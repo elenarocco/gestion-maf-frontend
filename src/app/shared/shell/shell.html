@@ -1,0 +1,28 @@
+<mat-toolbar color="primary">
+  <div style="background: white; padding: 4px 8px; border-radius: 4px; margin-right: 12px; display: flex; align-items: center;">
+    <img src="logo-maf.png" alt="MAF Chile" style="height: 24px; display: block;">
+  </div>
+  <span>Sistema de Gestión de Solicitudes TI — MAF Chile</span>
+  <span style="flex: 1"></span>
+<mat-form-field appearance="fill" style="width: 220px;">
+    <mat-label>Viendo como (temporal)</mat-label>
+    <mat-select [ngModel]="rolService.rolActual()" (ngModelChange)="rolService.rolActual.set($event)">
+      @for (rol of roles; track rol) {
+        <mat-option [value]="rol">{{ rol }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</mat-toolbar>
+<mat-sidenav-container style="height: calc(100vh - 64px);">
+  <mat-sidenav mode="side" opened style="width: 220px;">
+    <mat-nav-list>
+      @for (item of menuActual; track item.ruta) {
+        <a mat-list-item [routerLink]="item.ruta">{{ item.nombre }}</a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content style="padding: 20px;">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

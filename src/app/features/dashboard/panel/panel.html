@@ -1,0 +1,24 @@
+<h2>Panel General</h2>
+
+@if (resumen) {
+  <div style="display: flex; gap: 16px;">
+    <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+      <p>Dotación Actual</p>
+      <h1>{{ resumen.dotacionActual }}</h1>
+    </div>
+
+    <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+      <p>Solicitudes Pendientes</p>
+      <h1>{{ resumen.solicitudesPendientes }}</h1>
+    </div>
+
+    @if (rolService.rolActual() === 'SuperAdmin' || rolService.rolActual() === 'AdminTI' || rolService.rolActual() === 'Auditoria') {
+      <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+        <p>Trabajadores Inactivos</p>
+        <h1>{{ resumen.trabajadoresInactivos }}</h1>
+      </div>
+    }
+  </div>
+} @else {
+  <p>Cargando...</p>
+}
