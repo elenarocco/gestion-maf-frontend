@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,computed, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,7 +16,12 @@ export class Shell {
   constructor(public rolService: RolSimuladoService) { }
 
   roles = ['SuperAdmin', 'AdminTI', 'Jefatura', 'RRHH', 'Auditoria'];
-
+  puedeCrearSolicitud = computed(() => {
+    const rol = this.rolService.rolActual();
+    const rolesPermitidos = ['SuperAdmin', 'AdminTI', 'Jefatura'];
+    
+    return rolesPermitidos.includes(rol);
+  });
   menuPorRol: Record<string, { nombre: string, ruta: string }[]> = {
     SuperAdmin: [
       { nombre: 'Dashboard', ruta: '/dashboard' },

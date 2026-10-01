@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, computed,inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { RolSimuladoService } from '../../../core/rol-simulado';
@@ -27,6 +27,13 @@ interface FilaSolicitud {
 export class Panel implements OnInit {
   private api = 'http://localhost:5153/api';
 
+  public rolService = inject(RolSimuladoService);
+
+  puedeCrearSolicitud = computed(() => {
+    const rol = this.rolService.rolActual();
+    const rolesPermitidos = ['SuperAdmin', 'AdminTI', 'Jefatura'];
+    return rolesPermitidos.includes(rol);
+  });
   resumen: Resumen | null = null;
   subtitulo = '';
   tiposResumen: { etiqueta: string; cantidad: number; porcentaje: number }[] = [];
@@ -42,8 +49,8 @@ export class Panel implements OnInit {
 
   constructor(
     private http: HttpClient,
-    public rolService: RolSimuladoService,
     private cdr: ChangeDetectorRef
+    
   ) { }
 
   ngOnInit(): void {

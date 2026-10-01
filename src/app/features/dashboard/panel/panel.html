@@ -3,7 +3,9 @@
     <h1>Panel general</h1>
     <p class="sub">{{ subtitulo }}</p>
   </div>
-  @if (rolService.rolActual() === 'SuperAdmin' || rolService.rolActual() === 'Jefatura') {
+  
+  <!-- Usamos la propiedad computada del TypeScript -->
+  @if (puedeCrearSolicitud()) {
     <a class="btn-nueva" routerLink="/solicitudes/nueva">+ Nueva solicitud</a>
   }
 </header>

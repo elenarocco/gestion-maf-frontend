@@ -1,11 +1,19 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CatalogoService, Catalogo } from '../../../core/catalogo';
 import { TrabajadorService } from '../../../core/trabajador';
 import { SolicitudService } from '../../../core/solicitud';
 
+
+
+function fechaNoFutura(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  const valor = new Date(control.value);
+  return valor > hoy ? { futura: true } : null;
+}
 @Component({
   selector: 'app-formulario-ingreso',
   imports: [CommonModule, ReactiveFormsModule],
@@ -27,7 +35,7 @@ export class FormularioIngreso implements OnInit {
   buscandoCorreo = false;
   enviando = false;
   errores: string[] = [];
-
+  esReincorporacion = false;  
   // TEMPORAL: hasta tener login real, se usa tu propio UsuarioSistema. Confirma que tu Id sea este.
   private creadoPorId = 1;
 
@@ -42,13 +50,14 @@ export class FormularioIngreso implements OnInit {
     this.form = this.fb.group({
       rut: [''], sexo: [''], primerNombre: [''], segundoNombre: [''],
       primerApellido: [''], segundoApellido: [''],
-      fechaNacimiento: [''], fechaIncorporacion: [''], esCuentaGenerica: [false],
+      fechaNacimiento: ['', [Validators.required, fechaNoFutura]],
       correo: [''], direccionCorporativaId: [''], areaId: [''], cargo: [''], lugarTrabajoId: [''],
       direccionDomicilio: [''], jefeDirecto: [''], homologarAccesosDesde: [''],
       tieneTelefonoCorporativo: [false], solicitaTelefono: [false]
     });
   }
 
+  
   ngOnInit(): void {
     this.catalogoService.getPorTipo('DireccionCorporativa').subscribe(r => { this.direcciones = r.datos; this.cdr.detectChanges(); });
     this.catalogoService.getPorTipo('Area').subscribe(r => { this.areas = r.datos; this.cdr.detectChanges(); });
@@ -68,24 +77,28 @@ export class FormularioIngreso implements OnInit {
     }
     this.form.get('rut')!.setValue(formateado, { emitEvent: false });
   }
+  
 
-  buscarCorreoSugerido(): void {
-    const nombre = this.form.get('primerNombre')!.value;
-    const apellido = this.form.get('primerApellido')!.value;
-    if (!nombre || !apellido) return;
+buscarCorreoSugerido(): void {
+  const rut = this.form.get('rut')!.value;
+  const nombre = this.form.get('primerNombre')!.value;
+  const apellido = this.form.get('primerApellido')!.value;
+  const segundoApellido = this.form.get('segundoApellido')!.value;
+  if (!nombre || !apellido || !rut) return;
 
-    this.buscandoCorreo = true;
-    this.trabajadorService.sugerirCorreo(nombre, apellido).subscribe({
-      next: (r) => {
-        this.buscandoCorreo = false;
-        this.correoDisponible = r.disponible;
-        this.correoSugerido = r.disponible && r.correo ? r.correo : '';
-        this.form.get('correo')!.setValue(this.correoSugerido);
-        this.cdr.detectChanges();
-      },
-      error: () => { this.buscandoCorreo = false; this.cdr.detectChanges(); }
-    });
-  }
+  this.buscandoCorreo = true;
+  this.trabajadorService.sugerirCorreo(rut, nombre, apellido, segundoApellido).subscribe({
+    next: (r) => {
+      this.buscandoCorreo = false;
+      this.correoDisponible = r.disponible;
+      this.esReincorporacion = r.esReincorporacion;
+      this.correoSugerido = r.disponible && r.correo ? r.correo : '';
+      this.form.get('correo')!.setValue(this.correoSugerido);
+      this.cdr.detectChanges();
+    },
+    error: () => { this.buscandoCorreo = false; this.cdr.detectChanges(); }
+  });
+}
 
   toggleAcceso(id: number): void {
     this.accesosSeleccionados.has(id) ? this.accesosSeleccionados.delete(id) : this.accesosSeleccionados.add(id);

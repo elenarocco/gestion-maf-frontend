@@ -29,9 +29,8 @@ export class TrabajadorService {
     return this.http.get<RespuestaPaginada>(`${this.apiUrl}?pagina=${pagina}&tamanoPagina=${tamanoPagina}`);
   }
 
-  sugerirCorreo(primerNombre: string, primerApellido: string) {
-    return this.http.get<{ correo: string | null, disponible: boolean }>(
-      `${this.apiUrl}/sugerir-correo?primerNombre=${encodeURIComponent(primerNombre)}&primerApellido=${encodeURIComponent(primerApellido)}`
-    );
-  }
+  sugerirCorreo(rut: string, primerNombre: string, primerApellido: string, segundoApellido: string) {
+  const params = `rut=${encodeURIComponent(rut)}&primerNombre=${encodeURIComponent(primerNombre)}&primerApellido=${encodeURIComponent(primerApellido)}&segundoApellido=${encodeURIComponent(segundoApellido || '')}`;
+  return this.http.get<{ correo: string | null, disponible: boolean, esReincorporacion: boolean }>(`${this.apiUrl}/sugerir-correo?${params}`);
+}
 }

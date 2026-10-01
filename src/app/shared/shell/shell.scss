@@ -18,3 +18,7 @@ nav a.activo { background: #fde8ec; color: var(--maf-rojo); font-weight: 500; }
 
 .usuario { margin-top: auto; }
 .contenido { flex: 1; overflow-y: auto; }
+@media (max-width: 768px) {
+  .layout { flex-direction: column; height: auto; min-height: 100vh; }
+  .sidebar { width: 100%; box-sizing: border-box; }
+}

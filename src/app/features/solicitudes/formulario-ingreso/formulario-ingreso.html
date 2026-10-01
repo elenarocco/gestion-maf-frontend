@@ -1,4 +1,3 @@
-<p>formulario-ingreso works!</p>
 <header class="encabezado">
   <p class="migas">Nueva solicitud / Ingreso</p>
   <h1>Nueva solicitud — Ingreso</h1>
@@ -14,7 +13,8 @@
     <section class="tarjeta">
       <h4>Antecedentes del trabajador</h4>
       <div class="grid-2">
-        <div class="campo"><label>RUT</label><input formControlName="rut" (input)="onRutInput($event)" placeholder="12.345.678-9"></div>
+        <div class="campo"><label>RUT</label>  <input formControlName="rut" (input)="onRutInput($event)" (blur)="buscarCorreoSugerido()" placeholder="12.345.678-9">
+</div>
         <div class="campo">
           <label>Sexo</label>
           <select formControlName="sexo">
@@ -28,8 +28,7 @@
         <div class="campo"><label>Segundo Nombre <span class="opcional">(opcional)</span></label><input formControlName="segundoNombre" placeholder="Andrés"></div>
         <div class="campo"><label>Primer Apellido</label><input formControlName="primerApellido" (blur)="buscarCorreoSugerido()" placeholder="Pérez"></div>
         <div class="campo"><label>Segundo Apellido <span class="opcional">(opcional)</span></label><input formControlName="segundoApellido" placeholder="González"></div>
-        <div class="campo"><label>Fecha de nacimiento</label><input type="date" formControlName="fechaNacimiento"></div>
-        <div class="campo"><label>Fecha de incorporación</label><input type="date" formControlName="fechaIncorporacion"></div>
+        <div class="campo"><label>Fecha de nacimiento</label><input type="date" formControlName="fechaNacimiento"></div>        <div class="campo"><label>Fecha de incorporación</label><input type="date" formControlName="fechaIncorporacion"></div>
       </div>
       <div class="campo toggle">
         <label>¿Es cuenta genérica?</label>
@@ -40,8 +39,9 @@
     <section class="tarjeta">
       <h4>Correo institucional</h4>
       @if (buscandoCorreo) { <p class="hint">Buscando un correo disponible...</p> }
+      @else if (esReincorporacion) { <p class="hint ok">Esta persona trabajó antes en MAF — se reutiliza su correo anterior: {{ correoSugerido }}</p> }
       @else if (correoSugerido) { <p class="hint ok">Sugerido automáticamente: {{ correoSugerido }}</p> }
-      @else if (!correoDisponible) { <p class="hint alerta-texto">Ese correo ya existe. Ingrésalo manualmente.</p> }
+      @else if (!correoDisponible) { <p class="hint alerta-texto">Ese correo ya existe. Ingresa tu Segundo apellido para generar otro correo</p> }
       @else { <p class="hint">Ingresa nombre y apellido para generar el correo sugerido.</p> }
       <input formControlName="correo" placeholder="nombre.apellido@mafchile.com">
     </section>
