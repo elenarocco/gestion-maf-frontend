@@ -22,7 +22,7 @@ export class ListaTrabajadores implements OnInit {
       next: (respuesta) => {
         this.trabajadores = respuesta.datos;
         this.cargando = false;
-        this.cdr.detectChanges(); // fuerza a Angular a redibujar la pantalla ahora
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar trabajadores:', err);

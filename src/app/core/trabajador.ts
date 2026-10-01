@@ -19,15 +19,19 @@ export interface RespuestaPaginada {
   datos: Trabajador[];
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TrabajadorService {
   private apiUrl = 'http://localhost:5153/api/Trabajador';
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<RespuestaPaginada> {
-    return this.http.get<RespuestaPaginada>(`${this.apiUrl}?pagina=1&tamanoPagina=1000`);
+  getAll(pagina: number = 1, tamanoPagina: number = 20): Observable<RespuestaPaginada> {
+    return this.http.get<RespuestaPaginada>(`${this.apiUrl}?pagina=${pagina}&tamanoPagina=${tamanoPagina}`);
+  }
+
+  sugerirCorreo(primerNombre: string, primerApellido: string) {
+    return this.http.get<{ correo: string | null, disponible: boolean }>(
+      `${this.apiUrl}/sugerir-correo?primerNombre=${encodeURIComponent(primerNombre)}&primerApellido=${encodeURIComponent(primerApellido)}`
+    );
   }
 }

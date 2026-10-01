@@ -1,0 +1,11 @@
+<header class="encabezado"><h1>Nueva solicitud</h1><p class="sub">Selecciona el tipo de solicitud a crear</p></header>
+<div class="grilla">
+  @for (t of tipos; track t.nombre) {
+    <div class="tarjeta" [class.deshabilitada]="!t.disponible">
+      <h3>{{ t.nombre }}</h3>
+      <p>{{ t.desc }}</p>
+      @if (t.disponible) { <a [routerLink]="t.ruta">Seleccionar →</a> }
+      @else { <span class="proximamente">Próximamente</span> }
+    </div>
+  }
+</div>

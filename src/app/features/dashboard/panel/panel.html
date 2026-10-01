@@ -1,24 +1,93 @@
-<h2>Panel General</h2>
+<header class="encabezado">
+  <div>
+    <h1>Panel general</h1>
+    <p class="sub">{{ subtitulo }}</p>
+  </div>
+  @if (rolService.rolActual() === 'SuperAdmin' || rolService.rolActual() === 'Jefatura') {
+    <a class="btn-nueva" routerLink="/solicitudes/nueva">+ Nueva solicitud</a>
+  }
+</header>
 
 @if (resumen) {
-  <div style="display: flex; gap: 16px;">
-    <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
-      <p>Dotación Actual</p>
-      <h1>{{ resumen.dotacionActual }}</h1>
-    </div>
-
-    <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
-      <p>Solicitudes Pendientes</p>
-      <h1>{{ resumen.solicitudesPendientes }}</h1>
-    </div>
-
-    @if (rolService.rolActual() === 'SuperAdmin' || rolService.rolActual() === 'AdminTI' || rolService.rolActual() === 'Auditoria') {
-      <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
-        <p>Trabajadores Inactivos</p>
-        <h1>{{ resumen.trabajadoresInactivos }}</h1>
+  <div class="cuerpo">
+    <section class="kpis">
+      <div class="tarjeta">
+        <div class="label">Dotación actual</div>
+        <div class="valor">{{ resumen.dotacionActual }}</div>
+        <div class="nota">Todos los empleados</div>
       </div>
-    }
+      <div class="tarjeta">
+        <div class="label">Ingresos este mes</div>
+        <div class="valor">{{ resumen.ingresosDelMes }}</div>
+        <div class="nota">Según fecha de incorporación</div>
+      </div>
+      <div class="tarjeta">
+        <div class="label">Bajas este mes</div>
+        <div class="valor">{{ resumen.bajasDelMes }}</div>
+        <div class="nota">Según fecha de salida</div>
+      </div>
+      <div class="tarjeta">
+        <div class="label">Solicitudes pendientes</div>
+        <div class="valor">{{ resumen.solicitudesPendientes }}</div>
+        <div class="nota rojo">{{ resumen.solicitudesUrgentes }} urgentes</div>
+      </div>
+    </section>
+
+    <section class="fila-2">
+      <div class="tarjeta">
+        <div class="cabecera-grafico">
+          <div><h3>Ingresos vs Bajas</h3><p class="desc">Últimos 6 meses</p></div>
+          <div class="leyenda">
+            <span><i class="punto ingreso"></i>Ingresos</span>
+            <span><i class="punto baja"></i>Bajas</span>
+          </div>
+        </div>
+        <div class="grafico">
+          @for (m of meses; track m.etiqueta) {
+            <div class="mes">
+              <div class="barras">
+                <div class="barra ingreso" [style.height.%]="m.hIngresos"></div>
+                <div class="barra baja" [style.height.%]="m.hBajas"></div>
+              </div>
+              <span class="mes-label">{{ m.etiqueta }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h3>Resumen por tipo</h3>
+        <p class="desc">Solicitudes pendientes</p>
+        @for (t of tiposResumen; track t.etiqueta) {
+          <div class="tipo">
+            <div class="fila-tipo"><span>{{ t.etiqueta }}</span><strong>{{ t.cantidad }}</strong></div>
+            <div class="linea" [style.width.%]="t.porcentaje"></div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="cabecera-grafico">
+        <div><h3>Solicitudes recientes</h3><p class="desc">Últimas solicitudes ingresadas al sistema</p></div>
+        <a class="ver-todas" routerLink="/solicitudes">Ver todas →</a>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>Área</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
+        <tbody>
+          @for (s of recientes; track $index) {
+            <tr>
+              <td><div class="persona"><span class="avatar">{{ s.iniciales }}</span>{{ s.nombre }}</div></td>
+              <td>{{ s.area }}</td>
+              <td><span class="chip">{{ s.tipo }}</span></td>
+              <td>{{ s.fecha }}</td>
+              <td><span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
   </div>
 } @else {
-  <p>Cargando...</p>
+  <p class="cargando">Cargando...</p>
 }
