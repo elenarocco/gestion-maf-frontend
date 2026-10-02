@@ -1,0 +1,32 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="marca">
+      <img src="logo-maf.png" alt="MAF Chile">
+      <div class="marca-texto">
+        <strong>GestiónTI</strong>
+        <span>MAF Chile</span>
+      </div>
+    </div>
+
+    <nav>
+      @for (item of menuActual; track item.ruta) {
+        <a [routerLink]="item.ruta" routerLinkActive="activo">{{ item.nombre }}</a>
+      }
+    </nav>
+
+    <div class="usuario">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Viendo como (temporal)</mat-label>
+        <mat-select [ngModel]="rolService.rolActual()" (ngModelChange)="rolService.rolActual.set($event)">
+          @for (rol of roles; track rol) {
+            <mat-option [value]="rol">{{ rol }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </aside>
+
+  <main class="contenido">
+    <router-outlet />
+  </main>
+</div>

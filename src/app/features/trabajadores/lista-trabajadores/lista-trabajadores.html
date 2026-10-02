@@ -1,0 +1,21 @@
+<h2>Trabajadores</h2>
+
+@if (cargando) {
+  <p>Cargando...</p>
+} @else {
+  <table>
+    <thead>
+      <tr><th>RUT</th><th>Nombre</th><th>Correo</th><th>Cargo</th></tr>
+    </thead>
+    <tbody>
+      @for (t of trabajadores; track t.id) {
+        <tr>
+          <td>{{ t.rut }}</td>
+          <td>{{ t.primerNombre }} {{ t.primerApellido }}</td>
+          <td>{{ t.correo }}</td>
+          <td>{{ t.cargo }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

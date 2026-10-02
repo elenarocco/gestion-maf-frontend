@@ -1,0 +1,24 @@
+.layout { display: flex; height: 100vh; background: #f7f8fa; }
+
+.sidebar {
+  width: 220px; background: #fff; border-right: 1px solid #e8eaee;
+  display: flex; flex-direction: column; padding: 16px 12px; box-sizing: border-box;
+}
+
+.marca { display: flex; align-items: center; gap: 10px; padding: 4px 8px 24px; }
+.marca img { height: 28px; }
+.marca-texto { display: flex; flex-direction: column; line-height: 1.2; }
+.marca-texto strong { font-size: 14px; color: #111827; }
+.marca-texto span { font-size: 12px; color: #9ca3af; }
+
+nav { display: flex; flex-direction: column; gap: 2px; }
+nav a { padding: 9px 12px; border-radius: 6px; font-size: 14px; color: #4b5563; text-decoration: none; }
+nav a:hover { background: #f3f4f6; }
+nav a.activo { background: #fde8ec; color: var(--maf-rojo); font-weight: 500; }
+
+.usuario { margin-top: auto; }
+.contenido { flex: 1; overflow-y: auto; }
+@media (max-width: 768px) {
+  .layout { flex-direction: column; height: auto; min-height: 100vh; }
+  .sidebar { width: 100%; box-sizing: border-box; }
+}
