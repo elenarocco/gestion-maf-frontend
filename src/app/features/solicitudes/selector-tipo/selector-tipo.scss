@@ -1,10 +1,41 @@
 .encabezado { padding: 20px 28px; background: #fff; border-bottom: 1px solid #e8eaee; }
 h1 { margin: 0; font-size: 20px; font-weight: 600; }
 .sub { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
-.grilla { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 28px; max-width: 700px; }
-.tarjeta { background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 20px; }
+
+.pagina {
+  display: flex;
+  justify-content: center;
+  padding: 28px 20px 40px;
+  box-sizing: border-box;
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(100%, 760px);
+}
+
+.tarjeta {
+  background: #fff;
+  border: 1px solid #e8eaee;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+  box-sizing: border-box;
+}
+
 .tarjeta.deshabilitada { opacity: .55; }
 h3 { margin: 0 0 6px; font-size: 15px; }
-p { margin: 0 0 14px; font-size: 13px; color: #6b7280; }
+p { margin: 0 0 14px; font-size: 13px; color: #6b7280; flex: 1; }
 a { color: var(--maf-rojo); font-size: 13px; text-decoration: none; font-weight: 500; }
 .proximamente { font-size: 12px; color: #9ca3af; }
+
+@media (max-width: 640px) {
+  .encabezado { padding: 16px 16px; }
+  .pagina { padding: 16px 16px 32px; }
+  .grilla { grid-template-columns: 1fr; }
+  .tarjeta { min-height: 0; }
+}

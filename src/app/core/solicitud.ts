@@ -10,4 +10,11 @@ export class SolicitudService {
   crearIngreso(dto: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/ingreso`, dto);
   }
+  getAll(filtros: { tipo?: string, estado?: string, urgente?: boolean } = {}, pagina = 1): Observable<any> {
+  const params = new URLSearchParams({ pagina: String(pagina), tamanoPagina: '20' });
+  if (filtros.tipo) params.set('tipo', filtros.tipo);
+  if (filtros.estado) params.set('estado', filtros.estado);
+  if (filtros.urgente) params.set('urgente', 'true');
+  return this.http.get(`${this.apiUrl}?${params.toString()}`);
+}
 }

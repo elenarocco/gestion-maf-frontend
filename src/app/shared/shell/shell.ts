@@ -15,22 +15,22 @@ import { RolSimuladoService } from '../../core/rol-simulado';
 export class Shell {
   constructor(public rolService: RolSimuladoService) { }
 
-  roles = ['SuperAdmin', 'AdminTI', 'Jefatura', 'RRHH', 'Auditoria'];
+  roles = ['Super Admin', 'Admin TI', 'Jefatura', 'RRHH', 'Auditoría'];
   puedeCrearSolicitud = computed(() => {
     const rol = this.rolService.rolActual();
-    const rolesPermitidos = ['SuperAdmin', 'AdminTI', 'Jefatura'];
-    
+    const rolesPermitidos = ['Super Admin', 'Admin TI', 'Jefatura'];
+
     return rolesPermitidos.includes(rol);
   });
   menuPorRol: Record<string, { nombre: string, ruta: string }[]> = {
-    SuperAdmin: [
+    'Super Admin': [
       { nombre: 'Dashboard', ruta: '/dashboard' },
       { nombre: 'Trabajadores', ruta: '/trabajadores' },
       { nombre: 'Solicitudes', ruta: '/solicitudes' },
       { nombre: 'Catálogos', ruta: '/catalogos' },
       { nombre: 'Roles y Permisos', ruta: '/roles' },
     ],
-    AdminTI: [
+    'Admin TI': [
       { nombre: 'Dashboard', ruta: '/dashboard' },
       { nombre: 'Trabajadores', ruta: '/trabajadores' },
       { nombre: 'Solicitudes', ruta: '/solicitudes' },
@@ -45,7 +45,7 @@ export class Shell {
       { nombre: 'Dashboard', ruta: '/dashboard' },
       { nombre: 'Solicitudes de Bloqueo', ruta: '/solicitudes' },
     ],
-    Auditoria: [
+    'Auditoría': [
       { nombre: 'Dashboard', ruta: '/dashboard' },
       { nombre: 'Trabajadores', ruta: '/trabajadores' },
       { nombre: 'Historial de Solicitudes', ruta: '/solicitudes' },

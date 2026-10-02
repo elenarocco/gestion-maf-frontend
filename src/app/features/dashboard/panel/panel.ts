@@ -31,7 +31,7 @@ export class Panel implements OnInit {
 
   puedeCrearSolicitud = computed(() => {
     const rol = this.rolService.rolActual();
-    const rolesPermitidos = ['SuperAdmin', 'AdminTI', 'Jefatura'];
+    const rolesPermitidos = ['Super Admin', 'Admin TI', 'Jefatura'];
     return rolesPermitidos.includes(rol);
   });
   resumen: Resumen | null = null;

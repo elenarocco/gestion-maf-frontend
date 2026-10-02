@@ -1,0 +1,38 @@
+<header class="encabezado">
+  <h1>Solicitudes</h1>
+  <p class="sub">{{ total }} solicitud{{ total === 1 ? '' : 'es' }} encontrada{{ total === 1 ? '' : 's' }}</p>
+</header>
+
+<div class="filtros">
+  <select [value]="tipoActivo" (change)="filtrarTipo($any($event.target).value)">
+    @for (t of tipos; track t) { <option [value]="t">{{ t === 'Todas' ? 'Todos los tipos' : t }}</option> }
+  </select>
+
+  <select [value]="estadoActivo" (change)="filtrarEstado($any($event.target).value)">
+    @for (e of estados; track e) { <option [value]="e">{{ e === 'Todas' ? 'Todos los estados' : e }}</option> }
+  </select>
+</div>
+
+
+<section class="tarjeta">
+  @if (cargando) {
+    <p class="cargando">Cargando...</p>
+  } @else if (filas.length === 0) {
+    <p class="cargando">No hay solicitudes para este filtro.</p>
+  } @else {
+    <table>
+      <thead><tr><th>Nombre</th><th>Área</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
+      <tbody>
+        @for (s of filas; track $index) {
+          <tr>
+            <td><div class="persona"><span class="avatar">{{ s.iniciales }}</span>{{ s.nombre }}</div></td>
+            <td>{{ s.area }}</td>
+            <td><span class="chip">{{ s.tipo }}</span></td>
+            <td>{{ s.fecha }}</td>
+            <td><span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

@@ -1,0 +1,31 @@
+.encabezado { padding: 20px 28px; background: #fff; border-bottom: 1px solid #e8eaee; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; }
+.sub { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
+
+.filtros { padding: 16px 28px 0; display: flex; gap: 10px; }
+.filtros select {
+  border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 12px;
+  font-size: 13px; color: #374151; background: #fff; font-family: inherit;
+}
+.grupo { display: flex; gap: 8px; flex-wrap: wrap; }
+.grupo button {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 999px; padding: 6px 14px;
+  font-size: 13px; color: #4b5563; cursor: pointer;
+}
+.grupo button.activo { background: var(--maf-rojo); color: #fff; border-color: var(--maf-rojo); }
+
+.tarjeta { margin: 16px 28px 28px; background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 10px 20px; }
+.cargando { padding: 24px 0; color: #6b7280; font-size: 14px; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; font-weight: 500; padding: 10px 8px; }
+td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #f1f2f4; }
+.persona { display: flex; align-items: center; gap: 10px; }
+.avatar { width: 26px; height: 26px; border-radius: 50%; background: #fde8ec; color: var(--maf-rojo); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.chip { background: #f3f4f6; border-radius: 4px; padding: 3px 8px; font-size: 12px; }
+.badge { border-radius: 10px; padding: 3px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.pendiente { background: #fff4d6; color: #b7791f; }
+.badge.urgente, .badge.rechazada { background: #fde8ec; color: #c81e3a; }
+.badge.proceso { background: #e0edff; color: #1d4ed8; }
+.badge.completada { background: #e2f7e8; color: #15803d; }
