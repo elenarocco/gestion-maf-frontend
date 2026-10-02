@@ -1,21 +1,79 @@
-<h2>Trabajadores</h2>
+<header class="encabezado">
+  <div>
+    <h1>Trabajadores</h1>
+    <p class="sub">
+      {{ trabajadoresFiltrados.length }} {{ trabajadoresFiltrados.length === 1 ? 'registro en total' : 'registros en
+      total' }}
+    </p>
+  </div>
+  <a class="btn-nuevo" routerLink="/solicitudes/nueva/ingreso">+ Nuevo trabajador</a>
+</header>
 
-@if (cargando) {
-  <p>Cargando...</p>
-} @else {
-  <table>
-    <thead>
-      <tr><th>RUT</th><th>Nombre</th><th>Correo</th><th>Cargo</th></tr>
-    </thead>
-    <tbody>
-      @for (t of trabajadores; track t.id) {
+<div class="cuerpo">
+  <!-- Filtros -->
+  <div class="fila-filtros">
+    <div class="buscador">
+      <svg class="icono-buscar" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" [(ngModel)]="busqueda" (ngModelChange)="filtrar()"
+        placeholder="Buscar por nombre, RUT o correo..." />
+    </div>
+
+    <div class="selector-area">
+      <select [(ngModel)]="areaSeleccionada" (ngModelChange)="filtrar()">
+        <option value="">Todas las áreas</option>
+        @for (area of areasDisponibles; track area) {
+        <option [value]="area">{{ area }}</option>
+        }
+      </select>
+      <svg class="icono-flecha" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tarjeta con Tabla -->
+  <div class="tarjeta-tabla">
+    @if (cargando) {
+    <div class="estado-mensaje">Cargando trabajadores...</div>
+    } @else {
+    <table class="tabla-trabajadores">
+      <thead>
         <tr>
-          <td>{{ t.rut }}</td>
-          <td>{{ t.primerNombre }} {{ t.primerApellido }}</td>
-          <td>{{ t.correo }}</td>
-          <td>{{ t.cargo }}</td>
+          <th>NOMBRE</th>
+          <th>RUT</th>
+          <th>ÁREA</th>
+          <th>CORREO ELECTRÓNICO</th>
         </tr>
-      }
-    </tbody>
-  </table>
-}
+      </thead>
+      <tbody>
+        @for (t of trabajadoresFiltrados; track t.id) {
+        <tr>
+          <td>
+            <div class="persona">
+              <span class="avatar">{{ obtenerIniciales(t) }}</span>
+              <span class="nombre">{{ obtenerNombreCompleto(t) }}</span>
+            </div>
+          </td>
+          <td class="rut">{{ t.rut }}</td>
+          <td>
+            <span class="badge-area">{{ obtenerArea(t) }}</span>
+          </td>
+          <td class="correo">{{ t.correo }}</td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="4" class="sin-registros">
+            No se encontraron trabajadores que coincidan con la búsqueda.
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
+</div>

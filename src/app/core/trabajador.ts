@@ -6,9 +6,13 @@ export interface Trabajador {
   id: number;
   rut: string;
   primerNombre: string;
+  segundoNombre?: string;
   primerApellido: string;
+  segundoApellido?: string;
   correo: string;
   cargo: string;
+  area?: string;
+  areaNombre?: string;
   activo: boolean;
 }
 
