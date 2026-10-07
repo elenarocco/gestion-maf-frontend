@@ -1,0 +1,27 @@
+<div class="selector">
+  <div class="fila">
+    <div class="caja">
+      <input type="text" autocomplete="off"
+             [value]="texto" [placeholder]="placeholder"
+             (input)="onInput($event)" (focus)="abrir()" (blur)="onBlur()" (keydown)="onKey($event)">
+      @if (abierto) {
+        <ul class="lista">
+          @for (o of filtradas; track o.id; let i = $index) {
+            <li [class.resaltada]="i === resaltada" (mousedown)="elegir(o); $event.preventDefault()">{{ o.nombre }}</li>
+          } @empty {
+            <li class="vacio">Sin resultados</li>
+          }
+        </ul>
+      }
+    </div>
+    <button type="button" class="mas" [disabled]="!pendiente" (click)="agregar()" title="Agregar">+</button>
+  </div>
+
+  <div class="elegidos">
+    @for (o of elegidos; track o.id) {
+      <span class="etiqueta">{{ o.nombre }}<button type="button" (click)="quitar(o.id)" aria-label="Quitar">×</button></span>
+    } @empty {
+      <p class="aviso">{{ vacio }}</p>
+    }
+  </div>
+</div>

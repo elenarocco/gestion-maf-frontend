@@ -1,21 +1,59 @@
-<h2>Trabajadores</h2>
+<header class="encabezado">
+  <h1>Trabajadores</h1>
+  <p class="sub">{{ total }} trabajador{{ total === 1 ? '' : 'es' }}</p>
+</header>
 
-@if (cargando) {
-  <p>Cargando...</p>
-} @else {
-  <table>
-    <thead>
-      <tr><th>RUT</th><th>Nombre</th><th>Correo</th><th>Cargo</th></tr>
-    </thead>
-    <tbody>
-      @for (t of trabajadores; track t.id) {
-        <tr>
-          <td>{{ t.rut }}</td>
-          <td>{{ t.primerNombre }} {{ t.primerApellido }}</td>
-          <td>{{ t.correo }}</td>
-          <td>{{ t.cargo }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-}
+<div class="filtros">
+  <input class="buscar" type="search" [formControl]="buscar" placeholder="Buscar por nombre, RUT o correo...">
+  <div class="filtro-area">
+    <app-buscador-catalogo [opciones]="areas" [control]="area" placeholder="Filtrar por área..." />
+  </div>
+  <select [value]="estado" (change)="cambiarEstado($any($event.target).value)">
+    <option value="Todos">Todos los estados</option>
+    <option value="Activos">Solo activos</option>
+    <option value="Inactivos">Solo inactivos</option>
+  </select>
+</div>
+
+<section class="tarjeta">
+  @if (error) {
+    <p class="mensaje">{{ error }}</p>
+  } @else if (cargando) {
+    <p class="mensaje">Cargando...</p>
+  } @else if (filas.length === 0) {
+    <p class="mensaje">No hay trabajadores para este filtro.</p>
+  } @else {
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr><th>Nombre</th><th>RUT</th><th>Área</th><th>Cargo</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          @for (t of filas; track t.id) {
+            <tr (click)="abrir(t.id)">
+              <td>
+                <div class="persona">
+                  <span class="avatar">{{ t.iniciales }}</span>
+                  <div><div>{{ t.nombre }}</div><div class="correo">{{ t.correo }}</div></div>
+                </div>
+              </td>
+              <td>{{ t.rut }}</td>
+              <td>{{ t.area }}</td>
+              <td>{{ t.cargo }}</td>
+              <td><span class="badge" [class.activo]="t.activo" [class.inactivo]="!t.activo">{{ t.activo ? 'Activo' : 'Inactivo' }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="paginacion">
+      <span>{{ desde }}–{{ hasta }} de {{ total }}</span>
+      <div class="controles">
+        <button (click)="irA(pagina - 1)" [disabled]="pagina <= 1">← Anterior</button>
+        <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+        <button (click)="irA(pagina + 1)" [disabled]="pagina >= totalPaginas">Siguiente →</button>
+      </div>
+    </footer>
+  }
+</section>

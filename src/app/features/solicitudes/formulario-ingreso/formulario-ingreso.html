@@ -13,7 +13,15 @@
     <section class="tarjeta">
       <h4>Antecedentes del trabajador</h4>
       <div class="grid-2">
-        <div class="campo"><label>RUT</label>  <input formControlName="rut" (input)="onRutInput($event)" (blur)="buscarCorreoSugerido()" placeholder="12.345.678-9">
+       <div class="campo">
+          <label>RUT</label>
+          <input formControlName="rut" (input)="onRutInput($event)" (blur)="verificarRut()" placeholder="12.345.678-9">
+          @if (verificandoRut) {
+            <span class="hint">Verificando RUT...</span>
+          } @else if (rutMensaje) {
+            <span class="error-campo">{{ rutMensaje }}</span>
+          }
+        </div>
 </div>
         <div class="campo">
           <label>Sexo</label>
@@ -24,16 +32,19 @@
             <option value="Prefiere no informar">Prefiere no informar</option>
           </select>
         </div>
-        <div class="campo"><label>Primer Nombre</label><input formControlName="primerNombre" (blur)="buscarCorreoSugerido()" placeholder="Juan"></div>
-        <div class="campo"><label>Segundo Nombre <span class="opcional">(opcional)</span></label><input formControlName="segundoNombre" placeholder="Andrés"></div>
-        <div class="campo"><label>Primer Apellido</label><input formControlName="primerApellido" (blur)="buscarCorreoSugerido()" placeholder="Pérez"></div>
-        <div class="campo"><label>Segundo Apellido <span class="opcional">(opcional)</span></label><input formControlName="segundoApellido" placeholder="González"></div>
-        <div class="campo"><label>Fecha de nacimiento</label><input type="date" formControlName="fechaNacimiento"></div>        <div class="campo"><label>Fecha de incorporación</label><input type="date" formControlName="fechaIncorporacion"></div>
-      </div>
-      <div class="campo toggle">
-        <label>¿Es cuenta genérica?</label>
-        <label class="switch"><input type="checkbox" formControlName="esCuentaGenerica"><span></span></label>
-      </div>
+       <div class="campo"><label>Primer Nombre</label><input formControlName="primerNombre" (input)="onNombreInput($event, 'primerNombre')" (blur)="buscarCorreoSugerido()" placeholder="Juan"></div>
+        <div class="campo"><label>Segundo Nombre <span class="opcional">(opcional)</span></label><input formControlName="segundoNombre" (input)="onNombreInput($event, 'segundoNombre')" placeholder="Andrés"></div>
+        <div class="campo"><label>Primer Apellido</label><input formControlName="primerApellido" (input)="onNombreInput($event, 'primerApellido')" (blur)="buscarCorreoSugerido()" placeholder="Pérez"></div>
+        <div class="campo"><label>Segundo Apellido <span class="opcional">(opcional)</span></label><input formControlName="segundoApellido" (input)="onNombreInput($event, 'segundoApellido')" (blur)="buscarCorreoSugerido()" placeholder="González"></div>
+        <div class="campo">
+          <label>Fecha de nacimiento</label>
+          <input type="date" formControlName="fechaNacimiento" [min]="fechaMinNacimiento" [max]="fechaMaxNacimiento">
+          @if (form.get('fechaNacimiento')?.hasError('edadInvalida') && form.get('fechaNacimiento')?.touched) {
+            <span class="error-campo">La edad debe estar entre 18 y 75 años.</span>
+          }
+</div>
+     
+     
     </section>
 
     <section class="tarjeta">
@@ -43,7 +54,7 @@
       @else if (correoSugerido) { <p class="hint ok">Sugerido automáticamente: {{ correoSugerido }}</p> }
       @else if (!correoDisponible) { <p class="hint alerta-texto">Ese correo ya existe. Ingresa tu Segundo apellido para generar otro correo</p> }
       @else { <p class="hint">Ingresa nombre y apellido para generar el correo sugerido.</p> }
-      <input formControlName="correo" placeholder="nombre.apellido@mafchile.com">
+      <input formControlName="correo" (input)="onCorreoInput($event)" placeholder="nombre.apellido@mafchile.com">
     </section>
 
     <section class="tarjeta">
@@ -63,7 +74,13 @@
             @for (a of areas; track a.id) { <option [value]="a.id">{{ a.nombre }}</option> }
           </select>
         </div>
-        <div class="campo"><label>Cargo</label><input formControlName="cargo" placeholder="Analista Contable"></div>
+        
+        <div class="campo">
+          <label>Cargo</label>
+          <app-buscador-catalogo [opciones]="cargos" [control]="form.get('cargoId')!" placeholder="Escribe para buscar un cargo..." />
+      </div>
+
+
         <div class="campo">
           <label>Lugar de Trabajo</label>
           <select formControlName="lugarTrabajoId">
@@ -75,7 +92,7 @@
     </section>
 
     <section class="tarjeta">
-      <h4>Contacto y otros <span class="opcional">(opcional)</span></h4>
+      <h4>Contacto y otros</h4>
       <div class="grid-2">
         <div class="campo"><label>Dirección de domicilio</label><input formControlName="direccionDomicilio"></div>
         <div class="campo"><label>Jefe directo</label><input formControlName="jefeDirecto"></div>
@@ -88,14 +105,12 @@
     <section class="tarjeta">
       <h4>Accesos a solicitar</h4>
       <p class="subtitulo-seccion">Sistemas</p>
-      <div class="checks">
-        @for (s of sistemas; track s.id) { <label class="check"><input type="checkbox" (change)="toggleAcceso(s.id)">{{ s.nombre }}</label> }
-      </div>
+      <app-selector-multiple [opciones]="sistemas" [(seleccionados)]="sistemasSel"
+        placeholder="Escribe para buscar un sistema..." vacio="Aún no has agregado sistemas." />
       <p class="subtitulo-seccion">Carpetas de red</p>
-      <div class="checks columna">
-        @for (c of carpetas; track c.id) { <label class="check"><input type="checkbox" (change)="toggleAcceso(c.id)">{{ c.nombre }}</label> }
-      </div>
-    </section>
+      <app-selector-multiple [opciones]="carpetas" [(seleccionados)]="carpetasSel"
+        placeholder="Escribe para buscar una carpeta..." vacio="Aún no has agregado carpetas." />
+</section>
 
     <div class="acciones">
       <button type="button" class="btn-secundario" disabled title="Próximamente">Guardar borrador</button>

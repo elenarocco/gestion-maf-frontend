@@ -1,0 +1,67 @@
+@if (error) {
+  <div class="pagina">
+    <a class="volver" routerLink="/trabajadores">← Volver a trabajadores</a>
+    <p class="mensaje">{{ error }}</p>
+  </div>
+} @else if (ficha) {
+  <header class="encabezado">
+    <p class="migas"><a routerLink="/trabajadores">Trabajadores</a> / {{ ficha.nombreCompleto }}</p>
+  </header>
+
+  <div class="cuerpo">
+    <section class="tarjeta cabecera">
+      <span class="avatar grande">{{ iniciales }}</span>
+      <div class="identidad">
+        <h1>{{ ficha.nombreCompleto }}</h1>
+        <p>{{ ficha.cargo }} · {{ ficha.area }}</p>
+      </div>
+      <div class="rut"><span class="label">RUT</span><strong>{{ ficha.rut }}</strong></div>
+    </section>
+
+    <div class="dos-columnas">
+      <section class="tarjeta">
+        <h4>Datos personales</h4>
+        <dl>
+          <dt>Correo institucional</dt><dd>{{ ficha.correo }}</dd>
+          <dt>Fecha de ingreso</dt><dd>{{ fechaIngreso }}</dd>
+          @if (fechaSalida) { <dt>Fecha de salida</dt><dd>{{ fechaSalida }}</dd> }
+          <dt>Dirección corporativa</dt><dd>{{ ficha.direccionCorporativa }}</dd>
+          <dt>Ubicación</dt><dd>{{ ficha.lugarTrabajo }}</dd>
+          <dt>Estado</dt>
+          <dd><span class="badge" [class.activo]="ficha.activo" [class.inactivo]="!ficha.activo">{{ ficha.activo ? 'Activo' : 'Inactivo' }}</span></dd>
+        </dl>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Accesos vigentes</h4>
+        <p class="sub-sec">Sistemas</p>
+        @if (ficha.sistemas.length) {
+          <div class="chips">@for (s of ficha.sistemas; track s) { <span class="chip rojo">{{ s }}</span> }</div>
+        } @else { <p class="vacio">Sin sistemas asignados.</p> }
+
+        <p class="sub-sec">Carpetas de red</p>
+        @if (ficha.carpetas.length) {
+          <ul class="carpetas">@for (c of ficha.carpetas; track c) { <li>{{ c }}</li> }</ul>
+        } @else { <p class="vacio">Sin carpetas asignadas.</p> }
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <h4>Historial de solicitudes</h4>
+      @if (historial.length) {
+        <ul class="historial">
+          @for (h of historial; track h.id) {
+            <li>
+              <span class="chip">{{ h.tipo }}</span>
+              <span class="por">por {{ h.creadoPor }}</span>
+              <span class="badge {{ h.estadoClase }}">{{ h.estado }}</span>
+              <span class="fecha">{{ h.fecha }}</span>
+            </li>
+          }
+        </ul>
+      } @else { <p class="vacio">Este trabajador no tiene solicitudes.</p> }
+    </section>
+  </div>
+} @else {
+  <p class="mensaje pad">Cargando...</p>
+}

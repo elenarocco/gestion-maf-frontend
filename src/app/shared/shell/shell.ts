@@ -18,39 +18,39 @@ export class Shell {
   roles = ['Super Admin', 'Admin TI', 'Jefatura', 'RRHH', 'Auditoría'];
   puedeCrearSolicitud = computed(() => {
     const rol = this.rolService.rolActual();
-    const rolesPermitidos = ['Super Admin', 'Admin TI', 'Jefatura'];
-
+    const rolesPermitidos = ['SuperAdmin', 'AdminTI', 'Jefatura'];
+    
     return rolesPermitidos.includes(rol);
   });
   menuPorRol: Record<string, { nombre: string, ruta: string }[]> = {
-    'Super Admin': [
-      { nombre: 'Dashboard', ruta: '/dashboard' },
-      { nombre: 'Trabajadores', ruta: '/trabajadores' },
-      { nombre: 'Solicitudes', ruta: '/solicitudes' },
-      { nombre: 'Catálogos', ruta: '/catalogos' },
-      { nombre: 'Roles y Permisos', ruta: '/roles' },
-    ],
-    'Admin TI': [
-      { nombre: 'Dashboard', ruta: '/dashboard' },
-      { nombre: 'Trabajadores', ruta: '/trabajadores' },
-      { nombre: 'Solicitudes', ruta: '/solicitudes' },
-      { nombre: 'Catálogos', ruta: '/catalogos' },
-    ],
-    Jefatura: [
-      { nombre: 'Dashboard', ruta: '/dashboard' },
-      { nombre: 'Mi Equipo', ruta: '/trabajadores' },
-      { nombre: 'Mis Solicitudes', ruta: '/solicitudes' },
-    ],
-    RRHH: [
-      { nombre: 'Dashboard', ruta: '/dashboard' },
-      { nombre: 'Solicitudes de Bloqueo', ruta: '/solicitudes' },
-    ],
-    'Auditoría': [
-      { nombre: 'Dashboard', ruta: '/dashboard' },
-      { nombre: 'Trabajadores', ruta: '/trabajadores' },
-      { nombre: 'Historial de Solicitudes', ruta: '/solicitudes' },
-    ],
-  };
+  'Super Admin': [
+    { nombre: 'Dashboard', ruta: '/dashboard' },
+    { nombre: 'Trabajadores', ruta: '/trabajadores' },
+    { nombre: 'Solicitudes', ruta: '/solicitudes' },
+    { nombre: 'Catálogos', ruta: '/catalogos' },
+    { nombre: 'Roles y Permisos', ruta: '/roles' },
+  ],
+  'Admin TI': [
+    { nombre: 'Dashboard', ruta: '/dashboard' },
+    { nombre: 'Trabajadores', ruta: '/trabajadores' },
+    { nombre: 'Solicitudes', ruta: '/solicitudes' },
+    { nombre: 'Catálogos', ruta: '/catalogos' },
+  ],
+  'Jefatura': [
+    { nombre: 'Dashboard', ruta: '/dashboard' },
+    { nombre: 'Mi Equipo', ruta: '/trabajadores' },
+    { nombre: 'Mis Solicitudes', ruta: '/solicitudes' },
+  ],
+  'RRHH': [
+    { nombre: 'Dashboard', ruta: '/dashboard' },
+    { nombre: 'Solicitudes de Bloqueo', ruta: '/solicitudes' },
+  ],
+  'Auditoría': [
+    { nombre: 'Dashboard', ruta: '/dashboard' },
+    { nombre: 'Trabajadores', ruta: '/trabajadores' },
+    { nombre: 'Historial de Solicitudes', ruta: '/solicitudes' },
+  ],
+};
 
   get menuActual() {
     return this.menuPorRol[this.rolService.rolActual()] ?? [];

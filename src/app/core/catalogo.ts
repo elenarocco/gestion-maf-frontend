@@ -19,6 +19,6 @@ export class CatalogoService {
   constructor(private http: HttpClient) { }
 
   getPorTipo(tipo: string): Observable<RespuestaPaginadaCatalogo> {
-    return this.http.get<RespuestaPaginadaCatalogo>(`${this.apiUrl}?tipo=${tipo}&tamanoPagina=100`);
+    return this.http.get<RespuestaPaginadaCatalogo>(`${this.apiUrl}?tipo=${tipo}&tamanoPagina=500`);
   }
 }

@@ -1,0 +1,15 @@
+<div class="buscador">
+  <input type="text" autocomplete="off"
+         [value]="texto" [placeholder]="placeholder"
+         [class.invalido]="control.invalid && control.touched"
+         (input)="onInput($event)" (focus)="abrir()" (blur)="onBlur()" (keydown)="onKey($event)">
+  @if (abierto) {
+    <ul class="lista">
+      @for (o of filtradas; track o.id; let i = $index) {
+        <li [class.resaltada]="i === resaltada" (mousedown)="seleccionar(o); $event.preventDefault()">{{ o.nombre }}</li>
+      } @empty {
+        <li class="vacio">Sin resultados</li>
+      }
+    </ul>
+  }
+</div>

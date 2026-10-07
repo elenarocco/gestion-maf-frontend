@@ -1,0 +1,15 @@
+.buscador { position: relative; }
+input {
+  width: 100%; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 6px;
+  padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa;
+}
+input:focus { outline: none; border-color: var(--maf-rojo); background: #fff; }
+input.invalido { border-color: var(--maf-rojo); }
+.lista {
+  position: absolute; z-index: 20; left: 0; right: 0; margin: 4px 0 0; padding: 4px 0; list-style: none;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08); max-height: 220px; overflow-y: auto;
+}
+li { padding: 8px 12px; font-size: 13px; color: #374151; cursor: pointer; }
+li.resaltada, li:hover { background: #fde8ec; }
+li.vacio { color: #9ca3af; cursor: default; }

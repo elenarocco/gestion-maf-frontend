@@ -1,0 +1,38 @@
+.encabezado { padding: 20px 28px; background: #fff; border-bottom: 1px solid #e8eaee; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; color: #111827; }
+.sub { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
+
+.filtros { padding: 16px 28px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; }
+.buscar, .filtros select {
+  border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px;
+  font-size: 13px; color: #374151; background: #fff; font-family: inherit;
+}
+.buscar { flex: 1 1 260px; min-width: 200px; }
+.filtro-area { flex: 0 1 260px; min-width: 200px; }
+
+.tarjeta { margin: 16px 28px 28px; background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 10px 20px; }
+.mensaje { padding: 24px 0; color: #6b7280; font-size: 14px; }
+
+.tabla-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; font-weight: 500; padding: 10px 8px; }
+td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #f1f2f4; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: #fafafa; }
+.persona { display: flex; align-items: center; gap: 10px; }
+.correo { font-size: 12px; color: #9ca3af; }
+.avatar { width: 28px; height: 28px; flex: none; border-radius: 50%; background: #fde8ec; color: var(--maf-rojo); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.badge { border-radius: 10px; padding: 3px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.activo { background: #e2f7e8; color: #15803d; }
+.badge.inactivo { background: #fde8ec; color: #c81e3a; }
+
+.paginacion { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 14px 0 6px; border-top: 1px solid #f1f2f4; font-size: 13px; color: #6b7280; }
+.controles { display: flex; align-items: center; gap: 12px; }
+.controles button { background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+.controles button:disabled { opacity: .45; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .encabezado, .filtros { padding-left: 16px; padding-right: 16px; }
+  .tarjeta { margin: 16px; padding: 10px 12px; }
+}
