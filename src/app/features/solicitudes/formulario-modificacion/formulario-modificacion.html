@@ -1,0 +1,188 @@
+<header class="encabezado">
+  <p class="migas">Nueva solicitud / Modificación</p>
+  <h1>Nueva solicitud — Modificación</h1>
+</header>
+
+<div class="cuerpo">
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+
+    @if (errores().length) {
+      <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+    }
+
+    <section class="tarjeta">
+      <h4>Trabajador</h4>
+      <div class="campo">
+        <label>Buscar trabajador</label>
+        <div class="buscador">
+          <input type="text" autocomplete="off"
+                 [value]="textoBusqueda()" placeholder="RUT, nombre o correo..."
+                 (input)="onBusquedaInput($event)" (focus)="abierto.set(true)" (blur)="abierto.set(false)"
+                 (keydown)="onBusquedaKey($event)">
+          @if (abierto() && textoBusqueda().trim()) {
+            <ul class="lista">
+              @if (buscando()) {
+                <li class="vacio">Buscando...</li>
+              } @else {
+                @for (t of resultados(); track t.id; let i = $index) {
+                  <li [class.resaltada]="i === resaltada()" (mousedown)="seleccionar(t); $event.preventDefault()">
+                    {{ t.primerNombre }} {{ t.primerApellido }}
+                    <span class="detalle">{{ t.rut }} · {{ t.correo }}</span>
+                  </li>
+                } @empty {
+                  <li class="vacio">Sin resultados</li>
+                }
+              }
+            </ul>
+          }
+        </div>
+        @if (cargandoTrabajador()) { <span class="hint">Cargando datos del trabajador...</span> }
+        @else if (!trabajador()) { <span class="hint">Busca un trabajador activo para cargar sus datos y modificarlos.</span> }
+      </div>
+    </section>
+
+    @if (trabajador(); as t) {
+      <section class="tarjeta">
+        <h4>Antecedentes del trabajador</h4>
+        <div class="grid-2">
+          <div class="campo">
+            <label>RUT <span class="opcional">(no editable)</span></label>
+            <input [value]="t.rut" disabled>
+          </div>
+          <div class="campo">
+            <label>Sexo @if (cambiado('sexo')) { <span class="modificado">Modificado</span> }</label>
+            <select formControlName="sexo">
+              <option value="" disabled>— Seleccionar —</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Prefiere no informar">Prefiere no informar</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Primer Nombre @if (cambiado('primerNombre')) { <span class="modificado">Modificado</span> }</label>
+            <input formControlName="primerNombre" (input)="onNombreInput($event, 'primerNombre')" (blur)="revisarCorreo()">
+          </div>
+          <div class="campo">
+            <label>Segundo Nombre <span class="opcional">(opcional)</span> @if (cambiado('segundoNombre')) { <span class="modificado">Modificado</span> }</label>
+            <input formControlName="segundoNombre" (input)="onNombreInput($event, 'segundoNombre')">
+          </div>
+          <div class="campo">
+            <label>Primer Apellido @if (cambiado('primerApellido')) { <span class="modificado">Modificado</span> }</label>
+            <input formControlName="primerApellido" (input)="onNombreInput($event, 'primerApellido')" (blur)="revisarCorreo()">
+          </div>
+          <div class="campo">
+            <label>Segundo Apellido <span class="opcional">(opcional)</span> @if (cambiado('segundoApellido')) { <span class="modificado">Modificado</span> }</label>
+            <input formControlName="segundoApellido" (input)="onNombreInput($event, 'segundoApellido')" (blur)="revisarCorreo()">
+          </div>
+          <div class="campo">
+            <label>Fecha de nacimiento @if (cambiado('fechaNacimiento')) { <span class="modificado">Modificado</span> }</label>
+            <input type="date" formControlName="fechaNacimiento" [min]="fechaMinNacimiento" [max]="fechaMaxNacimiento">
+            @if (form.controls.fechaNacimiento.hasError('edadInvalida') && form.controls.fechaNacimiento.touched) {
+              <span class="error-campo">La edad debe estar entre 18 y 75 años.</span>
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Correo institucional @if (cambiado('correo')) { <span class="modificado">Modificado</span> }</h4>
+        @if (buscandoCorreo()) { <p class="hint">Buscando un correo disponible...</p> }
+        @else if (avisoCorreo()) { <p class="hint ok">{{ avisoCorreo() }}</p> }
+        <div class="campo">
+          <input formControlName="correo" (input)="onCorreoInput($event)" placeholder="nombre.apellido@mafchile.com">
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Datos organizacionales</h4>
+        <div class="grid-2">
+          <div class="campo">
+            <label>Dirección Corporativa @if (cambiado('direccionCorporativaId')) { <span class="modificado">Modificado</span> }</label>
+            <select formControlName="direccionCorporativaId">
+              <option value="" disabled>— Seleccionar —</option>
+              @for (d of direcciones; track d.id) { <option [ngValue]="d.id">{{ d.nombre }}</option> }
+            </select>
+          </div>
+          <div class="campo">
+            <label>Área @if (cambiado('areaId')) { <span class="modificado">Modificado</span> }</label>
+            <select formControlName="areaId">
+              <option value="" disabled>{{ form.controls.direccionCorporativaId.value ? '— Seleccionar —' : '— Primero elige una dirección —' }}</option>
+              @for (a of areas; track a.id) { <option [ngValue]="a.id">{{ a.nombre }}</option> }
+            </select>
+          </div>
+          <div class="campo">
+            <label>Cargo @if (cambiado('cargoId')) { <span class="modificado">Modificado</span> }</label>
+            <app-buscador-catalogo [opciones]="cargos" [control]="form.controls.cargoId" placeholder="Escribe para buscar un cargo..." />
+          </div>
+          <div class="campo">
+            <label>Lugar de Trabajo @if (cambiado('lugarTrabajoId')) { <span class="modificado">Modificado</span> }</label>
+            <select formControlName="lugarTrabajoId">
+              <option value="" disabled>— Seleccionar —</option>
+              @for (l of lugares; track l.id) { <option [ngValue]="l.id">{{ l.nombre }}</option> }
+            </select>
+          </div>
+          <div class="campo">
+            <label>Fecha de incorporación @if (cambiado('fechaIncorporacion')) { <span class="modificado">Modificado</span> }</label>
+            <input type="date" formControlName="fechaIncorporacion">
+          </div>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Contacto y otros</h4>
+        <div class="grid-2">
+          <div class="campo"><label>Dirección de domicilio @if (cambiado('direccionDomicilio')) { <span class="modificado">Modificado</span> }</label><input formControlName="direccionDomicilio"></div>
+          <div class="campo"><label>Jefe directo @if (cambiado('jefeDirecto')) { <span class="modificado">Modificado</span> }</label><input formControlName="jefeDirecto"></div>
+          <div class="campo" style="grid-column: span 2;"><label>Homologar accesos desde @if (cambiado('homologarAccesosDesde')) { <span class="modificado">Modificado</span> }</label><input formControlName="homologarAccesosDesde" placeholder="RUT o nombre de un usuario existente"></div>
+        </div>
+        <div class="campo toggle"><label>¿Tiene teléfono corporativo? @if (cambiado('tieneTelefonoCorporativo')) { <span class="modificado">Modificado</span> }</label><label class="switch"><input type="checkbox" formControlName="tieneTelefonoCorporativo"><span></span></label></div>
+        <div class="campo toggle"><label>¿Solicita teléfono? @if (cambiado('solicitaTelefono')) { <span class="modificado">Modificado</span> }</label><label class="switch"><input type="checkbox" formControlName="solicitaTelefono"><span></span></label></div>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Accesos</h4>
+
+        <p class="subtitulo-seccion">Accesos actuales</p>
+        @for (tipo of ['Sistema', 'Carpeta']; track tipo) {
+          @if (accesosDeTipo(tipo).length) {
+            <div class="actuales">
+              @for (a of accesosDeTipo(tipo); track a.catalogoId) {
+                <span class="acceso" [class.quitado]="seQuita(a.catalogoId)">
+                  <span class="nombre">{{ a.nombre }}</span>
+                  <button type="button" (click)="marcarQuitar(a.catalogoId)">{{ seQuita(a.catalogoId) ? 'Deshacer' : 'Quitar' }}</button>
+                </span>
+              }
+            </div>
+          }
+        }
+        @if (!accesosActuales().length) { <p class="hint">El trabajador no tiene accesos activos.</p> }
+
+        <p class="subtitulo-seccion">Agregar sistemas</p>
+        <app-selector-multiple [opciones]="sistemasDisponibles" [(seleccionados)]="sistemasAgregar"
+          placeholder="Escribe para buscar un sistema..." vacio="No se agregarán sistemas." />
+        <p class="subtitulo-seccion">Agregar carpetas de red</p>
+        <app-selector-multiple [opciones]="carpetasDisponibles" [(seleccionados)]="carpetasAgregar"
+          placeholder="Escribe para buscar una carpeta..." vacio="No se agregarán carpetas." />
+      </section>
+
+      <section class="tarjeta">
+        <h4>Justificación</h4>
+        <div class="campo">
+          <textarea formControlName="justificacion" rows="4" [attr.maxlength]="maxJustificacion"
+                    (input)="onJustificacionInput($event)"
+                    placeholder="Motivo de la modificación. Solo letras, espacios, comas y puntos."></textarea>
+          <span class="contador">{{ largoJustificacion() }}/{{ maxJustificacion }}</span>
+          @if (form.controls.justificacion.touched && form.controls.justificacion.invalid) {
+            <span class="error-campo">La justificación es obligatoria y solo admite letras, espacios, comas y puntos.</span>
+          }
+        </div>
+        @if (!hayCambios()) { <p class="hint">Aún no has modificado ningún dato ni acceso.</p> }
+      </section>
+    }
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario activo" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}</button>
+    </div>
+  </form>
+</div>
