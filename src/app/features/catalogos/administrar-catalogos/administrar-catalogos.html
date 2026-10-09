@@ -1,0 +1,74 @@
+<header class="encabezado">
+  <div>
+    <h1>Catálogos</h1>
+    <p class="sub">Administra los sistemas y carpetas de red disponibles en los formularios</p>
+  </div>
+  <button class="btn-nueva" (click)="abrirNuevo()">+ {{ tipoActivo.nuevo }}</button>
+</header>
+
+<div class="pestanas">
+  @for (t of tipos; track t.clave) {
+    <button [class.activa]="t.clave === tipoActivo.clave" (click)="cambiarTipo(t)">{{ t.etiqueta }}</button>
+  }
+</div>
+
+@if (alerta) {
+  <p class="alerta-linea" [class.error]="alerta.error">{{ alerta.texto }}</p>
+}
+
+@if (panelAbierto) {
+  <section class="panel">
+    <h3>{{ editando ? 'Editar ' + tipoActivo.singular : tipoActivo.nuevo }}</h3>
+    @if (erroresForm.length) {
+      <div class="alerta">@for (e of erroresForm; track e) { <div>{{ e }}</div> }</div>
+    }
+    <div class="fila-form">
+      <input [formControl]="nombre" [placeholder]="tipoActivo.placeholder" (keydown.enter)="guardar()">
+      <button class="primario" (click)="guardar()" [disabled]="guardando">{{ guardando ? 'Guardando...' : 'Guardar' }}</button>
+      <button class="secundario" (click)="cancelar()">Cancelar</button>
+    </div>
+  </section>
+}
+
+<div class="filtros">
+  <input class="buscar" type="search" [formControl]="buscar" placeholder="Buscar en {{ tipoActivo.etiqueta.toLowerCase() }}...">
+</div>
+
+<section class="tarjeta">
+  @if (error) {
+    <p class="mensaje">{{ error }}</p>
+  } @else if (cargando) {
+    <p class="mensaje">Cargando...</p>
+  } @else if (filas.length === 0) {
+    <p class="mensaje">
+      {{ buscar.value ? 'No hay resultados para esa búsqueda.' : 'Aún no hay ' + tipoActivo.etiqueta.toLowerCase() + ' cargados. Usa el botón de arriba para agregar el primero.' }}
+    </p>
+  } @else {
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Nombre</th><th>Estado</th><th class="acciones">Acciones</th></tr></thead>
+        <tbody>
+          @for (c of filas; track c.id) {
+            <tr>
+              <td [class.tenue]="!c.activo" class="nombre">{{ c.nombre }}</td>
+              <td><span class="badge" [class.activo]="c.activo" [class.inactivo]="!c.activo">{{ c.activo ? 'Activo' : 'Inactivo' }}</span></td>
+              <td class="acciones">
+                <button class="link" (click)="abrirEditar(c)">Editar</button>
+                <button class="link" [class.peligro]="c.activo" (click)="alternarActivo(c)">{{ c.activo ? 'Desactivar' : 'Reactivar' }}</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="paginacion">
+      <span>{{ desde }}–{{ hasta }} de {{ total }}</span>
+      <div class="controles">
+        <button (click)="irA(pagina - 1)" [disabled]="pagina <= 1">← Anterior</button>
+        <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+        <button (click)="irA(pagina + 1)" [disabled]="pagina >= totalPaginas">Siguiente →</button>
+      </div>
+    </footer>
+  }
+</section>

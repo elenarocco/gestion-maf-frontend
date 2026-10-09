@@ -92,12 +92,27 @@ export class FormularioIngreso implements OnInit {
 
   ngOnInit(): void {
     this.catalogoService.getPorTipo('DireccionCorporativa').subscribe(r => { this.direcciones = r.datos; this.cdr.detectChanges(); });
-    this.catalogoService.getPorTipo('Area').subscribe(r => { this.areas = r.datos; this.cdr.detectChanges(); });
     this.catalogoService.getPorTipo('LugarTrabajo').subscribe(r => { this.lugares = r.datos; this.cdr.detectChanges(); });
     this.catalogoService.getPorTipo('Sistema').subscribe(r => { this.sistemas = r.datos; this.cdr.detectChanges(); });
     this.catalogoService.getPorTipo('Carpeta').subscribe(r => { this.carpetas = r.datos; this.cdr.detectChanges(); });
     this.catalogoService.getPorTipo('Cargo').subscribe(r => { this.cargos = r.datos; this.cdr.detectChanges(); });
+
+    // Las áreas se cargan al elegir la dirección corporativa
+    this.form.get('direccionCorporativaId')!.valueChanges.subscribe(id => this.cargarAreas(id));
   }
+
+  private cargarAreas(direccionId: unknown): void {
+    this.form.get('areaId')!.setValue('');
+    this.areas = [];
+    const id = Number(direccionId);
+    if (!id) { this.cdr.detectChanges(); return; }
+
+    this.catalogoService.getPorTipo('Area', id).subscribe(r => {
+      this.areas = r.datos;
+      this.cdr.detectChanges();
+    });
+  }
+  
   
   verificarRut(): void {
   const ctrl = this.form.get('rut')!;

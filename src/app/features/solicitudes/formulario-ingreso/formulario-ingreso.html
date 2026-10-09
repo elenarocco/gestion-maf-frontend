@@ -70,7 +70,7 @@
         <div class="campo">
           <label>Área</label>
           <select formControlName="areaId">
-            <option value="" disabled selected>— Seleccionar —</option>
+            <option value="" disabled selected>{{ form.get('direccionCorporativaId')?.value ? '— Seleccionar —' : '— Primero elige una dirección —' }}</option>
             @for (a of areas; track a.id) { <option [value]="a.id">{{ a.nombre }}</option> }
           </select>
         </div>

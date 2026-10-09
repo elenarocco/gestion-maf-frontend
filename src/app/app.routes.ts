@@ -5,6 +5,7 @@ import { SelectorTipo } from './features/solicitudes/selector-tipo/selector-tipo
 import { FormularioIngreso } from './features/solicitudes/formulario-ingreso/formulario-ingreso';
 import { ListaSolicitudes } from './features/solicitudes/lista-solicitudes/lista-solicitudes';
 import { FichaTrabajador } from './features/trabajadores/ficha-trabajador/ficha-trabajador';
+import { AdministrarCatalogos } from './features/catalogos/administrar-catalogos/administrar-catalogos';
 
 export const routes: Routes = [
   { path: 'dashboard', component: Panel },
@@ -14,4 +15,5 @@ export const routes: Routes = [
   { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso },
   { path: 'solicitudes', component: ListaSolicitudes },
   { path: 'trabajadores/:id', component: FichaTrabajador },
+  { path: 'catalogos', component: AdministrarCatalogos },
 ];
