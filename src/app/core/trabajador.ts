@@ -51,6 +51,30 @@ export interface TrabajadorFicha {
   solicitudes: FichaSolicitud[];
 }
 
+export interface TrabajadorDetalle {
+  id: number;
+  rut: string;
+  primerNombre: string;
+  segundoNombre: string | null;
+  primerApellido: string;
+  segundoApellido: string | null;
+  fechaNacimiento: string;
+  sexo: string;
+  correo: string;
+  direccionCorporativaId: number;
+  areaId: number;
+  cargoId: number;
+  lugarTrabajoId: number;
+  esCuentaGenerica: boolean;
+  fechaIncorporacion: string;
+  direccionDomicilio: string | null;
+  jefeDirecto: string | null;
+  homologarAccesosDesde: string | null;
+  tieneTelefonoCorporativo: boolean;
+  solicitaTelefono: boolean;
+  activo: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TrabajadorService {
   private apiUrl = 'http://localhost:5153/api/Trabajador';
@@ -63,6 +87,10 @@ export class TrabajadorService {
     if (filtros.areaId) params = params.set('areaId', filtros.areaId);
     if (filtros.activo !== undefined) params = params.set('activo', filtros.activo);
     return this.http.get<RespuestaPaginada>(this.apiUrl, { params });
+  }
+
+  getById(id: number): Observable<TrabajadorDetalle> {
+    return this.http.get<TrabajadorDetalle>(`${this.apiUrl}/${id}`);
   }
 
   getFicha(id: number): Observable<TrabajadorFicha> {
