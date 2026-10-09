@@ -1,0 +1,141 @@
+<header class="encabezado">
+  <p class="migas">Nueva solicitud / Bloqueo</p>
+  <h1>Nueva solicitud — Bloqueo</h1>
+</header>
+
+<div class="cuerpo">
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+
+    @if (errores().length) {
+      <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+    }
+
+    <section class="tarjeta">
+      <h4>Trabajador</h4>
+      <div class="campo">
+        <label>Buscar trabajador</label>
+        <div class="buscador">
+          <input type="text" autocomplete="off"
+                 [value]="textoBusqueda()" placeholder="Nombre, RUT o correo..."
+                 (input)="onBusquedaInput($event)" (focus)="abierto.set(true)" (blur)="abierto.set(false)"
+                 (keydown)="onBusquedaKey($event)">
+          @if (abierto() && textoBusqueda().trim()) {
+            <ul class="lista">
+              @if (buscando()) {
+                <li class="vacio">Buscando...</li>
+              } @else {
+                @for (t of resultados(); track t.id; let i = $index) {
+                  <li [class.resaltada]="i === resaltada()" (mousedown)="seleccionar(t); $event.preventDefault()">
+                    {{ t.primerNombre }} {{ t.primerApellido }}
+                    <span class="detalle">{{ t.rut }} · {{ t.correo }}</span>
+                  </li>
+                } @empty {
+                  <li class="vacio">Sin resultados</li>
+                }
+              }
+            </ul>
+          }
+        </div>
+        @if (cargandoTrabajador()) { <span class="hint">Cargando datos del trabajador...</span> }
+        @else if (!trabajador()) { <span class="hint">Selecciona un trabajador activo para ver sus datos.</span> }
+      </div>
+    </section>
+
+    @if (trabajador(); as t) {
+      <section class="tarjeta">
+        <h4>Antecedentes del trabajador</h4>
+        <div class="grid-2">
+          <div class="campo"><label>RUT</label><input [value]="t.rut" disabled></div>
+          <div class="campo"><label>Sexo</label><input [value]="texto(t.sexo)" disabled></div>
+          <div class="campo"><label>Primer Nombre</label><input [value]="t.primerNombre" disabled></div>
+          <div class="campo"><label>Segundo Nombre</label><input [value]="texto(t.segundoNombre)" disabled></div>
+          <div class="campo"><label>Primer Apellido</label><input [value]="t.primerApellido" disabled></div>
+          <div class="campo"><label>Segundo Apellido</label><input [value]="texto(t.segundoApellido)" disabled></div>
+          <div class="campo"><label>Fecha de nacimiento</label><input [value]="fecha(t.fechaNacimiento)" disabled></div>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Datos laborales</h4>
+        <div class="grid-2">
+          <div class="campo" style="grid-column: span 2;"><label>Correo institucional</label><input [value]="t.correo" disabled></div>
+          <div class="campo"><label>Dirección Corporativa</label><input [value]="texto(ficha()?.direccionCorporativa)" disabled></div>
+          <div class="campo"><label>Área</label><input [value]="texto(ficha()?.area)" disabled></div>
+          <div class="campo"><label>Cargo</label><input [value]="texto(ficha()?.cargo)" disabled></div>
+          <div class="campo"><label>Lugar de Trabajo</label><input [value]="texto(ficha()?.lugarTrabajo)" disabled></div>
+          <div class="campo"><label>Jefe directo</label><input [value]="texto(t.jefeDirecto)" disabled></div>
+          <div class="campo"><label>Fecha de incorporación</label><input [value]="fecha(t.fechaIncorporacion)" disabled></div>
+          <div class="campo" style="grid-column: span 2;"><label>Dirección de domicilio</label><input [value]="texto(t.direccionDomicilio)" disabled></div>
+          <div class="campo"><label>¿Tiene teléfono corporativo?</label><input [value]="siNo(t.tieneTelefonoCorporativo)" disabled></div>
+          <div class="campo"><label>¿Solicita teléfono?</label><input [value]="siNo(t.solicitaTelefono)" disabled></div>
+          <div class="campo" style="grid-column: span 2;"><label>Homologar accesos desde</label><input [value]="texto(t.homologarAccesosDesde)" disabled></div>
+        </div>
+      </section>
+
+      <section class="tarjeta">
+        <h4>Accesos activos</h4>
+        <p class="subtitulo-seccion">Sistemas</p>
+        @if (ficha()?.sistemas?.length) {
+          <div class="checks">@for (s of ficha()!.sistemas; track s) { <span class="check">{{ s }}</span> }</div>
+        } @else { <p class="hint">Sin sistemas activos.</p> }
+        <p class="subtitulo-seccion">Carpetas de red</p>
+        @if (ficha()?.carpetas?.length) {
+          <div class="checks">@for (c of ficha()!.carpetas; track c) { <span class="check">{{ c }}</span> }</div>
+        } @else { <p class="hint">Sin carpetas activas.</p> }
+      </section>
+    }
+
+    <section class="tarjeta">
+      <h4>Datos del bloqueo</h4>
+
+      <div class="campo toggle"><label>Bloqueo temporal</label><label class="switch"><input type="checkbox" formControlName="esTemporal"><span></span></label></div>
+
+      @if (form.controls.esTemporal.value) {
+        <div class="grid-2">
+          <div class="campo">
+            <label>Desde</label>
+            <input type="datetime-local" formControlName="desde" [min]="minDesde()">
+          </div>
+          <div class="campo">
+            <label>Hasta</label>
+            <input type="datetime-local" formControlName="hasta" [min]="minHasta()">
+          </div>
+        </div>
+      } @else {
+        <p class="hint">El bloqueo se aplicará en la fecha y hora en que se envíe la solicitud.</p>
+      }
+
+      <div class="campo">
+        <label>¿Usuario cuenta con PC? <span class="opcional">(opcional)</span></label>
+        <div class="radios">
+          <label class="radio"><input type="radio" formControlName="tienePc" [value]="true"> Sí</label>
+          <label class="radio"><input type="radio" formControlName="tienePc" [value]="false"> No</label>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>¿Su casilla de correo continuará operando? <span class="opcional">(opcional)</span></label>
+        <div class="radios">
+          <label class="radio"><input type="radio" formControlName="casillaOpera" [value]="true"> Sí</label>
+          <label class="radio"><input type="radio" formControlName="casillaOpera" [value]="false"> No</label>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Justificación</label>
+        <textarea formControlName="justificacion" rows="4" [attr.maxlength]="maxJustificacion"
+                  (input)="onJustificacionInput($event)"
+                  placeholder="Motivo del bloqueo. Solo letras, espacios, comas y puntos."></textarea>
+        <span class="contador">{{ largoJustificacion() }}/{{ maxJustificacion }}</span>
+        @if (form.controls.justificacion.touched && form.controls.justificacion.invalid) {
+          <span class="error-campo">La justificación es obligatoria y solo admite letras, espacios, comas y puntos.</span>
+        }
+      </div>
+    </section>
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario activo" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}</button>
+    </div>
+  </form>
+</div>
