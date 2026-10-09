@@ -1,0 +1,72 @@
+.encabezado { padding: 20px 28px; background: #fff; border-bottom: 1px solid #e8eaee; }
+.migas { margin: 0 0 4px; font-size: 12px; color: #9ca3af; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; }
+.cuerpo { padding: 24px 16px; max-width: 720px; width: 100%; margin: 0 auto; box-sizing: border-box; }
+.tarjeta { background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+h4 { margin: 0 0 16px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.campo label { font-size: 13px; color: #374151; }
+.opcional { color: #9ca3af; font-weight: 400; }
+.campo input, .campo select { border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa; }
+.campo input:focus, .campo select:focus { outline: none; border-color: var(--maf-rojo); background: #fff; }
+.toggle { flex-direction: row; align-items: center; justify-content: space-between; }
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch span { position: absolute; inset: 0; background: #d1d5db; border-radius: 999px; transition: .15s; }
+.switch span::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .15s; }
+.switch input:checked + span { background: var(--maf-rojo); }
+.switch input:checked + span::before { transform: translateX(18px); }
+.hint { font-size: 13px; color: #9ca3af; margin: 0 0 8px; }
+.hint.ok { color: #15803d; }
+.hint.alerta-texto { color: var(--maf-rojo); }
+.subtitulo-seccion { font-size: 13px; font-weight: 600; color: #374151; margin: 12px 0 8px; }
+.checks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.checks.columna { grid-template-columns: 1fr; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 9px 12px; background: #fafafa; }
+.alerta { background: #fde8ec; color: #c81e3a; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+.acciones { display: flex; gap: 12px; }
+.btn-primario { background: var(--maf-rojo); color: #fff; border: none; border-radius: 6px; padding: 11px 20px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn-primario:disabled { opacity: .6; }
+.btn-secundario { background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 11px 20px; font-size: 14px; color: #9ca3af; cursor: not-allowed; }
+.nota-footer { font-size: 12px; color: #9ca3af; margin-top: 10px; }
+.campo input.ng-invalid.ng-touched,
+.campo select.ng-invalid.ng-touched {
+  border-color: var(--maf-rojo);
+}
+@media (max-width: 640px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .checks { grid-template-columns: repeat(2, 1fr) !important; }
+}
+// --- Propio del formulario de bloqueo ---
+.campo textarea { border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa; resize: vertical; }
+.campo textarea:focus { outline: none; border-color: var(--maf-rojo); background: #fff; }
+.campo textarea.ng-invalid.ng-touched { border-color: var(--maf-rojo); }
+.campo input:disabled { color: #374151; cursor: default; }
+.contador { align-self: flex-end; font-size: 12px; color: #9ca3af; }
+.error-campo { font-size: 12px; color: var(--maf-rojo); }
+.radios { display: flex; gap: 12px; }
+.radio { display: flex; align-items: center; gap: 6px; font-size: 13px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px 14px; background: #fafafa; cursor: pointer; }
+.btn-secundario.activo { color: #374151; cursor: pointer; }
+
+// Buscador de trabajador (mismo estilo que shared/buscador-catalogo)
+.buscador { position: relative; }
+.buscador input { width: 100%; box-sizing: border-box; }
+.lista {
+  position: absolute; z-index: 20; left: 0; right: 0; margin: 4px 0 0; padding: 4px 0; list-style: none;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08); max-height: 260px; overflow-y: auto;
+}
+.lista li { padding: 8px 12px; font-size: 13px; color: #374151; cursor: pointer; }
+.lista li.resaltada, .lista li:hover { background: #fde8ec; }
+.lista li.vacio { color: #9ca3af; cursor: default; }
+.lista .detalle { display: block; font-size: 12px; color: #9ca3af; }
+
+// --- Propio del formulario de modificación ---
+.modificado { margin-left: 6px; font-size: 11px; font-weight: 500; color: #b45309; background: #fef3c7; border-radius: 999px; padding: 1px 8px; text-transform: none; letter-spacing: 0; }
+.actuales { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.acceso { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px 10px; background: #fafafa; }
+.acceso button { border: none; background: none; color: var(--maf-rojo); font-size: 12px; cursor: pointer; padding: 0; }
+.acceso.quitado { background: #fde8ec; border-color: #f5c2cc; }
+.acceso.quitado .nombre { text-decoration: line-through; color: #9ca3af; }
+.acceso.quitado button { color: #374151; }

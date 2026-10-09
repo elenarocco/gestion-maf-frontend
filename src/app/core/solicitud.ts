@@ -18,6 +18,36 @@ export interface SolicitudBloqueoResultado {
   fechaVencimientoSLA: string;
 }
 
+export interface SolicitudModificacionCreate {
+  trabajadorId: number;
+  creadoPorId: number;
+  primerNombre: string;
+  segundoNombre: string | null;
+  primerApellido: string;
+  segundoApellido: string | null;
+  fechaNacimiento: string;
+  sexo: string;
+  correo: string;
+  direccionCorporativaId: number;
+  areaId: number;
+  cargoId: number;
+  lugarTrabajoId: number;
+  fechaIncorporacion: string;
+  direccionDomicilio: string | null;
+  jefeDirecto: string | null;
+  homologarAccesosDesde: string | null;
+  tieneTelefonoCorporativo: boolean;
+  solicitaTelefono: boolean;
+  justificacion: string;
+  catalogoIdsAgregar: number[];
+  catalogoIdsQuitar: number[];
+}
+
+export interface SolicitudModificacionResultado {
+  solicitudId: number;
+  fechaVencimientoSLA: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SolicitudService {
   private apiUrl = 'http://localhost:5153/api/Solicitud';
@@ -28,6 +58,9 @@ export class SolicitudService {
   }
   crearBloqueo(dto: SolicitudBloqueoCreate): Observable<SolicitudBloqueoResultado> {
     return this.http.post<SolicitudBloqueoResultado>(`${this.apiUrl}/bloqueo`, dto);
+  }
+  crearModificacion(dto: SolicitudModificacionCreate): Observable<SolicitudModificacionResultado> {
+    return this.http.post<SolicitudModificacionResultado>(`${this.apiUrl}/modificacion`, dto);
   }
   getAll(filtros: { tipo?: string, estado?: string, urgente?: boolean } = {}, pagina = 1): Observable<any> {
   const params = new URLSearchParams({ pagina: String(pagina), tamanoPagina: '20' });

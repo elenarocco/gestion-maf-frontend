@@ -75,6 +75,12 @@ export interface TrabajadorDetalle {
   activo: boolean;
 }
 
+export interface TrabajadorAcceso {
+  catalogoId: number;
+  nombre: string;
+  tipo: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TrabajadorService {
   private apiUrl = 'http://localhost:5153/api/Trabajador';
@@ -91,6 +97,10 @@ export class TrabajadorService {
 
   getById(id: number): Observable<TrabajadorDetalle> {
     return this.http.get<TrabajadorDetalle>(`${this.apiUrl}/${id}`);
+  }
+
+  getAccesos(id: number): Observable<TrabajadorAcceso[]> {
+    return this.http.get<TrabajadorAcceso[]>(`${this.apiUrl}/${id}/accesos`);
   }
 
   getFicha(id: number): Observable<TrabajadorFicha> {
