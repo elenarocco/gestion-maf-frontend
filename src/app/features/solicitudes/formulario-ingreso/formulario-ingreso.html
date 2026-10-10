@@ -88,6 +88,13 @@
             @for (l of lugares; track l.id) { <option [value]="l.id">{{ l.nombre }}</option> }
           </select>
         </div>
+        <div class="campo">
+          <label>Fecha de incorporación</label>
+          <input type="date" formControlName="fechaIncorporacion" [min]="fechaMinIncorporacion" max="9999-12-31">
+          @if (form.get('fechaIncorporacion')?.hasError('fechaPasada') && form.get('fechaIncorporacion')?.touched) {
+            <span class="error-campo">La fecha de incorporación no puede ser anterior a hoy.</span>
+          }
+        </div>
       </div>
     </section>
 
