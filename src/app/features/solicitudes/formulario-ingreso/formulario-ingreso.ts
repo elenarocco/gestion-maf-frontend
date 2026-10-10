@@ -208,7 +208,8 @@ export class FormularioIngreso implements OnInit {
   enviar(): void {
   if (this.form.invalid) {
     this.errores = this.rutMensaje ? [this.rutMensaje] : ['Completa todos los campos obligatorios antes de enviar.'];
-    
+    this.form.markAllAsTouched(); // pinta en rojo los campos que faltan
+
     return;
     
   }
