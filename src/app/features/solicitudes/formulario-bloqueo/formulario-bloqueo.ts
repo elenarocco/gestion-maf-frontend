@@ -180,7 +180,8 @@ export class FormularioBloqueo {
   }
 
   puedeEnviar(): boolean {
-    return !!this.trabajador() && this.form.valid && !this.enviando();
+    // No exige form.valid: así el clic llega a enviar(), que marca los campos y muestra los mensajes de error.
+    return !!this.trabajador() && !this.enviando();
   }
 
   // ---------- Formato de solo lectura ----------
