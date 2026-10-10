@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,6 +19,17 @@ function edadValida(control: AbstractControl): ValidationErrors | null {
   if (aunNoCumple) edad--;
   if (edad < 18 || edad > 75) return { edadInvalida: true };
   return null;
+}
+
+// Fecha de hoy en hora local como 'aaaa-mm-dd' (toISOString usaría UTC y puede correr el día)
+function hoyLocal(): string {
+  const h = new Date();
+  return `${h.getFullYear()}-${String(h.getMonth() + 1).padStart(2, '0')}-${String(h.getDate()).padStart(2, '0')}`;
+}
+
+function fechaNoPasada(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  return control.value < hoyLocal() ? { fechaPasada: true } : null;
 }
 
 @Component({
@@ -49,6 +61,8 @@ export class FormularioIngreso implements OnInit {
 
   fechaMaxNacimiento = '';
   fechaMinNacimiento = '';
+  fechaMinIncorporacion = hoyLocal();
+  private snackBar = inject(MatSnackBar);
 
 
   constructor(
@@ -73,7 +87,7 @@ export class FormularioIngreso implements OnInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       fechaNacimiento: ['', [Validators.required, edadValida]],
-      fechaIncorporacion: ['', Validators.required],
+      fechaIncorporacion: ['', [Validators.required, fechaNoPasada]],
       esCuentaGenerica: [false],
       correo: ['', Validators.required],
       direccionCorporativaId: ['', Validators.required],
@@ -214,7 +228,11 @@ export class FormularioIngreso implements OnInit {
     };
 
     this.solicitudService.crearIngreso(dto).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
+      next: () => {
+        this.enviando = false;
+        this.snackBar.open('Solicitud de ingreso creada con éxito', 'Cerrar', { duration: 4000 });
+        this.router.navigate(['/dashboard']);
+      },
       error: (err) => {
         this.enviando = false;
         this.errores = err.error?.errores ?? ['Ocurrió un error al crear la solicitud.'];
