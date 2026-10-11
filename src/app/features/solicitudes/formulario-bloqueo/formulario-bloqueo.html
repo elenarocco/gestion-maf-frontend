@@ -6,6 +6,10 @@
 <div class="cuerpo">
   <form [formGroup]="form" (ngSubmit)="enviar()">
 
+    @if (solicitudOrigenId) {
+      <div class="aviso-correccion">Corrigiendo la solicitud N° {{ solicitudOrigenId }}, que fue rechazada. La nueva solicitud quedará enlazada a ella.</div>
+    }
+
     @if (errores().length) {
       <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
     }

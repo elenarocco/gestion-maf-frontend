@@ -32,6 +32,15 @@
       }
     </section>
 
+    @if (cambios().length) {
+      <section class="tarjeta">
+        <h4>Cambios solicitados</h4>
+        <ul class="cambios">
+          @for (c of cambios(); track $index) { <li>{{ c }}</li> }
+        </ul>
+      </section>
+    }
+
     @if (camposDetalle().length) {
       <section class="tarjeta">
         <h4>Datos de la solicitud</h4>

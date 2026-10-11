@@ -6,6 +6,10 @@
 <div class="cuerpo">
   <form [formGroup]="form" (ngSubmit)="enviar()">
 
+    @if (solicitudOrigenId) {
+      <div class="aviso-correccion">Corrigiendo el Ingreso N° {{ solicitudOrigenId }}, que fue rechazado. Se precargaron sus datos; revisa, corrige lo necesario y elige la fecha de incorporación.</div>
+    }
+
     @if (errores.length) {
       <div class="alerta">@for (e of errores; track e) { <div>{{ e }}</div> }</div>
     }

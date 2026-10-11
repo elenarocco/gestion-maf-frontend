@@ -29,7 +29,11 @@
             <td>{{ s.area }}</td>
             <td><span class="chip">{{ s.tipo }}</span></td>
             <td>{{ s.fecha }}</td>
-            <td><span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span></td>
+            <td>
+              <span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span>
+              @if (s.motivoRechazo) { <div class="motivo-rechazo" [title]="s.motivoRechazo">{{ s.motivoRechazo }}</div> }
+              @if (s.corregir; as c) { <a class="corregir" [routerLink]="c.ruta" [queryParams]="c.queryParams">Corregir →</a> }
+            </td>
           </tr>
         }
       </tbody>

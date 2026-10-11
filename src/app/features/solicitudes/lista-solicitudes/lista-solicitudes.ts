@@ -1,15 +1,26 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { SolicitudService } from '../../../core/solicitud';
 
 interface Fila {
   nombre: string; iniciales: string; area: string; tipo: string;
   fecha: string; estadoTexto: string; estadoClase: string;
+  motivoRechazo: string | null;
+  // "Corregir" abre el formulario del mismo tipo enlazado a la rechazada; solo si el backend lo permite.
+  corregir: { ruta: string, queryParams: { origen: number, trabajador: number | null } } | null;
 }
+
+// Formulario que corrige cada tipo de solicitud.
+const RUTA_CORREGIR: Record<string, string> = {
+  'Ingreso': '/solicitudes/nueva/ingreso',
+  'Bloqueo': '/solicitudes/bloqueo',
+  'Modificación': '/solicitudes/modificacion'
+};
 
 @Component({
   selector: 'app-lista-solicitudes',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './lista-solicitudes.html',
   styleUrl: './lista-solicitudes.scss'
 })
@@ -64,7 +75,11 @@ export class ListaSolicitudes implements OnInit {
             area: s.areaNombre,
             tipo: s.tipo,
             fecha: new Date(s.fechaCreacion).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }).replace('.', ''),
-            estadoTexto, estadoClase
+            estadoTexto, estadoClase,
+            motivoRechazo: s.motivoRechazo ?? null,
+            corregir: s.puedeCorregir && RUTA_CORREGIR[s.tipo]
+              ? { ruta: RUTA_CORREGIR[s.tipo], queryParams: { origen: s.id, trabajador: s.trabajadorId } }
+              : null
           };
         });
         this.cargando = false;

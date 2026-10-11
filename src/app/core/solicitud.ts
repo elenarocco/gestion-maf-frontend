@@ -10,6 +10,7 @@ export interface SolicitudBloqueoCreate {
   justificacion: string;
   tienePc: boolean | null;
   casillaOpera: boolean | null;
+  solicitudOrigenId: number | null; // si corrige una solicitud rechazada
 }
 
 export interface SolicitudBloqueoResultado {
@@ -39,6 +40,7 @@ export interface SolicitudModificacionCreate {
   justificacion: string;
   catalogoIdsAgregar: number[];
   catalogoIdsQuitar: number[];
+  solicitudOrigenId: number | null; // si corrige una solicitud rechazada
 }
 
 export interface SolicitudModificacionResultado {

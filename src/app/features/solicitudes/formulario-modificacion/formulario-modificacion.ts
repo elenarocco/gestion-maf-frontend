@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, switchMap, of, forkJoin, map, catchError } from 'rxjs';
@@ -55,6 +55,10 @@ export class FormularioModificacion implements OnInit {
   private trabajadorService = inject(TrabajadorService);
   private solicitudService = inject(SolicitudService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  // Si se llega desde "Corregir" en una solicitud rechazada, la nueva queda enlazada a esa.
+  solicitudOrigenId = Number(this.route.snapshot.queryParamMap.get('origen')) || null;
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
@@ -166,6 +170,15 @@ export class FormularioModificacion implements OnInit {
     this.form.controls.direccionCorporativaId.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(id => this.cargarAreas(id));
+
+    this.precargarTrabajadorDeCorreccion();
+  }
+
+  private precargarTrabajadorDeCorreccion(): void {
+    const id = Number(this.route.snapshot.queryParamMap.get('trabajador'));
+    if (!this.solicitudOrigenId || !id) return;
+    this.trabajadorService.getById(id).subscribe(t =>
+      this.seleccionar({ id: t.id, rut: t.rut, primerNombre: t.primerNombre, primerApellido: t.primerApellido } as Trabajador));
   }
 
   private cargarAreas(direccionId: unknown, areaIdAMantener: number | null = null): void {
@@ -398,7 +411,8 @@ export class FormularioModificacion implements OnInit {
       solicitaTelefono: !!v.solicitaTelefono,
       justificacion: v.justificacion ?? '',
       catalogoIdsAgregar: [...this.sistemasAgregar, ...this.carpetasAgregar],
-      catalogoIdsQuitar: this.quitar()
+      catalogoIdsQuitar: this.quitar(),
+      solicitudOrigenId: this.solicitudOrigenId
     };
 
     this.enviando.set(true);

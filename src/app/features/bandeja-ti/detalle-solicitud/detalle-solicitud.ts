@@ -68,11 +68,18 @@ export class DetalleSolicitud {
       .map(a => ({ accion: a, texto: textos[a], primario: a !== 'rechazar' && a !== 'rechazarFicha' }));
   });
 
+  // Modificación: "Campo: antes → después", una línea por dato (lo calcula el backend).
+  cambios = computed(() => {
+    const c = this.solicitud()?.detalle?.['cambios'];
+    return Array.isArray(c) ? c.map(String) : [];
+  });
+
   // Campos propios del tipo (Ingreso, Modificación, Bloqueo), tal como los envía el backend.
   camposDetalle = computed(() => {
     const d = this.solicitud()?.detalle;
     if (!d) return [];
     return Object.entries(d)
+      .filter(([k]) => k !== 'cambios')
       .filter(([, v]) => v !== null && v !== undefined && !(typeof v === 'object' && !Array.isArray(v)))
       .map(([k, v]) => ({ etiqueta: this.etiqueta(k), valor: this.valor(v), largo: typeof v === 'string' && v.length > 60 || Array.isArray(v) }));
   });
