@@ -29,3 +29,9 @@ td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #
 .badge.urgente, .badge.rechazada { background: #fde8ec; color: #c81e3a; }
 .badge.proceso { background: #e0edff; color: #1d4ed8; }
 .badge.completada { background: #e2f7e8; color: #15803d; }
+
+/* Paginación (igual que en la lista de trabajadores) */
+.paginacion { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 14px 0 6px; border-top: 1px solid #f1f2f4; font-size: 13px; color: #6b7280; }
+.controles { display: flex; align-items: center; gap: 12px; }
+.controles button { background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+.controles button:disabled { opacity: .45; cursor: not-allowed; }

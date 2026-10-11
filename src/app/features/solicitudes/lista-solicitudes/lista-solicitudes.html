@@ -34,5 +34,14 @@
         }
       </tbody>
     </table>
+
+    <footer class="paginacion">
+      <span>{{ desde }}–{{ hasta }} de {{ total }}</span>
+      <div class="controles">
+        <button (click)="irA(pagina - 1)" [disabled]="pagina <= 1">← Anterior</button>
+        <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+        <button (click)="irA(pagina + 1)" [disabled]="pagina >= totalPaginas">Siguiente →</button>
+      </div>
+    </footer>
   }
 </section>
