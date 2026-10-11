@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RolSimuladoService } from '../../../core/rol-simulado';
 
 interface Resumen {
+  alcance: string; // "Empresa completa" o el área del usuario (Jefatura)
   dotacionActual: number;
   ingresosDelMes: number;
   bajasDelMes: number;
@@ -56,10 +57,12 @@ export class Panel implements OnInit {
   ngOnInit(): void {
     const hoy = new Date();
     const mes = hoy.toLocaleDateString('es-CL', { month: 'long' });
-    this.subtitulo = `${mes.charAt(0).toUpperCase() + mes.slice(1)} ${hoy.getFullYear()} · Empresa completa`;
+    const periodo = `${mes.charAt(0).toUpperCase() + mes.slice(1)} ${hoy.getFullYear()}`;
+    this.subtitulo = periodo;
 
     this.http.get<Resumen>(`${this.api}/Dashboard/resumen`).subscribe(r => {
       this.resumen = r;
+      this.subtitulo = `${periodo} · ${r.alcance}`;
       const maxTipo = Math.max(1, ...r.porTipo.map(t => t.cantidad));
       this.tiposResumen = Object.keys(this.etiquetasTipo).map(clave => {
         const cantidad = r.porTipo.find(t => t.tipo === clave)?.cantidad ?? 0;
