@@ -10,6 +10,9 @@ h4 { margin: 0 0 16px; font-size: 12px; letter-spacing: .06em; text-transform: u
 .opcional { color: #9ca3af; font-weight: 400; }
 .campo input, .campo select { border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa; }
 .campo input:focus, .campo select:focus { outline: none; border-color: var(--maf-rojo); background: #fff; }
+/* El correo va fuera de .campo: mismo estilo que los demás campos y ancho completo para que no se corte */
+.input-correo { width: 100%; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa; }
+.input-correo:focus { outline: none; border-color: var(--maf-rojo); background: #fff; }
 .toggle { flex-direction: row; align-items: center; justify-content: space-between; }
 .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
 .switch input { opacity: 0; width: 0; height: 0; }
