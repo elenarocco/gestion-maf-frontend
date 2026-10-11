@@ -11,6 +11,7 @@ export interface SolicitudBloqueoCreate {
   justificacion: string;
   tienePc: boolean | null;
   casillaOpera: boolean | null;
+  solicitudOrigenId: number | null; // si corrige una solicitud rechazada
 }
 
 export interface SolicitudBloqueoResultado {
@@ -41,6 +42,7 @@ export interface SolicitudModificacionCreate {
   justificacion: string;
   catalogoIdsAgregar: number[];
   catalogoIdsQuitar: number[];
+  solicitudOrigenId: number | null; // si corrige una solicitud rechazada
 }
 
 export interface SolicitudModificacionResultado {
@@ -64,6 +66,8 @@ export interface PasoHistorial {
 }
 
 export type AccionSolicitud = 'aprobar' | 'iniciar' | 'rechazar' | 'completar';
+// 'corregir' no cambia el estado: abre el formulario para crear una solicitud nueva enlazada.
+export type AccionDisponible = AccionSolicitud | 'corregir';
 
 export interface SolicitudDetalle {
   id: number;
@@ -74,6 +78,8 @@ export interface SolicitudDetalle {
   tipo: string;
   estado: string;
   motivoRechazo: string | null;
+  solicitudOrigenId: number | null; // esta solicitud corrige a esa
+  corregidaPorId: number | null;    // esa solicitud corrige a esta
   fechaCreacion: string;
   fechaVencimientoSLA: string;
   bloqueo: { esTemporal: boolean; fechaInicio: string; fechaFin: string | null; justificacion: string;
@@ -81,7 +87,7 @@ export interface SolicitudDetalle {
   modificacion: { justificacion: string } | null;
   accesosSolicitados: SolicitudAcceso[];
   historial: PasoHistorial[];
-  accionesDisponibles: AccionSolicitud[];
+  accionesDisponibles: AccionDisponible[];
 }
 
 @Injectable({ providedIn: 'root' })

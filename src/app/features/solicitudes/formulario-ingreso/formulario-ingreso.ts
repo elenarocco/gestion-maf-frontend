@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CatalogoService, Catalogo } from '../../../core/catalogo';
 import { TrabajadorService } from '../../../core/trabajador';
 import { SolicitudService } from '../../../core/solicitud';
@@ -63,6 +63,10 @@ export class FormularioIngreso implements OnInit {
   fechaMinNacimiento = '';
   fechaMinIncorporacion = hoyLocal();
   private snackBar = inject(MatSnackBar);
+  private route = inject(ActivatedRoute);
+
+  // Si se llega desde "Corregir" en un Ingreso rechazado, la nueva solicitud queda enlazada a ese.
+  solicitudOrigenId = Number(this.route.snapshot.queryParamMap.get('origen')) || null;
 
   // TEMPORAL: hasta tener login real, se usa tu propio UsuarioSistema. Confirma que tu Id sea este.
   private creadoPorId = 1;
@@ -113,9 +117,32 @@ export class FormularioIngreso implements OnInit {
 
     // Las áreas se cargan al elegir la dirección corporativa
     this.form.get('direccionCorporativaId')!.valueChanges.subscribe(id => this.cargarAreas(id));
+
+    this.precargarDatosDeCorreccion();
   }
 
-  private cargarAreas(direccionId: unknown): void {
+  // Precarga los datos del trabajador del Ingreso rechazado; la fecha de incorporación se vuelve a elegir.
+  private precargarDatosDeCorreccion(): void {
+    const id = Number(this.route.snapshot.queryParamMap.get('trabajador'));
+    if (!this.solicitudOrigenId || !id) return;
+
+    this.trabajadorService.getById(id).subscribe(t => {
+      this.form.patchValue({
+        rut: t.rut, sexo: t.sexo,
+        primerNombre: t.primerNombre, segundoNombre: t.segundoNombre ?? '',
+        primerApellido: t.primerApellido, segundoApellido: t.segundoApellido ?? '',
+        fechaNacimiento: t.fechaNacimiento, cargoId: t.cargoId, lugarTrabajoId: t.lugarTrabajoId,
+        direccionDomicilio: t.direccionDomicilio ?? '', jefeDirecto: t.jefeDirecto ?? '',
+        homologarAccesosDesde: t.homologarAccesosDesde ?? '',
+        tieneTelefonoCorporativo: t.tieneTelefonoCorporativo, solicitaTelefono: t.solicitaTelefono
+      });
+      this.form.get('direccionCorporativaId')!.setValue(t.direccionCorporativaId, { emitEvent: false });
+      this.cargarAreas(t.direccionCorporativaId, t.areaId);
+      this.buscarCorreoSugerido();
+    });
+  }
+
+  private cargarAreas(direccionId: unknown, areaIdAMantener: number | null = null): void {
     this.form.get('areaId')!.setValue('');
     this.areas = [];
     const id = Number(direccionId);
@@ -123,6 +150,9 @@ export class FormularioIngreso implements OnInit {
 
     this.catalogoService.getPorTipo('Area', id).subscribe(r => {
       this.areas = r.datos;
+      if (areaIdAMantener && this.areas.some(a => a.id === areaIdAMantener)) {
+        this.form.get('areaId')!.setValue(areaIdAMantener);
+      }
       this.cdr.detectChanges();
     });
   }
@@ -228,7 +258,8 @@ export class FormularioIngreso implements OnInit {
       jefeDirecto: v.jefeDirecto || null,
       homologarAccesosDesde: v.homologarAccesosDesde || null,
       creadoPorId: this.creadoPorId,
-      catalogoIds: [...this.sistemasSel, ...this.carpetasSel]
+      catalogoIds: [...this.sistemasSel, ...this.carpetasSel],
+      solicitudOrigenId: this.solicitudOrigenId
     };
 
     this.solicitudService.crearIngreso(dto).subscribe({

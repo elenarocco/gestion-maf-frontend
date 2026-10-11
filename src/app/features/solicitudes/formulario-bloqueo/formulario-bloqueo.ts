@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, switchMap, of, forkJoin, map, catchError } from 'rxjs';
@@ -33,6 +33,10 @@ export class FormularioBloqueo {
   private trabajadorService = inject(TrabajadorService);
   private solicitudService = inject(SolicitudService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  // Si se llega desde "Corregir" en una solicitud rechazada, la nueva queda enlazada a esa.
+  solicitudOrigenId = Number(this.route.snapshot.queryParamMap.get('origen')) || null;
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
@@ -95,6 +99,15 @@ export class FormularioBloqueo {
     this.form.controls.esTemporal.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(esTemporal => this.actualizarFechas(!!esTemporal));
+
+    this.precargarTrabajadorDeCorreccion();
+  }
+
+  private precargarTrabajadorDeCorreccion(): void {
+    const id = Number(this.route.snapshot.queryParamMap.get('trabajador'));
+    if (!this.solicitudOrigenId || !id) return;
+    this.trabajadorService.getById(id).subscribe(t =>
+      this.seleccionar({ id: t.id, rut: t.rut, primerNombre: t.primerNombre, primerApellido: t.primerApellido } as Trabajador));
   }
 
   // ---------- Buscador de trabajador ----------
@@ -224,7 +237,8 @@ export class FormularioBloqueo {
       hasta: esTemporal && v.hasta ? new Date(v.hasta).toISOString() : null,
       justificacion: v.justificacion ?? '',
       tienePc: v.tienePc ?? null,
-      casillaOpera: v.casillaOpera ?? null
+      casillaOpera: v.casillaOpera ?? null,
+      solicitudOrigenId: this.solicitudOrigenId
     };
 
     this.enviando.set(true);

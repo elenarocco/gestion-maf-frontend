@@ -20,6 +20,10 @@ h4 { margin: 0 0 14px; font-size: 12px; letter-spacing: .06em; text-transform: u
 .alerta-sla { background: #fde8ec; color: #c81e3a; border-radius: 10px; padding: 3px 10px; font-size: 12px; font-weight: 600; }
 
 .rechazo { background: #fff7f8; border-color: #f6c6cf; font-size: 13px; color: #7f1d2d; }
+.enlace { font-size: 13px; color: #374151; }
+.enlace p { margin: 0; }
+.enlace p + p { margin-top: 6px; }
+.enlace a { color: var(--maf-rojo); font-weight: 500; }
 
 .acciones label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
 .acciones textarea { width: 100%; box-sizing: border-box; border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa; resize: vertical; }
