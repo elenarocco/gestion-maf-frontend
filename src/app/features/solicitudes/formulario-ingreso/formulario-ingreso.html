@@ -56,7 +56,10 @@
       @if (buscandoCorreo) { <p class="hint">Buscando un correo disponible...</p> }
       @else if (esReincorporacion) { <p class="hint ok">Esta persona trabajó antes en MAF — se reutiliza su correo anterior: {{ correoSugerido }}</p> }
       @else if (correoSugerido) { <p class="hint ok">Sugerido automáticamente: {{ correoSugerido }}</p> }
-      @else if (!correoDisponible) { <p class="hint alerta-texto">Los correos automáticos ya están en uso. Escríbelo a mano: debe empezar con la inicial del nombre y el apellido paterno, y seguir solo con letras (ej: jperezgo@mafchile.com). Si falta el segundo apellido, agrégalo para generar otra opción.</p> }
+      @else if (!correoDisponible) {
+        <!-- Solo mientras el correo escrito a mano no cumpla la regla -->
+        @if (!correoManualCumple) { <p class="hint alerta-texto">Correo en uso. Escribe uno que empiece con "{{ prefijoCorreo }}" y solo tenga letras.</p> }
+      }
       @else { <p class="hint">Ingresa nombre y apellido para generar el correo sugerido.</p> }
       <input class="input-correo" formControlName="correo" (input)="onCorreoInput($event)" placeholder="Inicial del nombre + apellido paterno + letras, ej: jperezgo@mafchile.com">
     </section>

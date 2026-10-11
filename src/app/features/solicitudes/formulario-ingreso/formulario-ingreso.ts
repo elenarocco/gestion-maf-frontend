@@ -225,6 +225,23 @@ export class FormularioIngreso implements OnInit {
       error: () => { this.buscandoCorreo = false; this.cdr.detectChanges(); }
     });
   }
+  // Misma regla que valida el backend: inicial del nombre + apellido paterno, sin tildes ni espacios.
+  get prefijoCorreo(): string {
+    const sinTildes = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const nombre = sinTildes(this.form.get('primerNombre')!.value ?? '').trim();
+    const apellido = sinTildes(this.form.get('primerApellido')!.value ?? '').replace(/\s/g, '');
+    return nombre && apellido ? nombre[0] + apellido : '';
+  }
+
+  // Si el correo escrito a mano ya cumple el formato (que no esté en uso lo confirma el backend al enviar).
+  get correoManualCumple(): boolean {
+    const correo = (this.form.get('correo')!.value ?? '').trim().toLowerCase();
+    const dominio = '@mafchile.com';
+    if (!correo.endsWith(dominio)) return false;
+    const local = correo.slice(0, -dominio.length);
+    return /^[a-z]+$/.test(local) && local.length <= 30 && !!this.prefijoCorreo && local.startsWith(this.prefijoCorreo);
+  }
+
     onCorreoInput(event: Event): void {
   const input = event.target as HTMLInputElement;
   const partes = input.value.split('@');
