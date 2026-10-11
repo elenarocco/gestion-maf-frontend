@@ -56,9 +56,9 @@
       @if (buscandoCorreo) { <p class="hint">Buscando un correo disponible...</p> }
       @else if (esReincorporacion) { <p class="hint ok">Esta persona trabajó antes en MAF — se reutiliza su correo anterior: {{ correoSugerido }}</p> }
       @else if (correoSugerido) { <p class="hint ok">Sugerido automáticamente: {{ correoSugerido }}</p> }
-      @else if (!correoDisponible) { <p class="hint alerta-texto">Ese correo ya existe. Ingresa tu Segundo apellido para generar otro correo</p> }
+      @else if (!correoDisponible) { <p class="hint alerta-texto">Los correos automáticos ya están en uso. Escríbelo a mano: debe empezar con la inicial del nombre y el apellido paterno, y seguir solo con letras (ej: jperezgo@mafchile.com). Si falta el segundo apellido, agrégalo para generar otra opción.</p> }
       @else { <p class="hint">Ingresa nombre y apellido para generar el correo sugerido.</p> }
-      <input class="input-correo" formControlName="correo" (input)="onCorreoInput($event)" placeholder="Ej: jperez@mafchile.com (inicial del nombre + apellido paterno, solo letras)">
+      <input class="input-correo" formControlName="correo" (input)="onCorreoInput($event)" placeholder="Inicial del nombre + apellido paterno + letras, ej: jperezgo@mafchile.com">
     </section>
 
     <section class="tarjeta">
