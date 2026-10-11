@@ -25,6 +25,17 @@
       <section class="tarjeta rechazo"><strong>Motivo del rechazo:</strong> {{ s.motivoRechazo }}</section>
     }
 
+    @if (s.solicitudOrigenId || s.corregidaPorId) {
+      <section class="tarjeta enlace">
+        @if (s.solicitudOrigenId) {
+          <p>Esta solicitud corrige a la <a [routerLink]="['/solicitudes', s.solicitudOrigenId]">N° {{ s.solicitudOrigenId }}</a>, que fue rechazada.</p>
+        }
+        @if (s.corregidaPorId) {
+          <p>Fue corregida en la <a [routerLink]="['/solicitudes', s.corregidaPorId]">N° {{ s.corregidaPorId }}</a>.</p>
+        }
+      </section>
+    }
+
     @if (s.accionesDisponibles.length) {
       <section class="tarjeta acciones">
         <h4>Acciones</h4>
