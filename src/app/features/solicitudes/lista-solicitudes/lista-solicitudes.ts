@@ -1,15 +1,17 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { SolicitudService } from '../../../core/solicitud';
 
 interface Fila {
+  id: number;
   nombre: string; iniciales: string; area: string; tipo: string;
   fecha: string; estadoTexto: string; estadoClase: string;
 }
 
 @Component({
   selector: 'app-lista-solicitudes',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './lista-solicitudes.html',
   styleUrl: './lista-solicitudes.scss'
 })
@@ -47,6 +49,7 @@ export class ListaSolicitudes implements OnInit {
         this.filas = r.datos.map((s: any) => {
           const [estadoTexto, estadoClase] = this.estado(s);
           return {
+            id: s.id,
             nombre: s.trabajadorNombre,
             iniciales: s.trabajadorNombre.split(' ').filter(Boolean).slice(0, 2).map((p: string) => p[0]).join('').toUpperCase(),
             area: s.areaNombre,
