@@ -24,7 +24,7 @@
       <thead><tr><th>Nombre</th><th>Área</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
       <tbody>
         @for (s of filas; track $index) {
-          <tr>
+          <tr class="clickeable" [routerLink]="['/solicitudes', s.id]">
             <td><div class="persona"><span class="avatar">{{ s.iniciales }}</span>{{ s.nombre }}</div></td>
             <td>{{ s.area }}</td>
             <td><span class="chip">{{ s.tipo }}</span></td>

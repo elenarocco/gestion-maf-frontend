@@ -48,6 +48,42 @@ export interface SolicitudModificacionResultado {
   fechaVencimientoSLA: string;
 }
 
+export interface SolicitudAcceso {
+  catalogoId: number;
+  nombre: string;
+  tipo: string;
+  accion: 'Agregar' | 'Quitar';
+}
+
+export interface PasoHistorial {
+  id: number;
+  accion: string;
+  realizadoPorCorreo: string;
+  fecha: string;
+  comentario: string | null;
+}
+
+export type AccionSolicitud = 'aprobar' | 'iniciar' | 'rechazar' | 'completar';
+
+export interface SolicitudDetalle {
+  id: number;
+  trabajadorId: number;
+  trabajadorNombre: string;
+  areaNombre: string;
+  creadoPorCorreo: string;
+  tipo: string;
+  estado: string;
+  motivoRechazo: string | null;
+  fechaCreacion: string;
+  fechaVencimientoSLA: string;
+  bloqueo: { esTemporal: boolean; fechaInicio: string; fechaFin: string | null; justificacion: string;
+             tienePc: boolean | null; casillaOpera: boolean | null } | null;
+  modificacion: { justificacion: string } | null;
+  accesosSolicitados: SolicitudAcceso[];
+  historial: PasoHistorial[];
+  accionesDisponibles: AccionSolicitud[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class SolicitudService {
   private apiUrl = 'http://localhost:5153/api/Solicitud';
@@ -61,6 +97,14 @@ export class SolicitudService {
   }
   crearModificacion(dto: SolicitudModificacionCreate): Observable<SolicitudModificacionResultado> {
     return this.http.post<SolicitudModificacionResultado>(`${this.apiUrl}/modificacion`, dto);
+  }
+  getDetalle(id: number): Observable<SolicitudDetalle> {
+    return this.http.get<SolicitudDetalle>(`${this.apiUrl}/${id}`);
+  }
+  // aprobar, iniciar y completar no llevan cuerpo; rechazar exige motivo.
+  cambiarEstado(id: number, accion: AccionSolicitud, motivo?: string): Observable<{ solicitudId: number; estado: string }> {
+    return this.http.post<{ solicitudId: number; estado: string }>(
+      `${this.apiUrl}/${id}/${accion}`, accion === 'rechazar' ? { motivo } : null);
   }
   getAll(filtros: { tipo?: string, estado?: string, urgente?: boolean } = {}, pagina = 1): Observable<any> {
   const params = new URLSearchParams({ pagina: String(pagina), tamanoPagina: '20' });

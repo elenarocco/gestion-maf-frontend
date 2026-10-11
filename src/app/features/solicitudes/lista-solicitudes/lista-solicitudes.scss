@@ -29,3 +29,5 @@ td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #
 .badge.urgente, .badge.rechazada { background: #fde8ec; color: #c81e3a; }
 .badge.proceso { background: #e0edff; color: #1d4ed8; }
 .badge.completada { background: #e2f7e8; color: #15803d; }
+tr.clickeable { cursor: pointer; }
+tr.clickeable:hover td { background: #fafafa; }

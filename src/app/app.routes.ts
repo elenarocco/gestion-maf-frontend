@@ -6,6 +6,7 @@ import { FormularioIngreso } from './features/solicitudes/formulario-ingreso/for
 import { FormularioBloqueo } from './features/solicitudes/formulario-bloqueo/formulario-bloqueo';
 import { FormularioModificacion } from './features/solicitudes/formulario-modificacion/formulario-modificacion';
 import { ListaSolicitudes } from './features/solicitudes/lista-solicitudes/lista-solicitudes';
+import { DetalleSolicitud } from './features/solicitudes/detalle-solicitud/detalle-solicitud';
 import { FichaTrabajador } from './features/trabajadores/ficha-trabajador/ficha-trabajador';
 import { AdministrarCatalogos } from './features/catalogos/administrar-catalogos/administrar-catalogos';
 
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'solicitudes/bloqueo', component: FormularioBloqueo },
   { path: 'solicitudes/modificacion', component: FormularioModificacion },
   { path: 'solicitudes', component: ListaSolicitudes },
+  { path: 'solicitudes/:id', component: DetalleSolicitud },
   { path: 'trabajadores/:id', component: FichaTrabajador },
   { path: 'catalogos', component: AdministrarCatalogos },
 ];

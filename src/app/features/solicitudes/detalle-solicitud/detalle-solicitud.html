@@ -1,0 +1,104 @@
+@if (error) {
+  <div class="pagina">
+    <a class="volver" routerLink="/solicitudes">← Volver a solicitudes</a>
+    <p class="mensaje">{{ error }}</p>
+  </div>
+} @else if (s) {
+  <header class="encabezado">
+    <p class="migas"><a routerLink="/solicitudes">Solicitudes</a> / N° {{ s.id }}</p>
+  </header>
+
+  <div class="cuerpo">
+    <section class="tarjeta cabecera">
+      <div class="identidad">
+        <h1><span class="chip">{{ s.tipo }}</span> {{ s.trabajadorNombre }}</h1>
+        <p>{{ s.areaNombre }} · creada por {{ s.creadoPorCorreo }} el {{ fechaHora(s.fechaCreacion) }}</p>
+      </div>
+      <div class="estado">
+        <span class="badge {{ claseEstado }}">{{ s.estado }}</span>
+        @if (vencida) { <span class="alerta-sla">SLA vencido</span> }
+        <span class="sla">Vence: {{ fechaHora(s.fechaVencimientoSLA) }}</span>
+      </div>
+    </section>
+
+    @if (s.estado === 'Rechazada' && s.motivoRechazo) {
+      <section class="tarjeta rechazo"><strong>Motivo del rechazo:</strong> {{ s.motivoRechazo }}</section>
+    }
+
+    @if (s.accionesDisponibles.length) {
+      <section class="tarjeta acciones">
+        <h4>Acciones</h4>
+        @if (errorAccion) { <div class="alerta">{{ errorAccion }}</div> }
+        @if (rechazando) {
+          <label for="motivo">Motivo del rechazo</label>
+          <textarea id="motivo" rows="3" [maxLength]="maxMotivo" [value]="motivo"
+                    (input)="motivo = $any($event.target).value"
+                    placeholder="Explica por qué se rechaza la solicitud."></textarea>
+          <span class="contador">{{ motivo.length }}/{{ maxMotivo }}</span>
+          <div class="botones">
+            <button type="button" class="btn-secundario" (click)="cancelarRechazo()" [disabled]="enviando">Cancelar</button>
+            <button type="button" class="btn-peligro" (click)="confirmarRechazo()" [disabled]="enviando">Confirmar rechazo</button>
+          </div>
+        } @else {
+          <div class="botones">
+            @for (a of s.accionesDisponibles; track a) {
+              <button type="button" [class]="a === 'rechazar' ? 'btn-peligro' : 'btn-primario'"
+                      (click)="accion(a)" [disabled]="enviando">{{ etiqueta(a) }}</button>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <div class="dos-columnas">
+      <section class="tarjeta">
+        <h4>Detalle</h4>
+        @if (s.bloqueo; as b) {
+          <dl>
+            <dt>Tipo de bloqueo</dt><dd>{{ b.esTemporal ? 'Temporal' : 'Definitivo' }}</dd>
+            <dt>Desde</dt><dd>{{ fechaHora(b.fechaInicio) }}</dd>
+            @if (b.fechaFin) { <dt>Hasta</dt><dd>{{ fechaHora(b.fechaFin) }}</dd> }
+            <dt>¿Cuenta con PC?</dt><dd>{{ siNo(b.tienePc) }}</dd>
+            <dt>¿Casilla sigue operando?</dt><dd>{{ siNo(b.casillaOpera) }}</dd>
+            <dt>Justificación</dt><dd>{{ b.justificacion }}</dd>
+          </dl>
+        } @else if (s.modificacion; as m) {
+          <dl><dt>Justificación</dt><dd>{{ m.justificacion }}</dd></dl>
+        } @else {
+          <dl><dt>Trabajador</dt><dd><a [routerLink]="['/trabajadores', s.trabajadorId]">Ver ficha</a></dd></dl>
+        }
+      </section>
+
+      <section class="tarjeta">
+        <h4>Accesos solicitados</h4>
+        @if (agregar.length) {
+          <p class="sub-sec">Agregar</p>
+          <div class="chips">@for (a of agregar; track a.catalogoId) { <span class="chip rojo">{{ a.nombre }}</span> }</div>
+        }
+        @if (quitar.length) {
+          <p class="sub-sec">Quitar</p>
+          <div class="chips">@for (a of quitar; track a.catalogoId) { <span class="chip tachado">{{ a.nombre }}</span> }</div>
+        }
+        @if (!agregar.length && !quitar.length) { <p class="vacio">Esta solicitud no incluye accesos.</p> }
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <h4>Historial</h4>
+      @if (s.historial.length) {
+        <ol class="historial">
+          @for (h of s.historial; track h.id) {
+            <li>
+              <span class="paso">{{ h.accion }}</span>
+              <span class="por">{{ h.realizadoPorCorreo }}</span>
+              <span class="fecha">{{ fechaHora(h.fecha) }}</span>
+              @if (h.comentario) { <span class="comentario">"{{ h.comentario }}"</span> }
+            </li>
+          }
+        </ol>
+      } @else { <p class="vacio">Sin registros en el historial.</p> }
+    </section>
+  </div>
+} @else {
+  <p class="mensaje pad">Cargando...</p>
+}
