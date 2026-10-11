@@ -112,8 +112,8 @@ export class SolicitudService {
     return this.http.post<{ solicitudId: number; estado: string }>(
       `${this.apiUrl}/${id}/${accion}`, accion === 'rechazar' ? { motivo } : null);
   }
-  getAll(filtros: { tipo?: string, estado?: string, urgente?: boolean } = {}, pagina = 1): Observable<any> {
-  const params = new URLSearchParams({ pagina: String(pagina), tamanoPagina: '20' });
+  getAll(filtros: { tipo?: string, estado?: string, urgente?: boolean } = {}, pagina = 1, tamanoPagina = 20): Observable<any> {
+  const params = new URLSearchParams({ pagina: String(pagina), tamanoPagina: String(tamanoPagina) });
   if (filtros.tipo) params.set('tipo', filtros.tipo);
   if (filtros.estado) params.set('estado', filtros.estado);
   if (filtros.urgente) params.set('urgente', 'true');

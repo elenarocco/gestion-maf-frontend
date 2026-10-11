@@ -26,14 +26,23 @@ export class ListaSolicitudes implements OnInit {
   cargando = true;
   total = 0;
 
+  // Paginación (igual que en la lista de trabajadores)
+  pagina = 1;
+  private tamano = 20;
+  totalPaginas = 1;
+  desde = 0;
+  hasta = 0;
+
   constructor(private solicitudService: SolicitudService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.cargar();
   }
 
-  filtrarTipo(t: string): void { this.tipoActivo = t; this.cargar(); }
-  filtrarEstado(e: string): void { this.estadoActivo = e; this.cargar(); }
+  // Al cambiar un filtro se vuelve a la primera página.
+  filtrarTipo(t: string): void { this.tipoActivo = t; this.pagina = 1; this.cargar(); }
+  filtrarEstado(e: string): void { this.estadoActivo = e; this.pagina = 1; this.cargar(); }
+  irA(p: number): void { this.pagina = p; this.cargar(); }
 
   private cargar(): void {
     this.cargando = true;
@@ -43,9 +52,12 @@ export class ListaSolicitudes implements OnInit {
     if (this.estadoActivo === 'Urgentes') filtros.urgente = true;
     else if (this.estadoActivo !== 'Todas') filtros.estado = this.estadoActivo;
 
-    this.solicitudService.getAll(filtros).subscribe({
+    this.solicitudService.getAll(filtros, this.pagina, this.tamano).subscribe({
       next: (r) => {
         this.total = r.total;
+        this.totalPaginas = Math.max(1, Math.ceil(r.total / this.tamano));
+        this.desde = r.total === 0 ? 0 : (this.pagina - 1) * this.tamano + 1;
+        this.hasta = Math.min(this.pagina * this.tamano, r.total);
         this.filas = r.datos.map((s: any) => {
           const [estadoTexto, estadoClase] = this.estado(s);
           return {
