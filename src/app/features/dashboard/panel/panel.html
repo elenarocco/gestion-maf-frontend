@@ -16,7 +16,7 @@
       <div class="tarjeta">
         <div class="label">Dotación actual</div>
         <div class="valor">{{ resumen.dotacionActual }}</div>
-        <div class="nota">Todos los empleados</div>
+        <div class="nota">{{ resumen.alcance === 'Empresa completa' ? 'Todos los empleados' : 'Empleados de ' + resumen.alcance }}</div>
       </div>
       <div class="tarjeta">
         <div class="label">Ingresos este mes</div>
