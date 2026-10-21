@@ -1,0 +1,18 @@
+// Mismos valores que las tarjetas y botones de los formularios.
+.fondo { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; box-sizing: border-box; background: var(--maf-gris-fondo); }
+.tarjeta { width: 100%; max-width: 400px; background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+.marca { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.marca img { height: 32px; }
+.marca strong { display: block; font-size: 14px; }
+.marca span { font-size: 12px; color: #9ca3af; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; }
+.sub { margin: 0 0 4px; font-size: 13px; color: #6b7280; }
+.alerta { background: #fde8ec; color: var(--maf-rojo); padding: 12px 16px; border-radius: 6px; font-size: 13px; }
+.btn-primario { background: var(--maf-rojo); color: #fff; border: none; border-radius: 6px; padding: 11px 20px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn-primario:disabled, .btn-secundario:disabled { opacity: .6; cursor: default; }
+.btn-secundario { background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 10px 18px; font-size: 14px; color: #374151; cursor: pointer; }
+.enlace { background: none; border: none; color: var(--maf-rojo); font-size: 13px; cursor: pointer; padding: 0; align-self: flex-start; }
+.desarrollo { margin-top: 12px; padding-top: 16px; border-top: 1px dashed #d1d5db; display: flex; flex-direction: column; gap: 8px; }
+.etiqueta-dev { margin: 0; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; }
+.desarrollo label { font-size: 13px; color: #374151; }
+.desarrollo select { border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 13px; font-family: inherit; background: #fafafa; }

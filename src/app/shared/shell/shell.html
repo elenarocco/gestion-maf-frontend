@@ -14,21 +14,14 @@
       }
     </nav>
 
-    <div class="usuario">
-      <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Viendo como (temporal)</mat-label>
-        <mat-select [ngModel]="rolService.rolActual()" (ngModelChange)="cambiarRol($event)">
-          @for (rol of roles; track rol) {
-            <mat-option [value]="rol">{{ rol }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Usuario id (temporal)</mat-label>
-        <input matInput type="number" min="1" [value]="rolService.usuarioId()"
-               (change)="cambiarUsuario($any($event.target).value)">
-      </mat-form-field>
-    </div>
+    @if (sesion.usuario(); as u) {
+      <div class="usuario">
+        <strong>{{ u.nombre }}</strong>
+        <span>{{ u.rol }}@if (u.areaNombre) { · {{ u.areaNombre }} }</span>
+        <span class="correo">{{ u.correo }}</span>
+        <button type="button" (click)="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    }
   </aside>
 
   <main class="contenido">

@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { Shell } from './shared/shell/shell';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [Shell],
+  imports: [RouterOutlet],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

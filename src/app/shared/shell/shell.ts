@@ -1,30 +1,18 @@
-import { Component,computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
-import { RolSimuladoService } from '../../core/rol-simulado';
+import { SesionService } from '../../core/sesion';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatSelectModule, MatFormFieldModule, MatInputModule, FormsModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './shell.html',
   styleUrl: './shell.scss'
 })
 export class Shell {
+  sesion = inject(SesionService);
   private router = inject(Router);
 
-  constructor(public rolService: RolSimuladoService) { }
-
-  roles = ['Super Admin', 'Admin TI', 'Jefatura', 'RRHH', 'Auditoría'];
-  puedeCrearSolicitud = computed(() => {
-    const rol = this.rolService.rolActual();
-    const rolesPermitidos = ['SuperAdmin', 'AdminTI', 'Jefatura'];
-    
-    return rolesPermitidos.includes(rol);
-  });
   menuPorRol: Record<string, { nombre: string, ruta: string }[]> = {
   'Super Admin': [
     { nombre: 'Dashboard', ruta: '/dashboard' },
@@ -58,27 +46,11 @@ export class Shell {
 };
 
   get menuActual() {
-    return this.menuPorRol[this.rolService.rolActual()] ?? [];
+    return this.menuPorRol[this.sesion.rol()] ?? [];
   }
 
-  cambiarRol(nuevoRol: string): void {
-    if (nuevoRol === this.rolService.rolActual()) return;
-    this.rolService.rolActual.set(nuevoRol);
-    this.recargarPantalla();
-  }
-
-  cambiarUsuario(valor: string): void {
-    const id = Number(valor);
-    if (!Number.isInteger(id) || id < 1 || id === this.rolService.usuarioId()) return;
-    this.rolService.usuarioId.set(id);
-    this.recargarPantalla();
-  }
-
-  // Vuelve a crear la pantalla actual: el guard se evalúa con el rol nuevo (si no tiene acceso, redirige)
-  // y la pantalla pide de nuevo sus datos, con las acciones que el backend permite a ese rol.
-  private recargarPantalla(): void {
-    const url = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigateByUrl(url));
+  cerrarSesion(): void {
+    this.sesion.cerrarSesion();
+    this.router.navigate(['/login']);
   }
 }

@@ -13,24 +13,36 @@ import { NuevaSolicitudVpn } from './features/solicitudes/vpn/nueva-solicitud-vp
 import { FichaVpn } from './features/solicitudes/vpn/ficha-vpn/ficha-vpn';
 import { BandejaTi } from './features/bandeja-ti/bandeja-ti/bandeja-ti';
 import { DetalleSolicitud } from './features/bandeja-ti/detalle-solicitud/detalle-solicitud';
-import { rolGuard } from './core/rol-guard';
+import { rolGuard, sesionGuard } from './core/rol-guard';
+import { Shell } from './shared/shell/shell';
+import { Login } from './features/login/login';
 import { ROLES_JEFATURA_VPN } from './core/solicitud-vpn';
 import { ROLES_BANDEJA_TI } from './core/bandeja-ti';
 
 export const routes: Routes = [
-  { path: 'dashboard', component: Panel },
-  { path: 'trabajadores', component: ListaTrabajadores },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'solicitudes/nueva', component: SelectorTipo },
-  { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso },
-  { path: 'solicitudes/bloqueo', component: FormularioBloqueo },
-  { path: 'solicitudes/modificacion', component: FormularioModificacion },
-  { path: 'solicitudes/vpn', component: MisSolicitudesVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
-  { path: 'solicitudes/vpn/nueva', component: NuevaSolicitudVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
-  { path: 'solicitudes/vpn/:id/ficha', component: FichaVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
-  { path: 'bandeja-ti', component: BandejaTi, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
-  { path: 'bandeja-ti/:id', component: DetalleSolicitud, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
-  { path: 'solicitudes', component: ListaSolicitudes },
-  { path: 'trabajadores/:id', component: FichaTrabajador },
-  { path: 'catalogos', component: AdministrarCatalogos },
+  { path: 'login', component: Login },
+  // Todo lo demás exige sesión iniciada y se muestra dentro del shell.
+  {
+    path: '',
+    component: Shell,
+    canActivate: [sesionGuard],
+    children: [
+      { path: 'dashboard', component: Panel },
+      { path: 'trabajadores', component: ListaTrabajadores },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'solicitudes/nueva', component: SelectorTipo },
+      { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso },
+      { path: 'solicitudes/bloqueo', component: FormularioBloqueo },
+      { path: 'solicitudes/modificacion', component: FormularioModificacion },
+      { path: 'solicitudes/vpn', component: MisSolicitudesVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
+      { path: 'solicitudes/vpn/nueva', component: NuevaSolicitudVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
+      { path: 'solicitudes/vpn/:id/ficha', component: FichaVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
+      { path: 'bandeja-ti', component: BandejaTi, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
+      { path: 'bandeja-ti/:id', component: DetalleSolicitud, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
+      { path: 'solicitudes', component: ListaSolicitudes },
+      { path: 'trabajadores/:id', component: FichaTrabajador },
+      { path: 'catalogos', component: AdministrarCatalogos },
+    ]
+  },
+  { path: '**', redirectTo: '' }
 ];

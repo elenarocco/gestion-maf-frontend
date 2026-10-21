@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, computed,inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { RolSimuladoService } from '../../../core/rol-simulado';
+import { SesionService } from '../../../core/sesion';
 
 interface Resumen {
   dotacionActual: number;
@@ -27,10 +27,10 @@ interface FilaSolicitud {
 export class Panel implements OnInit {
   private api = 'http://localhost:5153/api';
 
-  public rolService = inject(RolSimuladoService);
+  private sesion = inject(SesionService);
 
   puedeCrearSolicitud = computed(() => {
-    const rol = this.rolService.rolActual();
+    const rol = this.sesion.rol();
     const rolesPermitidos = ['Super Admin', 'Admin TI', 'Jefatura'];
     return rolesPermitidos.includes(rol);
   });

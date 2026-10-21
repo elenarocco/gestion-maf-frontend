@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 export interface SolicitudBloqueoCreate {
   trabajadorId: number;
-  creadoPorId: number;
   esTemporal: boolean;
   desde: string | null;
   hasta: string | null;
@@ -20,7 +19,6 @@ export interface SolicitudBloqueoResultado {
 
 export interface SolicitudModificacionCreate {
   trabajadorId: number;
-  creadoPorId: number;
   primerNombre: string;
   segundoNombre: string | null;
   primerApellido: string;

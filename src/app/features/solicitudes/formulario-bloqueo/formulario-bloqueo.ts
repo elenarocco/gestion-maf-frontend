@@ -37,8 +37,6 @@ export class FormularioBloqueo {
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
-  // TEMPORAL: hasta tener login real, mismo valor fijo que usa formulario-ingreso.
-  private creadoPorId = 1;
 
   readonly maxJustificacion = 200;
 
@@ -217,7 +215,6 @@ export class FormularioBloqueo {
     const esTemporal = !!v.esTemporal;
     const dto: SolicitudBloqueoCreate = {
       trabajadorId: t.id,
-      creadoPorId: this.creadoPorId,
       esTemporal,
       desde: esTemporal && v.desde ? new Date(v.desde).toISOString() : null,
       hasta: esTemporal && v.hasta ? new Date(v.hasta).toISOString() : null,

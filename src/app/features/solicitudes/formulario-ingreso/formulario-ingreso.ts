@@ -50,8 +50,6 @@ export class FormularioIngreso implements OnInit {
   fechaMaxNacimiento = '';
   fechaMinNacimiento = '';
 
-  // TEMPORAL: hasta tener login real, se usa tu propio UsuarioSistema. Confirma que tu Id sea este.
-  private creadoPorId = 1;
 
   constructor(
     private fb: FormBuilder,
@@ -212,7 +210,6 @@ export class FormularioIngreso implements OnInit {
       direccionDomicilio: v.direccionDomicilio || null,
       jefeDirecto: v.jefeDirecto || null,
       homologarAccesosDesde: v.homologarAccesosDesde || null,
-      creadoPorId: this.creadoPorId,
       catalogoIds: [...this.sistemasSel, ...this.carpetasSel]
     };
 

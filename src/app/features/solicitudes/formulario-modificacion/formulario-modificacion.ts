@@ -59,8 +59,6 @@ export class FormularioModificacion implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
-  // TEMPORAL: hasta tener login real, mismo valor fijo que usa formulario-ingreso.
-  private creadoPorId = 1;
 
   readonly maxJustificacion = 200;
 
@@ -381,7 +379,6 @@ export class FormularioModificacion implements OnInit {
     const v = this.form.getRawValue();
     const dto: SolicitudModificacionCreate = {
       trabajadorId: t.id,
-      creadoPorId: this.creadoPorId,
       primerNombre: formatearNombre(v.primerNombre ?? ''),
       segundoNombre: v.segundoNombre ? formatearNombre(v.segundoNombre) : null,
       primerApellido: formatearNombre(v.primerApellido ?? ''),

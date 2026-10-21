@@ -1,0 +1,41 @@
+<div class="fondo">
+  <section class="tarjeta">
+    <div class="marca">
+      <img src="logo-maf.png" alt="MAF Chile">
+      <div>
+        <strong>GestiónTI</strong>
+        <span>MAF Chile</span>
+      </div>
+    </div>
+
+    <h1>Iniciar sesión</h1>
+    <p class="sub">Usa tu cuenta corporativa de Microsoft.</p>
+
+    @if (sesion.error()) {
+      <div class="alerta">{{ sesion.error() }}</div>
+    }
+
+    <button type="button" class="btn-primario" [disabled]="entrando()" (click)="entrarConMicrosoft()">
+      Iniciar sesión con Microsoft
+    </button>
+
+    @if (sesion.error() && sesion.hayCuentaMicrosoft()) {
+      <button type="button" class="enlace" (click)="sesion.usarOtraCuentaMicrosoft()">Usar otra cuenta de Microsoft</button>
+    }
+
+    @if (usuariosDesarrollo().length) {
+      <div class="desarrollo">
+        <p class="etiqueta-dev">Login de desarrollo (solo en este entorno)</p>
+        <label for="usuarioDev">Entrar como</label>
+        <select id="usuarioDev" [value]="seleccionado() ?? ''" (change)="seleccionado.set(+$any($event.target).value)">
+          @for (u of usuariosDesarrollo(); track u.usuarioId) {
+            <option [value]="u.usuarioId" [selected]="u.usuarioId === seleccionado()">{{ etiqueta(u) }}</option>
+          }
+        </select>
+        <button type="button" class="btn-secundario" [disabled]="entrando() || seleccionado() == null" (click)="entrarDesarrollo()">
+          {{ entrando() ? 'Entrando...' : 'Entrar como este usuario' }}
+        </button>
+      </div>
+    }
+  </section>
+</div>
