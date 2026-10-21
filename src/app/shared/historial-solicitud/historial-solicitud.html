@@ -1,0 +1,15 @@
+<section class="tarjeta">
+  <h4>Historial</h4>
+  @for (h of historial(); track $index) {
+    <div class="evento">
+      <div class="cabecera">
+        <span class="accion">{{ h.accion }}</span>
+        <span class="fecha">{{ fecha(h.fecha) }}</span>
+      </div>
+      <div class="autor">{{ h.realizadoPorNombre }}</div>
+      @if (h.comentario) { <div class="comentario">{{ h.comentario }}</div> }
+    </div>
+  } @empty {
+    <p class="vacio">Sin movimientos registrados.</p>
+  }
+</section>

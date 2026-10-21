@@ -8,6 +8,14 @@ import { FormularioModificacion } from './features/solicitudes/formulario-modifi
 import { ListaSolicitudes } from './features/solicitudes/lista-solicitudes/lista-solicitudes';
 import { FichaTrabajador } from './features/trabajadores/ficha-trabajador/ficha-trabajador';
 import { AdministrarCatalogos } from './features/catalogos/administrar-catalogos/administrar-catalogos';
+import { MisSolicitudesVpn } from './features/solicitudes/vpn/mis-solicitudes-vpn/mis-solicitudes-vpn';
+import { NuevaSolicitudVpn } from './features/solicitudes/vpn/nueva-solicitud-vpn/nueva-solicitud-vpn';
+import { FichaVpn } from './features/solicitudes/vpn/ficha-vpn/ficha-vpn';
+import { BandejaTi } from './features/bandeja-ti/bandeja-ti/bandeja-ti';
+import { DetalleSolicitud } from './features/bandeja-ti/detalle-solicitud/detalle-solicitud';
+import { rolGuard } from './core/rol-guard';
+import { ROLES_JEFATURA_VPN } from './core/solicitud-vpn';
+import { ROLES_BANDEJA_TI } from './core/bandeja-ti';
 
 export const routes: Routes = [
   { path: 'dashboard', component: Panel },
@@ -17,6 +25,11 @@ export const routes: Routes = [
   { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso },
   { path: 'solicitudes/bloqueo', component: FormularioBloqueo },
   { path: 'solicitudes/modificacion', component: FormularioModificacion },
+  { path: 'solicitudes/vpn', component: MisSolicitudesVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
+  { path: 'solicitudes/vpn/nueva', component: NuevaSolicitudVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
+  { path: 'solicitudes/vpn/:id/ficha', component: FichaVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
+  { path: 'bandeja-ti', component: BandejaTi, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
+  { path: 'bandeja-ti/:id', component: DetalleSolicitud, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
   { path: 'solicitudes', component: ListaSolicitudes },
   { path: 'trabajadores/:id', component: FichaTrabajador },
   { path: 'catalogos', component: AdministrarCatalogos },

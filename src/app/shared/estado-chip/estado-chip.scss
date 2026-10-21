@@ -1,0 +1,19 @@
+// Variables locales al componente (no son tokens globales). Valores tomados de lista-solicitudes.
+:host {
+  --chip-pendiente-fondo: #fff4d6;
+  --chip-pendiente-texto: #b7791f;
+  --chip-proceso-fondo: #e0edff;
+  --chip-proceso-texto: #1d4ed8;
+  --chip-completada-fondo: #e2f7e8;
+  --chip-completada-texto: #15803d;
+  --chip-rechazada-fondo: #fde8ec;
+  --chip-rechazada-texto: var(--maf-rojo);
+  display: inline-flex;
+}
+
+.chip { border-radius: 10px; padding: 3px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pendiente { background: var(--chip-pendiente-fondo); color: var(--chip-pendiente-texto); }
+.proceso { background: var(--chip-proceso-fondo); color: var(--chip-proceso-texto); }
+.completada { background: var(--chip-completada-fondo); color: var(--chip-completada-texto); }
+.rechazada { background: var(--chip-rechazada-fondo); color: var(--chip-rechazada-texto); }

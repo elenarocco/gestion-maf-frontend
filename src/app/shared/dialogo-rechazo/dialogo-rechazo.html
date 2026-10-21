@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ datos.titulo }}</h2>
+<mat-dialog-content>
+  <p class="descripcion">{{ datos.descripcion }}</p>
+  <div class="campo">
+    <label for="justificacionRechazo">Justificación del rechazo</label>
+    <textarea id="justificacionRechazo" rows="4" [formControl]="justificacion" [attr.maxlength]="max"
+              placeholder="Explica por qué se rechaza. La verá quien creó la solicitud."></textarea>
+    <span class="contador">{{ largo() }}/{{ max }}</span>
+    @if (justificacion.touched && justificacion.invalid) {
+      <span class="error-campo">La justificación del rechazo es obligatoria.</span>
+    }
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" class="btn-secundario" mat-dialog-close>Cancelar</button>
+  <button type="button" class="btn-primario" [disabled]="justificacion.invalid" (click)="confirmar()">Rechazar</button>
+</mat-dialog-actions>

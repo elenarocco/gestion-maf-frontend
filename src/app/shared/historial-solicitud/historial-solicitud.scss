@@ -1,0 +1,11 @@
+// Mismos valores que las tarjetas de los formularios de solicitudes.
+.tarjeta { background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+h4 { margin: 0 0 16px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; }
+.evento { border-left: 2px solid #e5e7eb; padding: 0 0 14px 14px; position: relative; }
+.evento::before { content: ''; position: absolute; left: -5px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: var(--maf-rojo); }
+.evento:last-of-type { padding-bottom: 0; }
+.cabecera { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.accion { font-size: 13px; font-weight: 500; color: #374151; }
+.fecha, .autor { font-size: 12px; color: #9ca3af; }
+.comentario { margin-top: 6px; font-size: 13px; color: #374151; background: #fafafa; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px 12px; }
+.vacio { font-size: 13px; color: #9ca3af; margin: 0; }

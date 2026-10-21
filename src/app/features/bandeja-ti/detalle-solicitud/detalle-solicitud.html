@@ -1,0 +1,80 @@
+<header class="encabezado">
+  <p class="migas">Bandeja de TI / #{{ solicitud()?.id ?? '' }}</p>
+  <h1>{{ solicitud() ? 'Solicitud de ' + tipoTexto(solicitud()!.tipo) : 'Detalle de solicitud' }}</h1>
+</header>
+
+<div class="cuerpo ancho">
+  @if (errores().length) {
+    <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+  }
+
+  @if (cargando() && !solicitud()) {
+    <section class="tarjeta"><p class="hint">Cargando...</p></section>
+  } @else if (solicitud(); as s) {
+
+    <section class="tarjeta">
+      <div class="encabezado-acciones">
+        <h4>Resumen</h4>
+        <app-estado-chip [estado]="s.estado" />
+      </div>
+      <div class="grid-2">
+        <div class="campo"><label>Tipo</label><input [value]="tipoTexto(s.tipo)" disabled></div>
+        <div class="campo"><label>Trabajador / solicitante</label><input [value]="persona(s)" disabled></div>
+        <div class="campo"><label>Creada por</label><input [value]="s.creadoPorNombre" disabled></div>
+        <div class="campo"><label>Fecha de creación</label><input [value]="fecha(s.fechaCreacion)" disabled></div>
+        <div class="campo">
+          <label>Vencimiento SLA</label>
+          <input [value]="fecha(s.fechaVencimientoSLA) + (s.vencida ? ' · Vencida' : '')" [class.vencida]="s.vencida" disabled>
+        </div>
+      </div>
+      @if (s.motivoRechazo) {
+        <div class="motivo-rechazo">Justificación del rechazo: {{ s.motivoRechazo }}</div>
+      }
+    </section>
+
+    @if (camposDetalle().length) {
+      <section class="tarjeta">
+        <h4>Datos de la solicitud</h4>
+        <div class="grid-2">
+          @for (c of camposDetalle(); track c.etiqueta) {
+            <div class="campo" [style.grid-column]="c.largo ? 'span 2' : null">
+              <label>{{ c.etiqueta }}</label><input [value]="c.valor" disabled>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if (s.vpn; as v) {
+      <section class="tarjeta">
+        <h4>Acceso VPN</h4>
+        <div class="grid-2">
+          <div class="campo"><label>Motivo</label><input [value]="v.motivoNombre" disabled></div>
+          <div class="campo">
+            <label>Ficha</label>
+            <input [value]="v.ficha ? 'Completada por la jefatura' : v.formularioHabilitado ? 'Habilitada, pendiente de la jefatura' : 'No habilitada'" disabled>
+          </div>
+          @if (v.fechaEnvioProveedor) {
+            <div class="campo"><label>Enviada al proveedor</label><input [value]="fecha(v.fechaEnvioProveedor)" disabled></div>
+          }
+        </div>
+      </section>
+
+      @if (v.ficha; as f) {
+        <app-ficha-vpn-lectura [ficha]="f" />
+      }
+    }
+
+    <app-historial-solicitud [historial]="s.historial" />
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario activo" (click)="volver()">Volver</button>
+      @for (b of botones(); track b.accion) {
+        <button type="button" [class]="b.primario ? 'btn-primario' : 'btn-peligro'"
+                [disabled]="procesando() !== null" (click)="ejecutar(b)">
+          {{ procesando() === b.accion ? 'Procesando...' : b.texto }}
+        </button>
+      }
+    </div>
+  }
+</div>

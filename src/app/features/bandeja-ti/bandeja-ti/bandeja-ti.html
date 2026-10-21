@@ -1,0 +1,60 @@
+<header class="encabezado">
+  <h1>Bandeja de TI</h1>
+  <p class="sub">{{ total() }} solicitud{{ total() === 1 ? '' : 'es' }} encontrada{{ total() === 1 ? '' : 's' }}</p>
+</header>
+
+<div class="filtros">
+  <select aria-label="Filtrar por tipo" (change)="filtrarTipo($any($event.target).value)">
+    <option value="" [selected]="tipo() === ''">Todos los tipos</option>
+    @for (t of tipos; track t.valor) { <option [value]="t.valor" [selected]="tipo() === t.valor">{{ t.etiqueta }}</option> }
+  </select>
+
+  <select aria-label="Filtrar por estado" (change)="filtrarEstado($any($event.target).value)">
+    <option value="" [selected]="estado() === ''">Todos los estados</option>
+    @for (e of estados; track e.valor) { <option [value]="e.valor" [selected]="estado() === e.valor">{{ e.etiqueta }}</option> }
+  </select>
+</div>
+
+@if (errores().length) {
+  <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+}
+
+<section class="tarjeta">
+  @if (cargando()) {
+    <p class="cargando">Cargando...</p>
+  } @else if (filas().length === 0) {
+    <p class="cargando">No hay solicitudes para este filtro.</p>
+  } @else {
+    <div class="tabla-scroll">
+      <table>
+        <thead>
+          <tr><th>N°</th><th>Tipo</th><th>Trabajador / solicitante</th><th>Creada por</th><th>Fecha</th><th>Vencimiento SLA</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          @for (s of filas(); track s.id) {
+            <tr class="clicable" tabindex="0" (click)="abrir(s)" (keydown.enter)="abrir(s)">
+              <td>#{{ s.id }}</td>
+              <td><span class="chip-tipo">{{ tipoTexto(s.tipo) }}</span></td>
+              <td>{{ persona(s) }}</td>
+              <td>{{ s.creadoPorNombre }}</td>
+              <td class="fecha">{{ fecha(s.fechaCreacion) }}</td>
+              <td class="fecha" [class.vencida]="s.vencida">
+                {{ fecha(s.fechaVencimientoSLA) }}
+                @if (s.vencida) { <span class="marca-vencida">Vencida</span> }
+              </td>
+              <td><app-estado-chip [estado]="s.estado" /></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPaginas() > 1) {
+      <div class="paginacion">
+        <button type="button" [disabled]="pagina() === 1" (click)="irPagina(pagina() - 1)">Anterior</button>
+        <span>Página {{ pagina() }} de {{ totalPaginas() }}</span>
+        <button type="button" [disabled]="pagina() === totalPaginas()" (click)="irPagina(pagina() + 1)">Siguiente</button>
+      </div>
+    }
+  }
+</section>

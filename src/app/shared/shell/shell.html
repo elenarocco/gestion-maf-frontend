@@ -17,11 +17,16 @@
     <div class="usuario">
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>Viendo como (temporal)</mat-label>
-        <mat-select [ngModel]="rolService.rolActual()" (ngModelChange)="rolService.rolActual.set($event)">
+        <mat-select [ngModel]="rolService.rolActual()" (ngModelChange)="cambiarRol($event)">
           @for (rol of roles; track rol) {
             <mat-option [value]="rol">{{ rol }}</mat-option>
           }
         </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Usuario id (temporal)</mat-label>
+        <input matInput type="number" min="1" [value]="rolService.usuarioId()"
+               (change)="cambiarUsuario($any($event.target).value)">
       </mat-form-field>
     </div>
   </aside>

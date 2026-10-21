@@ -1,0 +1,39 @@
+// Mismos valores que lista-solicitudes.
+.encabezado { padding: 20px 28px; background: #fff; border-bottom: 1px solid #e8eaee; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; }
+.sub { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
+
+.filtros { padding: 16px 28px 0; display: flex; gap: 10px; flex-wrap: wrap; }
+.filtros select {
+  border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 12px;
+  font-size: 13px; color: #374151; background: #fff; font-family: inherit;
+}
+
+.alerta { margin: 16px 28px 0; background: #fde8ec; color: var(--maf-rojo); padding: 12px 16px; border-radius: 6px; font-size: 13px; }
+
+.tarjeta { margin: 16px 28px 28px; background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 10px 20px; }
+.cargando { padding: 24px 0; color: #6b7280; font-size: 14px; }
+.tabla-scroll { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; font-weight: 500; padding: 10px 8px; vertical-align: bottom; }
+td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #f1f2f4; }
+tr.clicable { cursor: pointer; }
+tr.clicable:hover td, tr.clicable:focus-visible td { background: #fafafa; }
+tr.clicable:focus-visible { outline: 2px solid var(--maf-rojo); outline-offset: -2px; }
+td.fecha { white-space: nowrap; }
+.chip-tipo { background: #f3f4f6; border-radius: 4px; padding: 3px 8px; font-size: 12px; }
+
+td.vencida { color: var(--maf-rojo); font-weight: 500; }
+.marca-vencida { display: block; width: fit-content; margin-top: 3px; border: 1px solid var(--maf-rojo); border-radius: 4px; padding: 0 6px; font-size: 11px; }
+
+.paginacion { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 0 6px; font-size: 13px; color: #6b7280; }
+.paginacion button { background: #fff; border: 1px solid #d1d5db; border-radius: 6px; padding: 6px 12px; font-size: 13px; color: #374151; cursor: pointer; }
+.paginacion button:disabled { opacity: .5; cursor: default; }
+
+@media (max-width: 640px) {
+  .encabezado { padding: 16px; }
+  .filtros { padding: 16px 16px 0; }
+  .tarjeta { margin: 16px 16px 24px; padding: 10px 12px; }
+  .alerta { margin: 16px 16px 0; }
+}

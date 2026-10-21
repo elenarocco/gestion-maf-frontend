@@ -64,7 +64,7 @@ export class ListaSolicitudes implements OnInit {
 
   private estado(s: any): [string, string] {
     if (s.estado === 'Pendiente') return s.esUrgente ? ['Urgente', 'urgente'] : ['Pendiente', 'pendiente'];
-    if (s.estado === 'En proceso') return ['En proceso', 'proceso'];
+    if (s.estado === 'En proceso' || s.estado === 'EnProceso') return ['En proceso', 'proceso'];
     if (s.estado === 'Completada') return ['Completada', 'completada'];
     return ['Rechazada', 'rechazada'];
   }

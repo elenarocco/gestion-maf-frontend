@@ -1,0 +1,45 @@
+<header class="encabezado">
+  <div class="encabezado-acciones">
+    <div>
+      <p class="migas">Solicitudes / VPN</p>
+      <h1>Mis solicitudes VPN</h1>
+    </div>
+    <a class="btn-primario" routerLink="/solicitudes/vpn/nueva">Nueva solicitud VPN</a>
+  </div>
+</header>
+
+<div class="cuerpo ancho">
+  @if (errores().length) {
+    <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+  }
+
+  <section class="tarjeta">
+    @if (cargando()) {
+      <p class="hint">Cargando...</p>
+    } @else {
+      @for (s of solicitudes(); track s.id) {
+        <div class="fila">
+          <div class="fila-cabecera">
+            <div>
+              <div class="fila-titulo">#{{ s.id }} · {{ s.motivoNombre }}</div>
+              <div class="fila-meta">{{ fecha(s.fechaCreacion) }} · {{ etapa(s) }}</div>
+            </div>
+            <div class="fila-acciones">
+              <app-estado-chip [estado]="s.estado" />
+              @if (puedeCompletar(s)) {
+                <a [routerLink]="['/solicitudes/vpn', s.id, 'ficha']">Completar ficha →</a>
+              } @else if (s.fichaCompletada) {
+                <a [routerLink]="['/solicitudes/vpn', s.id, 'ficha']">Ver ficha →</a>
+              }
+            </div>
+          </div>
+          @if (s.motivoRechazo) {
+            <div class="motivo-rechazo">Justificación del rechazo: {{ s.motivoRechazo }}</div>
+          }
+        </div>
+      } @empty {
+        <p class="hint">Aún no has creado solicitudes de VPN.</p>
+      }
+    }
+  </section>
+</div>

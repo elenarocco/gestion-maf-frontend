@@ -1,0 +1,33 @@
+<header class="encabezado">
+  <p class="migas">Nueva solicitud / VPN</p>
+  <h1>Nueva solicitud — VPN</h1>
+</header>
+
+<div class="cuerpo">
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+
+    @if (errores().length) {
+      <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+    }
+
+    <section class="tarjeta">
+      <h4>Motivo de la solicitud</h4>
+      <div class="campo">
+        <label for="motivo">Motivo</label>
+        <select id="motivo" formControlName="motivoId">
+          <option [ngValue]="null" disabled>{{ cargandoMotivos() ? 'Cargando...' : 'Selecciona un motivo' }}</option>
+          @for (m of motivos(); track m.id) { <option [ngValue]="m.id">{{ m.nombre }}</option> }
+        </select>
+        @if (form.controls.motivoId.touched && form.controls.motivoId.invalid) {
+          <span class="error-campo">Debes seleccionar un motivo.</span>
+        }
+      </div>
+      <p class="hint">TI revisará la solicitud. Si la aprueba, podrás completar la ficha de habilitación del proveedor.</p>
+    </section>
+
+    <div class="acciones">
+      <button type="button" class="btn-secundario activo" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}</button>
+    </div>
+  </form>
+</div>

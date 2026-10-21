@@ -16,7 +16,7 @@ nav a { padding: 9px 12px; border-radius: 6px; font-size: 14px; color: #4b5563; 
 nav a:hover { background: #f3f4f6; }
 nav a.activo { background: #fde8ec; color: var(--maf-rojo); font-weight: 500; }
 
-.usuario { margin-top: auto; }
+.usuario { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
 .contenido { flex: 1; overflow-y: auto; }
 @media (max-width: 768px) {
   .layout { flex-direction: column; height: auto; min-height: 100vh; }

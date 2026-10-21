@@ -1,0 +1,29 @@
+@let f = ficha();
+<section class="tarjeta">
+  <h4>Vigencia del acceso</h4>
+  <div class="grid-2">
+    <div class="campo"><label>Fecha de incorporación</label><input [value]="fecha(f.fechaIncorporacion)" disabled></div>
+    <div class="campo"><label>Fecha de caducidad</label><input [value]="fecha(f.fechaCaducidad)" disabled></div>
+  </div>
+</section>
+
+<section class="tarjeta">
+  <h4>Datos del proveedor</h4>
+  <div class="grid-2">
+    <div class="campo"><label>RUT</label><input [value]="rut(f.rut)" disabled></div>
+    <div class="campo"><label>Cargo</label><input [value]="texto(f.cargo)" disabled></div>
+    <div class="campo"><label>Nombres</label><input [value]="texto(f.nombres)" disabled></div>
+    <div class="campo"><label>Apellidos</label><input [value]="texto(f.apellidos)" disabled></div>
+    <div class="campo"><label>Departamento</label><input [value]="texto(f.departamento)" disabled></div>
+    <div class="campo"><label>Ubicación física</label><input [value]="texto(f.ubicacionFisica)" disabled></div>
+    <div class="campo"><label>¿Pertenece a la compañía?</label><input [value]="siNo(f.equipoCorporativo)" disabled></div>
+    @if (f.equipoCorporativo === false) {
+      <div class="campo"><label>Compañía externa</label><input [value]="texto(f.companiaExterna)" disabled></div>
+    }
+    <div class="campo" style="grid-column: span 2;"><label>Cuenta de correo</label><input [value]="texto(f.cuentaCorreo)" disabled></div>
+  </div>
+  <div class="campo">
+    <label>Motivo</label>
+    <textarea rows="3" [value]="texto(f.motivo)" disabled></textarea>
+  </div>
+</section>
