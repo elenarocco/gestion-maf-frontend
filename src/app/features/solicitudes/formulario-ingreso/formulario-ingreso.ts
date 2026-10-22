@@ -57,6 +57,7 @@ export class FormularioIngreso implements OnInit {
   buscandoCorreo = false;
   enviando = false;
   errores: string[] = [];
+  erroresCorreo: string[] = []; // errores del backend sobre el correo, se muestran bajo ese campo
   esReincorporacion = false;
 
   fechaMaxNacimiento = '';
@@ -193,7 +194,25 @@ export class FormularioIngreso implements OnInit {
       error: () => { this.buscandoCorreo = false; this.cdr.detectChanges(); }
     });
   }
+  // Misma regla que valida el backend: inicial del nombre + apellido paterno, sin tildes ni espacios.
+  private get prefijoCorreo(): string {
+    const sinTildes = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const nombre = sinTildes(this.form.get('primerNombre')!.value ?? '').trim();
+    const apellido = sinTildes(this.form.get('primerApellido')!.value ?? '').replace(/\s/g, '');
+    return nombre && apellido ? nombre[0] + apellido : '';
+  }
+
+  // Si el correo escrito a mano cumple el formato (que no esté en uso lo confirma el backend al enviar).
+  get correoManualCumple(): boolean {
+    const correo = (this.form.get('correo')!.value ?? '').trim().toLowerCase();
+    const dominio = '@mafchile.com';
+    if (!correo.endsWith(dominio)) return false;
+    const local = correo.slice(0, -dominio.length);
+    return /^[a-z]+$/.test(local) && local.length <= 30 && !!this.prefijoCorreo && local.startsWith(this.prefijoCorreo);
+  }
+
     onCorreoInput(event: Event): void {
+  this.erroresCorreo = []; // al corregir el correo se quita el error anterior
   const input = event.target as HTMLInputElement;
   const partes = input.value.split('@');
   const local = partes[0].toLowerCase().replace(/[^a-z]/g, '').slice(0, 30);
@@ -204,12 +223,14 @@ export class FormularioIngreso implements OnInit {
 
 
   enviar(): void {
+  this.erroresCorreo = [];
   if (this.form.invalid) {
     this.errores = this.rutMensaje ? [this.rutMensaje] : ['Completa todos los campos obligatorios antes de enviar.'];
     this.form.markAllAsTouched(); // pinta en rojo los campos que faltan
+    this.irA('.ng-invalid.ng-touched:not(form)'); // el primer campo que falta
 
     return;
-    
+
   }
 
   this.enviando = true;
@@ -236,9 +257,22 @@ export class FormularioIngreso implements OnInit {
       },
       error: (err) => {
         this.enviando = false;
-        this.errores = err.error?.errores ?? ['Ocurrió un error al crear la solicitud.'];
+        const todos: string[] = err.error?.errores ?? ['Ocurrió un error al crear la solicitud.'];
+        // Los errores del correo se muestran junto a su campo; el resto, en el cuadro de arriba.
+        this.erroresCorreo = todos.filter(e => /correo/i.test(e));
+        this.errores = todos.filter(e => !/correo/i.test(e));
         this.cdr.detectChanges();
+        this.irA(this.erroresCorreo.length ? 'input[formcontrolname=correo]' : '.alerta');
       }
+    });
+  }
+
+  // Lleva la vista al error para que se vea aunque el usuario esté al final del formulario.
+  private irA(selector: string): void {
+    setTimeout(() => {
+      const el = document.querySelector<HTMLElement>(selector);
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (el instanceof HTMLInputElement) el.focus({ preventScroll: true });
     });
   }
 }

@@ -52,9 +52,14 @@
       @if (buscandoCorreo) { <p class="hint">Buscando un correo disponible...</p> }
       @else if (esReincorporacion) { <p class="hint ok">Esta persona trabajó antes en MAF — se reutiliza su correo anterior: {{ correoSugerido }}</p> }
       @else if (correoSugerido) { <p class="hint ok">Sugerido automáticamente: {{ correoSugerido }}</p> }
-      @else if (!correoDisponible) { <p class="hint alerta-texto">Ese correo ya existe. Ingresa tu Segundo apellido para generar otro correo</p> }
+      @else if (!correoDisponible) {
+        <!-- Correo escrito a mano: rojo hasta que cumpla la regla, verde cuando la cumple -->
+        @if (!correoManualCumple) { <p class="hint alerta-texto">Ese correo ya existe. Ingresa tu Segundo apellido para generar otro correo</p> }
+        @else if (!erroresCorreo.length) { <p class="hint ok">Formato de correo válido.</p> }
+      }
       @else { <p class="hint">Ingresa nombre y apellido para generar el correo sugerido.</p> }
-      <input formControlName="correo" (input)="onCorreoInput($event)" placeholder="nombre.apellido@mafchile.com">
+      <input class="input-correo" [class.con-error]="erroresCorreo.length" formControlName="correo" (input)="onCorreoInput($event)" placeholder="jpereza@mafchile.com">
+      @for (e of erroresCorreo; track e) { <p class="hint alerta-texto error-correo">{{ e }}</p> }
     </section>
 
     <section class="tarjeta">
