@@ -22,11 +22,12 @@ export class BandejaTi {
   private destroyRef = inject(DestroyRef);
 
   readonly tipos = TIPOS;
-  readonly estados = ESTADOS;
+  // "Por atender" = Pendiente y En proceso: ahí está todo lo que TI tiene que mover (los Bloqueos nacen En proceso).
+  readonly estados = [{ valor: 'Abiertas', etiqueta: 'Por atender' }, ...ESTADOS];
 
-  // Filtros en la URL para conservarlos al volver desde el detalle. "Pendiente" por defecto; "" = todos.
+  // Filtros en la URL para conservarlos al volver desde el detalle. "Por atender" por defecto; "" = todos.
   tipo = signal('');
-  estado = signal('Pendiente');
+  estado = signal('Abiertas');
   pagina = signal(1);
 
   filas = signal<SolicitudBandeja[]>([]);
@@ -37,7 +38,7 @@ export class BandejaTi {
   constructor() {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(q => {
       this.tipo.set(q.get('tipo') ?? '');
-      this.estado.set(q.get('estado') ?? 'Pendiente');
+      this.estado.set(q.get('estado') ?? 'Abiertas');
       this.pagina.set(Math.max(1, Number(q.get('pagina')) || 1));
       this.cargar();
     });

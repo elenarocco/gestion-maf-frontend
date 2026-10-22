@@ -155,7 +155,7 @@ export class FichaVpn {
   }
 
   cancelar(): void {
-    this.router.navigate(['/solicitudes/vpn']);
+    this.router.navigate(['/solicitudes']);
   }
 
   enviar(): void {
@@ -188,7 +188,7 @@ export class FichaVpn {
       next: () => {
         this.enviando.set(false);
         this.snackBar.open('Ficha de VPN enviada a TI', 'Cerrar', { duration: 4000 });
-        this.router.navigate(['/solicitudes/vpn']);
+        this.router.navigate(['/solicitudes']);
       },
       error: (err: HttpErrorResponse) => {
         this.enviando.set(false);

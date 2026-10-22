@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Catalogo {
   id: number;
@@ -19,7 +20,7 @@ export interface RespuestaCatalogo {
 
 @Injectable({ providedIn: 'root' })
 export class CatalogoService {
-  private apiUrl = 'http://localhost:5153/api/Catalogo';
+  private apiUrl = `${environment.apiUrl}/catalogos`;
   constructor(private http: HttpClient) { }
 
   // Para los formularios: solo elementos activos. Para las áreas, se puede filtrar por dirección (padreId)

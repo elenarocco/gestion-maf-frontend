@@ -4,17 +4,23 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { FichaVpn, HistorialItem } from './solicitud-vpn';
 
-export type AccionTi = 'tomar' | 'completar' | 'rechazar' | 'confirmarEnvio' | 'rechazarFicha';
+// Acciones de TI y del creador; el backend decide cuáles llegan.
+export type AccionTi = 'tomar' | 'completar' | 'rechazar' | 'confirmarEnvio' | 'rechazarFicha' | 'corregir' | 'completarFicha';
 
 export interface SolicitudBandeja {
   id: number;
   tipo: string;
   estado: string;
   trabajadorNombre: string | null;
+  areaNombre: string | null;
   creadoPorNombre: string;
   fechaCreacion: string;
   fechaVencimientoSLA: string;
   vencida: boolean;
+  trabajadorId: number | null;
+  motivoRechazo: string | null;
+  motivoVpn: string | null;
+  accionesPermitidas: AccionTi[];   // del creador: corregir, completarFicha
 }
 
 export interface PaginaBandeja {
@@ -33,6 +39,7 @@ export interface SolicitudDetalleTi {
   fechaVencimientoSLA: string;
   vencida: boolean;
   creadoPorNombre: string;
+  trabajadorId: number | null;
   trabajadorNombre: string | null;
   detalle: Record<string, unknown> | null;   // campos según el tipo
   vpn: {

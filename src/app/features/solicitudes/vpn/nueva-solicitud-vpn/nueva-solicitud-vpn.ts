@@ -42,7 +42,7 @@ export class NuevaSolicitudVpn {
   }
 
   cancelar(): void {
-    this.router.navigate(['/solicitudes/vpn']);
+    this.router.navigate(['/solicitudes']);
   }
 
   enviar(): void {
@@ -59,7 +59,7 @@ export class NuevaSolicitudVpn {
       next: () => {
         this.enviando.set(false);
         this.snackBar.open('Solicitud de VPN enviada a TI', 'Cerrar', { duration: 4000 });
-        this.router.navigate(['/solicitudes/vpn']);
+        this.router.navigate(['/solicitudes']);
       },
       error: (err: HttpErrorResponse) => {
         this.enviando.set(false);

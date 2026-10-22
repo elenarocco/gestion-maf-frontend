@@ -1,18 +1,30 @@
 <header class="encabezado">
-  <h1>Solicitudes</h1>
-  <p class="sub">{{ total }} solicitud{{ total === 1 ? '' : 'es' }} encontrada{{ total === 1 ? '' : 's' }}</p>
+  <div class="encabezado-fila">
+    <div>
+      <h1>{{ veTodas() ? 'Solicitudes' : 'Mis solicitudes' }}</h1>
+      <p class="sub">{{ total }} solicitud{{ total === 1 ? '' : 'es' }} encontrada{{ total === 1 ? '' : 's' }}</p>
+    </div>
+    @if (puedeCrear()) {
+      <a class="btn-nueva" routerLink="/solicitudes/nueva">+ Nueva solicitud</a>
+    }
+  </div>
 </header>
 
 <div class="filtros">
-  <select [value]="tipoActivo" (change)="filtrarTipo($any($event.target).value)">
-    @for (t of tipos; track t) { <option [value]="t">{{ t === 'Todas' ? 'Todos los tipos' : t }}</option> }
+  <select aria-label="Filtrar por tipo" (change)="filtrarTipo($any($event.target).value)">
+    <option value="" [selected]="tipoActivo === ''">Todos los tipos</option>
+    @for (t of tipos; track t.valor) { <option [value]="t.valor" [selected]="tipoActivo === t.valor">{{ t.etiqueta }}</option> }
   </select>
 
-  <select [value]="estadoActivo" (change)="filtrarEstado($any($event.target).value)">
-    @for (e of estados; track e) { <option [value]="e">{{ e === 'Todas' ? 'Todos los estados' : e }}</option> }
+  <select aria-label="Filtrar por estado" (change)="filtrarEstado($any($event.target).value)">
+    <option value="" [selected]="estadoActivo === ''">Todos los estados</option>
+    @for (e of estados; track e.valor) { <option [value]="e.valor" [selected]="estadoActivo === e.valor">{{ e.etiqueta }}</option> }
   </select>
 </div>
 
+@if (errores.length) {
+  <div class="alerta">@for (e of errores; track e) { <div>{{ e }}</div> }</div>
+}
 
 <section class="tarjeta">
   @if (cargando) {
@@ -21,18 +33,27 @@
     <p class="cargando">No hay solicitudes para este filtro.</p>
   } @else {
     <table>
-      <thead><tr><th>Nombre</th><th>Área</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Nombre</th><th>Área</th><th>Tipo</th>
+          @if (veTodas()) { <th>Creada por</th> }
+          <th>Fecha</th><th>Estado</th>
+        </tr>
+      </thead>
       <tbody>
-        @for (s of filas; track $index) {
-          <tr>
+        @for (s of filas; track s.id) {
+          <tr class="clicable" tabindex="0" (click)="abrir(s)" (keydown.enter)="abrir(s)">
             <td><div class="persona"><span class="avatar">{{ s.iniciales }}</span>{{ s.nombre }}</div></td>
             <td>{{ s.area }}</td>
             <td><span class="chip">{{ s.tipo }}</span></td>
+            @if (veTodas()) { <td>{{ s.creadoPor }}</td> }
             <td>{{ s.fecha }}</td>
             <td>
               <span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span>
               @if (s.motivoRechazo) { <div class="motivo-rechazo" [title]="s.motivoRechazo">{{ s.motivoRechazo }}</div> }
-              @if (s.corregir; as c) { <a class="corregir" [routerLink]="c.ruta" [queryParams]="c.queryParams">Corregir →</a> }
+              @for (a of s.acciones; track a.texto) {
+                <a class="accion" [routerLink]="a.ruta" [queryParams]="a.queryParams ?? null" (click)="$event.stopPropagation()">{{ a.texto }}</a>
+              }
             </td>
           </tr>
         }

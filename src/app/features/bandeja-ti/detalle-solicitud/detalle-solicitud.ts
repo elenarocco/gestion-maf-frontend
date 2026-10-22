@@ -21,6 +21,13 @@ interface Boton {
 
 const FECHA_ISO = /^\d{4}-\d{2}-\d{2}(T|$)/;
 
+// Formulario que corrige cada tipo de solicitud (valores de tipo de la API).
+const RUTA_CORREGIR: Record<string, string> = {
+  'Ingreso': '/solicitudes/nueva/ingreso',
+  'Bloqueo': '/solicitudes/bloqueo',
+  'Modificacion': '/solicitudes/modificacion'
+};
+
 // Los nombres de campo llegan sin tildes; se corrigen al mostrarlos.
 const PALABRAS: Record<string, string> = {
   rut: 'RUT', telefono: 'teléfono', direccion: 'dirección', ubicacion: 'ubicación', area: 'área',
@@ -60,9 +67,11 @@ export class DetalleSolicitud {
       completar: 'Marcar completada',
       confirmarEnvio: 'Confirmar y enviar al proveedor',
       rechazar: 'Rechazar',
-      rechazarFicha: 'Rechazar ficha'
+      rechazarFicha: 'Rechazar ficha',
+      corregir: 'Corregir solicitud',
+      completarFicha: 'Completar ficha'
     };
-    const orden: AccionTi[] = ['rechazar', 'rechazarFicha', 'tomar', 'completar', 'confirmarEnvio'];
+    const orden: AccionTi[] = ['rechazar', 'rechazarFicha', 'tomar', 'completar', 'confirmarEnvio', 'corregir', 'completarFicha'];
     return orden
       .filter(a => s.accionesPermitidas.includes(a))
       .map(a => ({ accion: a, texto: textos[a], primario: a !== 'rechazar' && a !== 'rechazarFicha' }));
@@ -100,6 +109,16 @@ export class DetalleSolicitud {
   }
 
   ejecutar(b: Boton): void {
+    // Acciones del creador: llevan al formulario que corresponde.
+    if (b.accion === 'corregir') {
+      const s = this.solicitud()!;
+      this.router.navigate([RUTA_CORREGIR[s.tipo]], { queryParams: { origen: s.id, trabajador: s.trabajadorId } });
+      return;
+    }
+    if (b.accion === 'completarFicha') {
+      this.router.navigate(['/solicitudes/vpn', this.id, 'ficha']);
+      return;
+    }
     if (b.accion === 'rechazar' || b.accion === 'rechazarFicha') {
       this.pedirRechazo(b.accion);
       return;
@@ -115,6 +134,7 @@ export class DetalleSolicitud {
       confirmarEnvio: 'Ficha confirmada y marcada como enviada al proveedor.'
     };
     const accion = b.accion as 'tomar' | 'completar' | 'confirmarEnvio';
+    if (!(accion in llamadas)) return;
     this.correr(accion, llamadas[accion](), exitos[accion]);
   }
 
@@ -151,10 +171,13 @@ export class DetalleSolicitud {
     });
   }
 
+  // Se abre desde la Bandeja de TI (/bandeja-ti/:id) o desde la lista de solicitudes (/solicitudes/:id).
+  desdeBandeja = this.router.url.startsWith('/bandeja-ti');
+
   volver(): void {
-    // Vuelve a la bandeja con los filtros que tenía; si se entró directo, a la bandeja por defecto.
+    // Vuelve a la lista con los filtros que tenía; si se entró directo, a la lista por defecto.
     if (window.history.length > 1) this.location.back();
-    else this.router.navigate(['/bandeja-ti']);
+    else this.router.navigate([this.desdeBandeja ? '/bandeja-ti' : '/solicitudes']);
   }
 
   // ---------- Formato ----------

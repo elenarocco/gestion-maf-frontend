@@ -8,7 +8,6 @@ import { FormularioModificacion } from './features/solicitudes/formulario-modifi
 import { ListaSolicitudes } from './features/solicitudes/lista-solicitudes/lista-solicitudes';
 import { FichaTrabajador } from './features/trabajadores/ficha-trabajador/ficha-trabajador';
 import { AdministrarCatalogos } from './features/catalogos/administrar-catalogos/administrar-catalogos';
-import { MisSolicitudesVpn } from './features/solicitudes/vpn/mis-solicitudes-vpn/mis-solicitudes-vpn';
 import { NuevaSolicitudVpn } from './features/solicitudes/vpn/nueva-solicitud-vpn/nueva-solicitud-vpn';
 import { FichaVpn } from './features/solicitudes/vpn/ficha-vpn/ficha-vpn';
 import { BandejaTi } from './features/bandeja-ti/bandeja-ti/bandeja-ti';
@@ -36,9 +35,10 @@ export const routes: Routes = [
       { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso, canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearIngreso] } },
       { path: 'solicitudes/bloqueo', component: FormularioBloqueo, canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearBloqueo] } },
       { path: 'solicitudes/modificacion', component: FormularioModificacion, canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearModificacion] } },
-      { path: 'solicitudes/vpn', component: MisSolicitudesVpn, canActivate: [permisoGuard], data: { permisos: [PERMISOS.solicitarVpn] } },
       { path: 'solicitudes/vpn/nueva', component: NuevaSolicitudVpn, canActivate: [permisoGuard], data: { permisos: [PERMISOS.solicitarVpn] } },
       { path: 'solicitudes/vpn/:id/ficha', component: FichaVpn, canActivate: [permisoGuard], data: { permisos: [PERMISOS.completarFichaVpn] } },
+      // Después de las rutas fijas de /solicitudes/*: el router usa la primera que calza.
+      { path: 'solicitudes/:id', component: DetalleSolicitud, canActivate: [permisoGuard], data: { permisos: PERMISOS_VER_SOLICITUDES } },
       { path: 'bandeja-ti', component: BandejaTi, canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
       { path: 'bandeja-ti/:id', component: DetalleSolicitud, canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
       { path: 'catalogos', component: AdministrarCatalogos, canActivate: [permisoGuard], data: { permisos: [PERMISOS.administrarCatalogos] } },

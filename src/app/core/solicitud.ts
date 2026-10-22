@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface SolicitudBloqueoCreate {
   trabajadorId: number;
@@ -50,7 +51,8 @@ export interface SolicitudModificacionResultado {
 
 @Injectable({ providedIn: 'root' })
 export class SolicitudService {
-  private apiUrl = 'http://localhost:5153/api/Solicitud';
+  // Una sola API de solicitudes: la lista y el detalle están en BandejaTiService (api/solicitudes).
+  private apiUrl = `${environment.apiUrl}/solicitudes`;
   constructor(private http: HttpClient) { }
 
   crearIngreso(dto: any): Observable<any> {
@@ -62,11 +64,4 @@ export class SolicitudService {
   crearModificacion(dto: SolicitudModificacionCreate): Observable<SolicitudModificacionResultado> {
     return this.http.post<SolicitudModificacionResultado>(`${this.apiUrl}/modificacion`, dto);
   }
-  getAll(filtros: { tipo?: string, estado?: string, urgente?: boolean } = {}, pagina = 1, tamanoPagina = 20): Observable<any> {
-  const params = new URLSearchParams({ pagina: String(pagina), tamanoPagina: String(tamanoPagina) });
-  if (filtros.tipo) params.set('tipo', filtros.tipo);
-  if (filtros.estado) params.set('estado', filtros.estado);
-  if (filtros.urgente) params.set('urgente', 'true');
-  return this.http.get(`${this.apiUrl}?${params.toString()}`);
-}
 }

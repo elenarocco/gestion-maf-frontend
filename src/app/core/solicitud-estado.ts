@@ -1,5 +1,5 @@
 // Valores que usa el contrato de /api/solicitudes y su texto en pantalla.
-// El listado antiguo (/api/Solicitud) todavía envía "En proceso"; se normaliza a "EnProceso".
+// La API envía "EnProceso"; si llega "En proceso" (valor de la BD) se normaliza igual.
 
 export const ESTADOS = [
   { valor: 'Pendiente', etiqueta: 'Pendiente' },

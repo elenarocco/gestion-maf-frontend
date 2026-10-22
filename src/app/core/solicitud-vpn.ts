@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 // Pantallas de Jefatura para VPN (pedir acceso y completar la ficha). Lo de TI está en la Bandeja de TI.
@@ -32,26 +32,6 @@ export interface HistorialItem {
   comentario: string | null;
 }
 
-export interface MiSolicitud {
-  id: number;
-  tipo: string;
-  estado: string;
-  fechaCreacion: string;
-  fechaVencimientoSLA: string;
-  vencida: boolean;
-  motivoNombre: string | null;
-  formularioHabilitado: boolean;
-  motivoRechazo: string | null;
-  fichaCompletada: boolean;
-}
-
-export interface PaginaMisSolicitudes {
-  items: MiSolicitud[];
-  total: number;
-  pagina: number;
-  tamano: number;
-}
-
 export interface SolicitudVpnDetalle {
   id: number;
   estado: string;
@@ -71,14 +51,8 @@ export class SolicitudVpnService {
   constructor(private http: HttpClient) { }
 
   motivos(): Observable<MotivoVpn[]> {
-    return this.http.get<MotivoVpn[]>(`${environment.apiUrl}/catalogos`, { params: { tipo: 'MotivoVpn' } });
-  }
-
-  // El backend filtra por el usuario de la sesión.
-  mias(estado = '', pagina = 1, tamano = 20): Observable<PaginaMisSolicitudes> {
-    let params = new HttpParams().set('tipo', 'Vpn').set('pagina', pagina).set('tamano', tamano);
-    if (estado) params = params.set('estado', estado);
-    return this.http.get<PaginaMisSolicitudes>(`${this.apiUrl}/mias`, { params });
+    const params = new HttpParams().set('tipo', 'MotivoVpn').set('soloActivos', true).set('tamanoPagina', 100);
+    return this.http.get<{ datos: MotivoVpn[] }>(`${environment.apiUrl}/catalogos`, { params }).pipe(map(r => r.datos));
   }
 
   detalle(id: number): Observable<SolicitudVpnDetalle> {
@@ -92,11 +66,6 @@ export class SolicitudVpnService {
   completarFicha(id: number, ficha: FichaVpn): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/vpn/${id}/ficha`, ficha);
   }
-}
-
-// En "Mis solicitudes VPN": botón "Completar ficha" solo si TI la habilitó, aún no se envía y sigue Pendiente.
-export function puedeCompletarFicha(s: MiSolicitud): boolean {
-  return s.formularioHabilitado && !s.fichaCompletada && s.estado === 'Pendiente';
 }
 
 // En la ficha: editable solo si TI la habilitó y sigue Pendiente; si no, se muestra en solo lectura.

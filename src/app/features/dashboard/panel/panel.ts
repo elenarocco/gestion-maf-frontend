@@ -81,13 +81,14 @@ export class Panel implements OnInit {
       this.cdr.detectChanges();
     });
 
-    this.http.get<{ datos: any[] }>(`${this.api}/Solicitud?pagina=1&tamanoPagina=5`).subscribe(r => {
-      this.recientes = r.datos.map(s => {
+    this.http.get<{ items: any[] }>(`${this.api}/solicitudes?pagina=1&tamano=5`).subscribe(r => {
+      this.recientes = r.items.map(s => {
         const [estadoTexto, estadoClase] = this.estado(s);
+        const nombre: string = s.trabajadorNombre ?? 'Proveedor por definir';
         return {
-          nombre: s.trabajadorNombre,
-          iniciales: s.trabajadorNombre.split(' ').filter(Boolean).slice(0, 2).map((p: string) => p[0]).join('').toUpperCase(),
-          area: s.areaNombre,
+          nombre,
+          iniciales: nombre.split(' ').filter(Boolean).slice(0, 2).map((p: string) => p[0]).join('').toUpperCase(),
+          area: s.areaNombre ?? '—',
           tipo: s.tipo,
           fecha: new Date(s.fechaCreacion).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }).replace('.', ''),
           estadoTexto, estadoClase
@@ -99,9 +100,9 @@ export class Panel implements OnInit {
 
   private estado(s: any): [string, string] {
     if (s.estado === 'Pendiente') {
-      return s.esUrgente ? ['Urgente', 'urgente'] : ['Pendiente', 'pendiente'];
+      return s.vencida ? ['Urgente', 'urgente'] : ['Pendiente', 'pendiente'];
     }
-    if (s.estado === 'En proceso') return ['En proceso', 'proceso'];
+    if (s.estado === 'EnProceso' || s.estado === 'En proceso') return ['En proceso', 'proceso'];
     if (s.estado === 'Completada') return ['Completada', 'completada'];
     return ['Rechazada', 'rechazada'];
   }

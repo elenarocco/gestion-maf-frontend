@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { SesionService } from '../../core/sesion';
-import { PERMISOS, PERMISOS_CREAR_SOLICITUD, PERMISOS_VER_SOLICITUDES } from '../../core/permisos';
+import { PERMISOS, PERMISOS_VER_SOLICITUDES } from '../../core/permisos';
 
 interface ItemMenu {
   nombre: string;
@@ -32,10 +32,7 @@ export class Shell {
       { nombre: 'Dashboard', ruta: '/dashboard', permisos: [] },
       { nombre: soloSuArea ? 'Mi equipo' : 'Trabajadores', ruta: '/trabajadores', permisos: [PERMISOS.consultarTrabajadores] },
       { nombre: 'Bandeja de TI', ruta: '/bandeja-ti', permisos: [PERMISOS.bandejaTi] },
-      { nombre: 'Nueva solicitud', ruta: '/solicitudes/nueva', permisos: PERMISOS_CREAR_SOLICITUD,
-        tambien: ['/solicitudes/bloqueo', '/solicitudes/modificacion'] },
       { nombre: veTodas ? 'Solicitudes' : 'Mis solicitudes', ruta: '/solicitudes', permisos: PERMISOS_VER_SOLICITUDES },
-      { nombre: 'Solicitudes VPN', ruta: '/solicitudes/vpn', permisos: [PERMISOS.solicitarVpn] },
       { nombre: 'Catálogos', ruta: '/catalogos', permisos: [PERMISOS.administrarCatalogos] }
     ];
     return items.filter(i => this.sesion.tieneAlguno(i.permisos));

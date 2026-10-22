@@ -1,5 +1,5 @@
 <header class="encabezado">
-  <p class="migas">Bandeja de TI / #{{ solicitud()?.id ?? '' }}</p>
+  <p class="migas">{{ desdeBandeja ? 'Bandeja de TI' : 'Solicitudes' }} / #{{ solicitud()?.id ?? '' }}</p>
   <h1>{{ solicitud() ? 'Solicitud de ' + tipoTexto(solicitud()!.tipo) : 'Detalle de solicitud' }}</h1>
 </header>
 
