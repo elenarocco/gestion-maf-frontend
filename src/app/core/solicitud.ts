@@ -84,7 +84,7 @@ export interface SolicitudDetalle {
   fechaVencimientoSLA: string;
   bloqueo: { esTemporal: boolean; fechaInicio: string; fechaFin: string | null; justificacion: string;
              tienePc: boolean | null; casillaOpera: boolean | null } | null;
-  modificacion: { justificacion: string } | null;
+  modificacion: { justificacion: string; cambios: string[] } | null;
   accesosSolicitados: SolicitudAcceso[];
   historial: PasoHistorial[];
   accionesDisponibles: AccionDisponible[];

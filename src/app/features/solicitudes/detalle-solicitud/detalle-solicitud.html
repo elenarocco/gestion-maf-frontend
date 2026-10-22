@@ -74,7 +74,13 @@
             <dt>Justificación</dt><dd>{{ b.justificacion }}</dd>
           </dl>
         } @else if (s.modificacion; as m) {
-          <dl><dt>Justificación</dt><dd>{{ m.justificacion }}</dd></dl>
+          <p class="sub-sec">Cambios solicitados</p>
+          @if (m.cambios.length) {
+            <ul class="cambios">@for (c of m.cambios; track c) { <li>{{ c }}</li> }</ul>
+          } @else {
+            <p class="vacio">Solo cambia accesos, o no hay registro de los datos anteriores.</p>
+          }
+          <dl class="con-margen"><dt>Justificación</dt><dd>{{ m.justificacion }}</dd></dl>
         } @else {
           <dl><dt>Trabajador</dt><dd><a [routerLink]="['/trabajadores', s.trabajadorId]">Ver ficha</a></dd></dl>
         }

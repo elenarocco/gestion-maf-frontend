@@ -58,7 +58,10 @@ dd a { color: var(--maf-rojo); }
 .historial .paso { font-weight: 600; color: #111827; min-width: 90px; }
 .historial .por { flex: 1; color: #6b7280; }
 .historial .fecha { color: #9ca3af; }
-.historial .comentario { flex-basis: 100%; color: #374151; font-style: italic; padding-left: 102px; }
+.historial .comentario { flex-basis: 100%; color: #374151; font-style: italic; padding-left: 102px; white-space: pre-line; }
+.cambios { margin: 0; padding-left: 18px; font-size: 13px; color: #111827; }
+.cambios li { padding: 3px 0; }
+dl.con-margen { margin-top: 14px; }
 
 .badge { border-radius: 10px; padding: 3px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
 .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
