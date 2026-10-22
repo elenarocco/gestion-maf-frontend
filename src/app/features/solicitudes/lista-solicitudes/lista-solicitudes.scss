@@ -2,7 +2,7 @@
 h1 { margin: 0; font-size: 20px; font-weight: 600; }
 .sub { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
 
-.filtros { padding: 16px 28px 0; display: flex; gap: 10px; }
+.filtros { padding: 16px 28px 0; display: flex; gap: 10px; flex-wrap: wrap; }
 .filtros select {
   border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 12px;
   font-size: 13px; color: #374151; background: #fff; font-family: inherit;

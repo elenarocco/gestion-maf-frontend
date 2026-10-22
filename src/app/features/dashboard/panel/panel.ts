@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { SesionService } from '../../../core/sesion';
 import { PERMISOS_CREAR_SOLICITUD } from '../../../core/permisos';
+import { environment } from '../../../../environments/environment';
 
 interface Resumen {
   alcance: string; // "Empresa completa" o el área del usuario (Jefatura)
@@ -27,7 +28,7 @@ interface FilaSolicitud {
   styleUrl: './panel.scss'
 })
 export class Panel implements OnInit {
-  private api = 'http://localhost:5153/api';
+  private api = environment.apiUrl;
 
   private sesion = inject(SesionService);
 

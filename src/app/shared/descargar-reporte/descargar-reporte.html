@@ -1,0 +1,15 @@
+@if (visible()) {
+  <div class="descargar">
+    <button type="button" class="boton" [disabled]="generando() !== null"
+            (click)="abierto.set(!abierto())" aria-haspopup="menu" [attr.aria-expanded]="abierto()">
+      {{ generando() ? 'Generando ' + (generando() === 'excel' ? 'Excel' : 'PDF') + '…' : 'Descargar ▾' }}
+    </button>
+    @if (abierto()) {
+      <div class="menu" role="menu">
+        <button type="button" role="menuitem" (click)="descargar('excel')">Excel (.xlsx)</button>
+        <button type="button" role="menuitem" (click)="descargar('pdf')">PDF</button>
+      </div>
+    }
+    @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+  </div>
+}

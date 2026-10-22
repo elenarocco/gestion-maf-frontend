@@ -6,6 +6,7 @@ import { TrabajadorService, FiltrosTrabajador } from '../../../core/trabajador';
 import { CatalogoService, Catalogo } from '../../../core/catalogo';
 import { BuscadorCatalogo } from '../../../shared/buscador-catalogo/buscador-catalogo';
 import { SesionService } from '../../../core/sesion';
+import { DescargarReporte } from '../../../shared/descargar-reporte/descargar-reporte';
 
 interface Fila {
   id: number; nombre: string; iniciales: string; correo: string;
@@ -14,7 +15,7 @@ interface Fila {
 
 @Component({
   selector: 'app-lista-trabajadores',
-  imports: [ReactiveFormsModule, BuscadorCatalogo],
+  imports: [ReactiveFormsModule, BuscadorCatalogo, DescargarReporte],
   templateUrl: './lista-trabajadores.html',
   styleUrl: './lista-trabajadores.scss',
 })
@@ -33,6 +34,8 @@ export class ListaTrabajadores implements OnInit, OnDestroy {
   hasta = 0;
   cargando = true;
   error = '';
+  // Los mismos filtros de la lista, para que el reporte descargue lo que se está viendo.
+  filtros: FiltrosTrabajador = {};
 
   private peticion = 0;
   private subs = new Subscription();
@@ -73,6 +76,7 @@ export class ListaTrabajadores implements OnInit, OnDestroy {
     if (areaId) filtros.areaId = areaId;
     if (this.estado === 'Activos') filtros.activo = true;
     if (this.estado === 'Inactivos') filtros.activo = false;
+    this.filtros = filtros;
 
     this.trabajadorService.getAll(filtros, this.pagina, this.tamano).subscribe({
       next: (r) => {
