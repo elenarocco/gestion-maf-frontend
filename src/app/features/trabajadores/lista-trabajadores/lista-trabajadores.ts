@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { TrabajadorService, FiltrosTrabajador } from '../../../core/trabajador';
 import { CatalogoService, Catalogo } from '../../../core/catalogo';
 import { BuscadorCatalogo } from '../../../shared/buscador-catalogo/buscador-catalogo';
+import { SesionService } from '../../../core/sesion';
 
 interface Fila {
   id: number; nombre: string; iniciales: string; correo: string;
@@ -35,6 +36,8 @@ export class ListaTrabajadores implements OnInit, OnDestroy {
 
   private peticion = 0;
   private subs = new Subscription();
+
+  sesion = inject(SesionService);
 
   constructor(
     private trabajadorService: TrabajadorService,

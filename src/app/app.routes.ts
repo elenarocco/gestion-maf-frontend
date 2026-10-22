@@ -13,11 +13,10 @@ import { NuevaSolicitudVpn } from './features/solicitudes/vpn/nueva-solicitud-vp
 import { FichaVpn } from './features/solicitudes/vpn/ficha-vpn/ficha-vpn';
 import { BandejaTi } from './features/bandeja-ti/bandeja-ti/bandeja-ti';
 import { DetalleSolicitud } from './features/bandeja-ti/detalle-solicitud/detalle-solicitud';
-import { rolGuard, sesionGuard } from './core/rol-guard';
+import { permisoGuard, sesionGuard } from './core/rol-guard';
+import { PERMISOS, PERMISOS_CREAR_SOLICITUD, PERMISOS_VER_SOLICITUDES } from './core/permisos';
 import { Shell } from './shared/shell/shell';
 import { Login } from './features/login/login';
-import { ROLES_JEFATURA_VPN } from './core/solicitud-vpn';
-import { ROLES_BANDEJA_TI } from './core/bandeja-ti';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -27,21 +26,22 @@ export const routes: Routes = [
     component: Shell,
     canActivate: [sesionGuard],
     children: [
-      { path: 'dashboard', component: Panel },
-      { path: 'trabajadores', component: ListaTrabajadores },
+      // Cada pantalla exige alguno de los permisos que entrega el backend; sin él, vuelve al dashboard.
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'solicitudes/nueva', component: SelectorTipo },
-      { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso },
-      { path: 'solicitudes/bloqueo', component: FormularioBloqueo },
-      { path: 'solicitudes/modificacion', component: FormularioModificacion },
-      { path: 'solicitudes/vpn', component: MisSolicitudesVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
-      { path: 'solicitudes/vpn/nueva', component: NuevaSolicitudVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
-      { path: 'solicitudes/vpn/:id/ficha', component: FichaVpn, canActivate: [rolGuard], data: { roles: ROLES_JEFATURA_VPN } },
-      { path: 'bandeja-ti', component: BandejaTi, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
-      { path: 'bandeja-ti/:id', component: DetalleSolicitud, canActivate: [rolGuard], data: { roles: ROLES_BANDEJA_TI } },
-      { path: 'solicitudes', component: ListaSolicitudes },
-      { path: 'trabajadores/:id', component: FichaTrabajador },
-      { path: 'catalogos', component: AdministrarCatalogos },
+      { path: 'dashboard', component: Panel },
+      { path: 'trabajadores', component: ListaTrabajadores, canActivate: [permisoGuard], data: { permisos: [PERMISOS.consultarTrabajadores] } },
+      { path: 'trabajadores/:id', component: FichaTrabajador, canActivate: [permisoGuard], data: { permisos: [PERMISOS.consultarTrabajadores] } },
+      { path: 'solicitudes', component: ListaSolicitudes, canActivate: [permisoGuard], data: { permisos: PERMISOS_VER_SOLICITUDES } },
+      { path: 'solicitudes/nueva', component: SelectorTipo, canActivate: [permisoGuard], data: { permisos: PERMISOS_CREAR_SOLICITUD } },
+      { path: 'solicitudes/nueva/ingreso', component: FormularioIngreso, canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearIngreso] } },
+      { path: 'solicitudes/bloqueo', component: FormularioBloqueo, canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearBloqueo] } },
+      { path: 'solicitudes/modificacion', component: FormularioModificacion, canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearModificacion] } },
+      { path: 'solicitudes/vpn', component: MisSolicitudesVpn, canActivate: [permisoGuard], data: { permisos: [PERMISOS.solicitarVpn] } },
+      { path: 'solicitudes/vpn/nueva', component: NuevaSolicitudVpn, canActivate: [permisoGuard], data: { permisos: [PERMISOS.solicitarVpn] } },
+      { path: 'solicitudes/vpn/:id/ficha', component: FichaVpn, canActivate: [permisoGuard], data: { permisos: [PERMISOS.completarFichaVpn] } },
+      { path: 'bandeja-ti', component: BandejaTi, canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
+      { path: 'bandeja-ti/:id', component: DetalleSolicitud, canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
+      { path: 'catalogos', component: AdministrarCatalogos, canActivate: [permisoGuard], data: { permisos: [PERMISOS.administrarCatalogos] } },
     ]
   },
   { path: '**', redirectTo: '' }

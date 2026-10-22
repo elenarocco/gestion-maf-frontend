@@ -9,8 +9,8 @@
     </div>
 
     <nav>
-      @for (item of menuActual; track item.ruta) {
-        <a [routerLink]="item.ruta" routerLinkActive="activo">{{ item.nombre }}</a>
+      @for (item of menuActual(); track item.ruta) {
+        <a [routerLink]="item.ruta" [class.activo]="item.ruta === rutaActiva()">{{ item.nombre }}</a>
       }
     </nav>
 

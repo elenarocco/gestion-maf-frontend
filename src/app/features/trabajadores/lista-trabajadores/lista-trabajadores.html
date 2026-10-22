@@ -1,13 +1,16 @@
 <header class="encabezado">
-  <h1>Trabajadores</h1>
+  <h1>{{ sesion.soloSuArea() ? 'Mi equipo' : 'Trabajadores' }}</h1>
   <p class="sub">{{ total }} trabajador{{ total === 1 ? '' : 'es' }}</p>
 </header>
 
 <div class="filtros">
   <input class="buscar" type="search" [formControl]="buscar" placeholder="Buscar por nombre, RUT o correo...">
-  <div class="filtro-area">
-    <app-buscador-catalogo [opciones]="areas" [control]="area" placeholder="Filtrar por área..." />
-  </div>
+  <!-- Jefatura ya ve solo su área (lo fuerza el backend): el filtro solo aparece a quien ve toda la empresa. -->
+  @if (!sesion.soloSuArea()) {
+    <div class="filtro-area">
+      <app-buscador-catalogo [opciones]="areas" [control]="area" placeholder="Filtrar por área..." />
+    </div>
+  }
   <select [value]="estado" (change)="cambiarEstado($any($event.target).value)">
     <option value="Todos">Todos los estados</option>
     <option value="Activos">Solo activos</option>

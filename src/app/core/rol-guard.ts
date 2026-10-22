@@ -7,9 +7,10 @@ export const sesionGuard: CanActivateFn = () => {
   return !!inject(SesionService).usuario() || inject(Router).createUrlTree(['/login']);
 };
 
-// Uso: { path: ..., canActivate: [rolGuard], data: { roles: ['Jefatura'] } }.
-// Solo oculta pantallas según el rol de la sesión; la autorización real la valida el backend.
-export const rolGuard: CanActivateFn = (route) => {
-  const roles = (route.data['roles'] as string[] | undefined) ?? [];
-  return roles.includes(inject(SesionService).rol()) || inject(Router).createUrlTree(['/solicitudes']);
+// Uso: { path: ..., canActivate: [permisoGuard], data: { permisos: [PERMISOS.crearBloqueo] } }.
+// Deja pasar si el usuario tiene ALGUNO de los permisos (los entrega el backend en /api/auth/yo).
+// Solo oculta pantallas; la autorización real la valida el backend en cada llamada.
+export const permisoGuard: CanActivateFn = (route) => {
+  const permisos = (route.data['permisos'] as string[] | undefined) ?? [];
+  return inject(SesionService).tieneAlguno(permisos) || inject(Router).createUrlTree(['/dashboard']);
 };

@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, computed,inject } from '@angular/
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { SesionService } from '../../../core/sesion';
+import { PERMISOS_CREAR_SOLICITUD } from '../../../core/permisos';
 
 interface Resumen {
   alcance: string; // "Empresa completa" o el área del usuario (Jefatura)
@@ -31,9 +32,8 @@ export class Panel implements OnInit {
   private sesion = inject(SesionService);
 
   puedeCrearSolicitud = computed(() => {
-    const rol = this.sesion.rol();
-    const rolesPermitidos = ['Super Admin', 'Admin TI', 'Jefatura'];
-    return rolesPermitidos.includes(rol);
+    // Según los permisos que entrega el backend (RRHH crea Bloqueos, Jefatura Ingresos, etc.).
+    return this.sesion.tieneAlguno(PERMISOS_CREAR_SOLICITUD);
   });
   resumen: Resumen | null = null;
   subtitulo = '';

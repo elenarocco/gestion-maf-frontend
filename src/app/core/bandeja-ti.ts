@@ -4,9 +4,6 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { FichaVpn, HistorialItem } from './solicitud-vpn';
 
-// La Bandeja de TI es solo para este rol (el backend vuelve a validarlo).
-export const ROLES_BANDEJA_TI = ['Admin TI'];
-
 export type AccionTi = 'tomar' | 'completar' | 'rechazar' | 'confirmarEnvio' | 'rechazarFicha';
 
 export interface SolicitudBandeja {

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 // Pantallas de Jefatura para VPN (pedir acceso y completar la ficha). Lo de TI está en la Bandeja de TI.
-export const ROLES_JEFATURA_VPN = ['Jefatura'];
 
 export interface MotivoVpn {
   id: number;

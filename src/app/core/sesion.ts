@@ -14,6 +14,7 @@ export interface UsuarioSesion {
   rol: string;
   areaId: number | null;
   areaNombre: string | null;
+  alcance: 'area' | 'empresa';   // "area": solo ve su área (lo decide el backend)
   permisos: string[];
 }
 
@@ -45,6 +46,13 @@ export class SesionService {
   tienePermiso(codigo: string): boolean {
     return this.usuario()?.permisos.includes(codigo) ?? false;
   }
+
+  // Sin permisos pedidos = basta con tener sesión.
+  tieneAlguno(codigos: readonly string[]): boolean {
+    return codigos.length === 0 ? !!this.usuario() : codigos.some(c => this.tienePermiso(c));
+  }
+
+  soloSuArea = computed(() => this.usuario()?.alcance === 'area');
 
   // Al iniciar la app: completa el regreso desde Microsoft (redirect) y recupera la sesión si existe.
   async inicializar(): Promise<void> {
