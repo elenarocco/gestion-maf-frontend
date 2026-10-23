@@ -9,6 +9,7 @@ import { SolicitudService } from '../../../core/solicitud';
 import { BuscadorCatalogo } from '../../../shared/buscador-catalogo/buscador-catalogo';
 import { SelectorMultiple } from '../../../shared/selector-multiple/selector-multiple';
 import { formatearNombre } from '../../../core/formato-nombre';
+import { AvisoPlazo } from '../../../shared/aviso-plazo/aviso-plazo';
 
 function edadValida(control: AbstractControl): ValidationErrors | null {
   if (!control.value) return null;
@@ -34,7 +35,7 @@ function fechaNoPasada(control: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-formulario-ingreso',
-  imports: [CommonModule, ReactiveFormsModule, BuscadorCatalogo, SelectorMultiple],
+  imports: [CommonModule, ReactiveFormsModule, BuscadorCatalogo, SelectorMultiple, AvisoPlazo],
   templateUrl: './formulario-ingreso.html',
   styleUrl: './formulario-ingreso.scss'
 })

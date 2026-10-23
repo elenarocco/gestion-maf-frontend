@@ -128,6 +128,7 @@
         placeholder="Escribe para buscar una carpeta..." vacio="Aún no has agregado carpetas." />
 </section>
 
+    <app-aviso-plazo tipo="Ingreso" />
     <div class="acciones">
       <button type="button" class="btn-secundario" disabled title="Próximamente">Guardar borrador</button>
       <button type="submit" class="btn-primario" [disabled]="enviando">{{ enviando ? 'Enviando...' : 'Enviar solicitud' }}</button>

@@ -25,6 +25,7 @@
       <p class="hint">TI revisará la solicitud. Si la aprueba, podrás completar la ficha de habilitación del proveedor.</p>
     </section>
 
+    <app-aviso-plazo tipo="Vpn" />
     <div class="acciones">
       <button type="button" class="btn-secundario activo" (click)="cancelar()">Cancelar</button>
       <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}</button>
