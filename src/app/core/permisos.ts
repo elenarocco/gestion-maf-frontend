@@ -10,7 +10,8 @@ export const PERMISOS = {
   solicitarVpn: 'SolicitarAccesoVPN',
   completarFichaVpn: 'CompletarFichaVPN',
   bandejaTi: 'GestionarBandejaTI',
-  administrarCatalogos: 'AdministrarCatalogos'
+  administrarCatalogos: 'AdministrarCatalogos',
+  administrarUsuarios: 'AdministrarUsuariosYRoles'
 } as const;
 
 // Con cualquiera de estos se puede crear algún tipo de solicitud.
