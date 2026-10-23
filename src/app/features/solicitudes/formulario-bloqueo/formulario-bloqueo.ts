@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, switchMap, of, forkJoin, map, catchError } from 'rxjs';
 import { TrabajadorService, Trabajador, TrabajadorDetalle, TrabajadorFicha } from '../../../core/trabajador';
 import { SolicitudService, SolicitudBloqueoCreate } from '../../../core/solicitud';
+import { AvisoPlazo } from '../../../shared/aviso-plazo/aviso-plazo';
 
 const JUSTIFICACION_PERMITIDA = /^[\p{L}\s,.]+$/u;
 const CARACTERES_NO_PERMITIDOS = /[^\p{L}\s,.]/gu;
@@ -24,7 +25,7 @@ function aDatetimeLocal(fecha: Date): string {
 
 @Component({
   selector: 'app-formulario-bloqueo',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AvisoPlazo],
   templateUrl: './formulario-bloqueo.html',
   styleUrl: './formulario-bloqueo.scss'
 })

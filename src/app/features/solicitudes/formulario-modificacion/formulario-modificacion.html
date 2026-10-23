@@ -184,6 +184,7 @@
       </section>
     }
 
+    <app-aviso-plazo tipo="Modificacion" />
     <div class="acciones">
       <button type="button" class="btn-secundario activo" (click)="cancelar()">Cancelar</button>
       <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}</button>

@@ -5,10 +5,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SolicitudVpnService, MotivoVpn } from '../../../../core/solicitud-vpn';
 import { mensajesError } from '../../../../core/errores-api';
+import { AvisoPlazo } from '../../../../shared/aviso-plazo/aviso-plazo';
 
 @Component({
   selector: 'app-nueva-solicitud-vpn',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AvisoPlazo],
   templateUrl: './nueva-solicitud-vpn.html',
   styleUrl: '../vpn.scss'
 })

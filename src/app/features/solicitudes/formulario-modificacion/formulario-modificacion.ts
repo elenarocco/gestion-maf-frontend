@@ -11,6 +11,7 @@ import { SolicitudService, SolicitudModificacionCreate } from '../../../core/sol
 import { BuscadorCatalogo } from '../../../shared/buscador-catalogo/buscador-catalogo';
 import { SelectorMultiple } from '../../../shared/selector-multiple/selector-multiple';
 import { formatearNombre } from '../../../core/formato-nombre';
+import { AvisoPlazo } from '../../../shared/aviso-plazo/aviso-plazo';
 
 const JUSTIFICACION_PERMITIDA = /^[\p{L}\s,.]+$/u;
 const CARACTERES_NO_PERMITIDOS = /[^\p{L}\s,.]/gu;
@@ -45,7 +46,7 @@ const CAMPOS: CampoEditable[] = [
 
 @Component({
   selector: 'app-formulario-modificacion',
-  imports: [ReactiveFormsModule, BuscadorCatalogo, SelectorMultiple],
+  imports: [ReactiveFormsModule, BuscadorCatalogo, SelectorMultiple, AvisoPlazo],
   templateUrl: './formulario-modificacion.html',
   styleUrl: './formulario-modificacion.scss'
 })
