@@ -1,0 +1,175 @@
+<header class="encabezado">
+  <div>
+    <h1>Usuarios y roles</h1>
+    <p class="sub">Quién puede entrar a la plataforma y qué puede hacer cada rol</p>
+  </div>
+  @if (pestana === 'usuarios') {
+    <button class="btn-nueva" (click)="abrirDarAcceso()">+ Dar acceso</button>
+  }
+</header>
+
+<div class="pestanas">
+  <button [class.activa]="pestana === 'usuarios'" (click)="pestana = 'usuarios'">Usuarios</button>
+  <button [class.activa]="pestana === 'roles'" (click)="pestana = 'roles'">Roles y permisos</button>
+</div>
+
+@if (pestana === 'usuarios') {
+  @if (alerta) {
+    <p class="alerta-linea" [class.error]="alerta.error" role="status">{{ alerta.texto }}</p>
+  }
+
+  @if (panelAbierto) {
+    <section class="panel">
+      <h3>{{ editando ? 'Cambiar acceso de ' + editando.trabajadorNombre : 'Dar acceso a un trabajador' }}</h3>
+      @if (erroresForm.length) {
+        <div class="alerta" role="alert">@for (e of erroresForm; track e) { <div>{{ e }}</div> }</div>
+      }
+
+      @if (!editando) {
+        <label class="campo">
+          <span>Trabajador</span>
+          @if (candidato) {
+            <div class="elegido">
+              <div><strong>{{ candidato.nombre }}</strong> · {{ candidato.rut }}<div class="tenue">{{ candidato.correo }} · {{ candidato.areaNombre }}</div></div>
+              <button type="button" class="link" (click)="quitarCandidato()">Cambiar</button>
+            </div>
+          } @else {
+            <input type="search" [formControl]="buscarCandidato" placeholder="Busca por nombre, RUT o correo (solo trabajadores activos sin acceso)">
+            @if (candidatos.length) {
+              <ul class="sugerencias">
+                @for (c of candidatos; track c.trabajadorId) {
+                  <li><button type="button" (click)="elegirCandidato(c)"><strong>{{ c.nombre }}</strong> · {{ c.rut }} <span class="tenue">· {{ c.areaNombre }}</span></button></li>
+                }
+              </ul>
+            } @else if (buscarCandidato.value.trim().length >= 2) {
+              <p class="tenue ayuda">Sin resultados: el trabajador no existe, está inactivo o ya tiene acceso.</p>
+            }
+          }
+        </label>
+      }
+
+      <div class="fila-form">
+        <label class="campo">
+          <span>Rol</span>
+          <select [formControl]="rol">
+            <option [ngValue]="''">— Seleccionar —</option>
+            @for (r of roles; track r.id) { <option [ngValue]="r.id">{{ r.nombre }}</option> }
+          </select>
+        </label>
+        <label class="campo">
+          <span>Área {{ esJefatura ? '(obligatoria para Jefatura)' : '(opcional)' }}</span>
+          <app-buscador-catalogo [opciones]="areas" [control]="area" placeholder="Buscar área..." />
+        </label>
+      </div>
+      @if (esJefatura) {
+        <p class="tenue ayuda">La Jefatura solo ve los trabajadores y datos de esta área.</p>
+      }
+
+      <div class="botones">
+        <button class="primario" (click)="guardar()" [disabled]="guardando">{{ guardando ? 'Guardando...' : (editando ? 'Guardar cambios' : 'Dar acceso') }}</button>
+        <button class="secundario" (click)="cancelar()">Cancelar</button>
+      </div>
+    </section>
+  }
+
+  <div class="filtros">
+    <input class="buscar" type="search" [formControl]="buscar" placeholder="Buscar por nombre, RUT o correo...">
+    <select aria-label="Filtrar por rol" (change)="filtrarRol($any($event.target).value)">
+      <option value="">Todos los roles</option>
+      @for (r of roles; track r.id) { <option [value]="r.id" [selected]="filtroRol === '' + r.id">{{ r.nombre }}</option> }
+    </select>
+    <select aria-label="Filtrar por estado" (change)="filtrarEstado($any($event.target).value)">
+      <option value="Activos" [selected]="filtroEstado === 'Activos'">Con acceso</option>
+      <option value="Inactivos" [selected]="filtroEstado === 'Inactivos'">Sin acceso</option>
+      <option value="Todos" [selected]="filtroEstado === 'Todos'">Todos</option>
+    </select>
+  </div>
+
+  <section class="tarjeta">
+    @if (error) {
+      <p class="mensaje">{{ error }}</p>
+    } @else if (cargando) {
+      <p class="mensaje">Cargando...</p>
+    } @else if (filas.length === 0) {
+      <p class="mensaje">No hay usuarios para este filtro.</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Usuario</th><th>RUT</th><th>Rol</th><th>Área</th><th>Acceso</th><th class="acciones">Acciones</th></tr></thead>
+          <tbody>
+            @for (u of filas; track u.id) {
+              <tr>
+                <td [class.tenue]="!u.activo">
+                  <div>{{ u.trabajadorNombre }} @if (u.esUstedMismo) { <span class="chip">Tú</span> }</div>
+                  <div class="correo">{{ u.trabajadorCorreo }}</div>
+                </td>
+                <td>{{ u.trabajadorRut }}</td>
+                <td>{{ u.rolNombre }}</td>
+                <td>{{ u.areaNombre ?? '—' }}</td>
+                <td>
+                  <span class="badge" [class.activo]="u.activo" [class.inactivo]="!u.activo">{{ u.activo ? 'Con acceso' : 'Sin acceso' }}</span>
+                  @if (!u.trabajadorActivo) { <div class="correo">Trabajador inactivo</div> }
+                </td>
+                <td class="acciones">
+                  @if (!u.esUstedMismo) {
+                    @if (u.activo) { <button class="link" (click)="abrirCambiar(u)">Cambiar rol</button> }
+                    <button class="link" [class.peligro]="u.activo" (click)="alternarActivo(u)">{{ u.activo ? 'Quitar acceso' : 'Reactivar' }}</button>
+                  }
+                  <button class="link" (click)="verHistorial(u)">{{ historialDe === u.id ? 'Ocultar historial' : 'Historial' }}</button>
+                </td>
+              </tr>
+              @if (historialDe === u.id) {
+                <tr class="historial">
+                  <td colspan="6">
+                    @if (historial.length === 0) {
+                      <span class="tenue">Sin cambios registrados (los accesos anteriores a esta pantalla no tienen historial).</span>
+                    } @else {
+                      <ul>
+                        @for (h of historial; track $index) {
+                          <li><span class="tenue">{{ h.fecha | date:'dd-MM-yyyy HH:mm' }}</span> · <strong>{{ h.accion }}</strong>@if (h.detalle) { · {{ h.detalle }} } <span class="tenue">· por {{ h.realizadoPorNombre }}</span></li>
+                        }
+                      </ul>
+                    }
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="paginacion">
+        <span>{{ desde }}–{{ hasta }} de {{ total }}</span>
+        <div class="controles">
+          <button (click)="irA(pagina - 1)" [disabled]="pagina <= 1">← Anterior</button>
+          <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+          <button (click)="irA(pagina + 1)" [disabled]="pagina >= totalPaginas">Siguiente →</button>
+        </div>
+      </footer>
+    }
+  </section>
+} @else {
+  <p class="nota">Los permisos de cada rol se ven aquí, pero no se cambian desde la plataforma: un cambio afecta a todos los usuarios del rol, así que se hace con una actualización revisada por TI.</p>
+  <section class="tarjeta">
+    <div class="tabla-scroll">
+      <table class="matriz">
+        <thead>
+          <tr>
+            <th>Permiso</th>
+            @for (r of roles; track r.id) { <th class="centro">{{ r.nombre }}<div class="tenue normal">{{ r.usuariosActivos }} usuario{{ r.usuariosActivos === 1 ? '' : 's' }}</div></th> }
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of permisos; track p.id) {
+            <tr>
+              <td>{{ p.descripcion || p.codigo }}<div class="correo">{{ p.codigo }}</div></td>
+              @for (r of roles; track r.id) {
+                <td class="centro">@if (tiene(r, p)) { <span class="si" aria-label="Sí">✓</span> } @else { <span class="no" aria-label="No">—</span> }</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}

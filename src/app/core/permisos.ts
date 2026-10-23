@@ -11,7 +11,8 @@ export const PERMISOS = {
   completarFichaVpn: 'CompletarFichaVPN',
   bandejaTi: 'GestionarBandejaTI',
   administrarCatalogos: 'AdministrarCatalogos',
-  exportarReportes: 'ExportarReportes'
+  exportarReportes: 'ExportarReportes',
+  administrarUsuarios: 'AdministrarUsuariosYRoles'
 } as const;
 
 // Con cualquiera de estos se puede crear algún tipo de solicitud.
