@@ -1,0 +1,19 @@
+:host { margin-left: auto; }
+.descargar { position: relative; }
+.boton {
+  border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 14px; background: #fff;
+  font-size: 13px; color: #374151; font-family: inherit; cursor: pointer; white-space: nowrap;
+}
+.boton:hover:not(:disabled) { border-color: #9ca3af; }
+.boton:disabled { opacity: .6; cursor: progress; }
+.menu {
+  position: absolute; right: 0; top: calc(100% + 4px); z-index: 10; min-width: 150px;
+  background: #fff; border: 1px solid #e8eaee; border-radius: 6px; box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  display: flex; flex-direction: column; padding: 4px;
+}
+.menu button {
+  border: 0; background: none; text-align: left; padding: 8px 10px; border-radius: 4px;
+  font-size: 13px; color: #374151; font-family: inherit; cursor: pointer;
+}
+.menu button:hover { background: #f3f4f6; }
+.error { margin: 6px 0 0; max-width: 260px; font-size: 12px; color: var(--maf-rojo); }

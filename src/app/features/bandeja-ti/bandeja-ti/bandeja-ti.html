@@ -13,6 +13,7 @@
     <option value="" [selected]="estado() === ''">Todos los estados</option>
     @for (e of estados; track e.valor) { <option [value]="e.valor" [selected]="estado() === e.valor">{{ e.etiqueta }}</option> }
   </select>
+  <app-descargar-reporte ruta="/solicitudes/exportar" [filtros]="{ tipo: tipo(), estado: estado() }" />
 </div>
 
 @if (errores().length) {

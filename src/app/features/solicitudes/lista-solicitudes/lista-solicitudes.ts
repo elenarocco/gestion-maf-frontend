@@ -7,6 +7,7 @@ import { SesionService } from '../../../core/sesion';
 import { PERMISOS, PERMISOS_CREAR_SOLICITUD } from '../../../core/permisos';
 import { ESTADOS, TIPOS, etiquetaTipo, normalizarEstado } from '../../../core/solicitud-estado';
 import { mensajesError } from '../../../core/errores-api';
+import { DescargarReporte } from '../../../shared/descargar-reporte/descargar-reporte';
 
 interface Enlace { ruta: string | (string | number)[]; queryParams?: Record<string, number | null>; texto: string; }
 
@@ -29,7 +30,7 @@ const RUTA_CORREGIR: Record<string, string> = {
 // ("Solicitudes"); el resto ve solo las que creó ("Mis solicitudes"), incluidas las VPN.
 @Component({
   selector: 'app-lista-solicitudes',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DescargarReporte],
   templateUrl: './lista-solicitudes.html',
   styleUrl: './lista-solicitudes.scss'
 })

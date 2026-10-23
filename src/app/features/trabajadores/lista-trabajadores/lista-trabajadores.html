@@ -16,6 +16,7 @@
     <option value="Activos">Solo activos</option>
     <option value="Inactivos">Solo inactivos</option>
   </select>
+  <app-descargar-reporte ruta="/Trabajador/exportar" [filtros]="$any(filtros)" />
 </div>
 
 <section class="tarjeta">

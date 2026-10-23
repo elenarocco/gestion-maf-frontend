@@ -6,12 +6,13 @@ import { BandejaTiService, SolicitudBandeja } from '../../../core/bandeja-ti';
 import { ESTADOS, TIPOS, etiquetaTipo, formatoFechaHora } from '../../../core/solicitud-estado';
 import { mensajesError } from '../../../core/errores-api';
 import { EstadoChip } from '../../../shared/estado-chip/estado-chip';
+import { DescargarReporte } from '../../../shared/descargar-reporte/descargar-reporte';
 
 const TAMANO_PAGINA = 20;
 
 @Component({
   selector: 'app-bandeja-ti',
-  imports: [EstadoChip],
+  imports: [EstadoChip, DescargarReporte],
   templateUrl: './bandeja-ti.html',
   styleUrl: './bandeja-ti.scss'
 })

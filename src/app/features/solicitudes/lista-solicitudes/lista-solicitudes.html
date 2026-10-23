@@ -20,6 +20,7 @@
     <option value="" [selected]="estadoActivo === ''">Todos los estados</option>
     @for (e of estados; track e.valor) { <option [value]="e.valor" [selected]="estadoActivo === e.valor">{{ e.etiqueta }}</option> }
   </select>
+  <app-descargar-reporte ruta="/solicitudes/exportar" [filtros]="{ tipo: tipoActivo, estado: estadoActivo }" />
 </div>
 
 @if (errores.length) {
