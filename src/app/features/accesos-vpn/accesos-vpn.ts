@@ -9,7 +9,9 @@ import { mensajesError } from '../../core/errores-api';
 interface AccesoVpn {
   id: number; solicitudId: number; rut: string; nombre: string; cargo: string | null; companiaExterna: string | null;
   departamento: string | null; cuentaCorreo: string | null; motivo: string;
-  fechaDesde: string | null; fechaHasta: string | null; vigente: boolean; fechaRegistro: string;
+  fechaDesde: string | null; fechaHasta: string | null;
+  // Los calcula el backend (ReglasVpn): Vigente | PorVencer | Vencido y cuántos días le quedan.
+  estado: 'Vigente' | 'PorVencer' | 'Vencido'; diasRestantes: number | null; fechaRegistro: string;
 }
 
 // Registro de accesos VPN de proveedores: se llena solo, cuando TI confirma el envío de una solicitud VPN.
@@ -47,14 +49,6 @@ export class AccesosVpn implements OnInit, OnDestroy {
 
   cambiarEstado(e: string): void { this.estado = e; this.pagina = 1; this.cargar(); }
   irA(p: number): void { this.pagina = p; this.cargar(); }
-
-  // Días que faltan para que venza (null si no tiene fecha de término).
-  diasRestantes(a: AccesoVpn): number | null {
-    if (!a.fechaHasta) return null;
-    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-    const [y, m, d] = a.fechaHasta.split('-').map(Number);
-    return Math.round((new Date(y, m - 1, d).getTime() - hoy.getTime()) / 86_400_000);
-  }
 
   fecha(f: string | null): string {
     if (!f) return '—';

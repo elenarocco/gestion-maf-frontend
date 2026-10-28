@@ -32,12 +32,12 @@
               <td>{{ fecha(a.fechaDesde) }}</td>
               <td>{{ fecha(a.fechaHasta) }}</td>
               <td>
-                @if (!a.vigente) {
-                  <span class="badge vencido">Vencido</span>
-                } @else if (diasRestantes(a) !== null && diasRestantes(a)! <= 15) {
-                  <span class="badge por-vencer">Vence en {{ diasRestantes(a) }} día{{ diasRestantes(a) === 1 ? '' : 's' }}</span>
-                } @else {
-                  <span class="badge vigente">Vigente</span>
+                @switch (a.estado) {
+                  @case ('Vencido') { <span class="badge vencido">Vencido</span> }
+                  @case ('PorVencer') {
+                    <span class="badge por-vencer">{{ a.diasRestantes === 0 ? 'Vence hoy' : 'Vence en ' + a.diasRestantes + ' día' + (a.diasRestantes === 1 ? '' : 's') }}</span>
+                  }
+                  @default { <span class="badge vigente">Vigente</span> }
                 }
               </td>
               <td class="acciones"><a class="btn-accion" [routerLink]="['/solicitudes', a.solicitudId]" [title]="'Solicitud N° ' + a.solicitudId">Ver solicitud</a></td>

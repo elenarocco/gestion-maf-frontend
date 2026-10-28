@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { formatearRut, rutValido } from '../../../../core/rut';
-import { SolicitudVpnService, SolicitudVpnDetalle, FichaVpn as Ficha, fichaEditable } from '../../../../core/solicitud-vpn';
+import { SolicitudVpnService, SolicitudVpnDetalle, FichaVpn as Ficha } from '../../../../core/solicitud-vpn';
 import { leerError, mensajesError } from '../../../../core/errores-api';
 import { EstadoChip } from '../../../../shared/estado-chip/estado-chip';
 import { HistorialSolicitud } from '../../../../shared/historial-solicitud/historial-solicitud';
@@ -53,7 +53,7 @@ export class FichaVpn {
 
   editable = computed(() => {
     const s = this.solicitud();
-    return !!s && fichaEditable(s);
+    return !!s && s.fichaEditable;
   });
 
   form = this.fb.group({

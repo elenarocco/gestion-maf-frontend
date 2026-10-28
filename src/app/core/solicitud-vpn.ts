@@ -42,6 +42,7 @@ export interface SolicitudVpnDetalle {
   fechaCreacion: string;
   fechaEnvioProveedor: string | null;
   ficha: FichaVpn | null;
+  fichaEditable: boolean;   // lo decide el backend: la creó quien consulta, TI la habilitó y sigue Pendiente
   historial: HistorialItem[];
 }
 
@@ -69,7 +70,3 @@ export class SolicitudVpnService {
   }
 }
 
-// En la ficha: editable solo si TI la habilitó y sigue Pendiente; si no, se muestra en solo lectura.
-export function fichaEditable(s: SolicitudVpnDetalle): boolean {
-  return s.formularioHabilitado && s.estado === 'Pendiente';
-}
