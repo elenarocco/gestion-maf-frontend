@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-// Pantallas de Jefatura para VPN (pedir acceso y completar la ficha). Lo de TI está en la Bandeja de TI.
+// Pantallas de VPN: Admin TI la pide con la ficha completa (queda aprobada). Lo demás está en la Bandeja de TI.
 
 export interface MotivoVpn {
   id: number;
@@ -59,8 +59,9 @@ export class SolicitudVpnService {
     return this.http.get<SolicitudVpnDetalle>(`${this.apiUrl}/vpn/${id}`);
   }
 
-  crear(motivoId: number): Observable<{ id: number }> {
-    return this.http.post<{ id: number }>(`${this.apiUrl}/vpn`, { motivoId });
+  // Admin TI la crea con la ficha completa: queda aprobada al crearla.
+  crear(motivoId: number, ficha: FichaVpn): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`${this.apiUrl}/vpn`, { motivoId, ficha });
   }
 
   completarFicha(id: number, ficha: FichaVpn): Observable<void> {

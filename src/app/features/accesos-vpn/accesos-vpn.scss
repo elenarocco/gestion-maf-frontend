@@ -15,7 +15,7 @@ th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: u
 td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #f1f2f4; }
 .tenue { font-size: 12px; color: #9ca3af; }
 .acciones { text-align: right; white-space: nowrap; }
-.link { color: #2563eb; font-size: 13px; text-decoration: none; }
+.acciones .btn-accion + .btn-accion { margin-left: 6px; }
 
 .badge { border-radius: 10px; padding: 3px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }

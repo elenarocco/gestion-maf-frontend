@@ -53,8 +53,8 @@
               <td [class.tenue]="!c.activo" class="nombre">{{ c.nombre }}</td>
               <td><span class="badge" [class.activo]="c.activo" [class.inactivo]="!c.activo">{{ c.activo ? 'Activo' : 'Inactivo' }}</span></td>
               <td class="acciones">
-                <button class="link" (click)="abrirEditar(c)">Editar</button>
-                <button class="link" [class.peligro]="c.activo" (click)="alternarActivo(c)">{{ c.activo ? 'Desactivar' : 'Reactivar' }}</button>
+                <button class="btn-accion" (click)="abrirEditar(c)">Editar</button>
+                <button class="btn-accion" [class.peligro]="c.activo" (click)="alternarActivo(c)">{{ c.activo ? 'Desactivar' : 'Reactivar' }}</button>
               </td>
             </tr>
           }

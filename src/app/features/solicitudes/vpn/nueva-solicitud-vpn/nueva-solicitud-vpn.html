@@ -13,22 +13,132 @@
     <section class="tarjeta">
       <h4>Motivo de la solicitud</h4>
       <div class="campo">
-        <label for="motivo">Motivo</label>
-        <select id="motivo" formControlName="motivoId">
+        <label for="motivoId">Motivo</label>
+        <select id="motivoId" formControlName="motivoId">
           <option [ngValue]="null" disabled>{{ cargandoMotivos() ? 'Cargando...' : 'Selecciona un motivo' }}</option>
           @for (m of motivos(); track m.id) { <option [ngValue]="m.id">{{ m.nombre }}</option> }
         </select>
-        @if (form.controls.motivoId.touched && form.controls.motivoId.invalid) {
-          <span class="error-campo">Debes seleccionar un motivo.</span>
-        }
+        @if (invalido('motivoId')) { <span class="error-campo">Debes seleccionar un motivo.</span> }
       </div>
-      <p class="hint">TI revisará la solicitud. Si la aprueba, podrás completar la ficha de habilitación del proveedor.</p>
+      <p class="hint">La solicitud queda aprobada al enviarla. Después solo falta confirmar el envío al proveedor desde la Bandeja de TI.</p>
+    </section>
+
+    <section class="tarjeta">
+      <h4>Vigencia del acceso</h4>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="fechaIncorporacion">Fecha de incorporación</label>
+          <input id="fechaIncorporacion" type="date" formControlName="fechaIncorporacion">
+          @if (invalido('fechaIncorporacion')) { <span class="error-campo">La fecha de incorporación es obligatoria.</span> }
+          @else if (errorServidor('fechaIncorporacion')) { <span class="error-campo">{{ errorServidor('fechaIncorporacion') }}</span> }
+        </div>
+        <div class="campo">
+          <label for="fechaCaducidad">Fecha de caducidad</label>
+          <input id="fechaCaducidad" type="date" formControlName="fechaCaducidad"
+                 [min]="form.controls.fechaIncorporacion.value || null"
+                 [class.ng-invalid]="fechasInvalidas()">
+          @if (invalido('fechaCaducidad')) { <span class="error-campo">La fecha de caducidad es obligatoria.</span> }
+          @else if (fechasInvalidas()) { <span class="error-campo">La fecha de caducidad debe ser posterior a la de incorporación.</span> }
+          @else if (errorServidor('fechaCaducidad')) { <span class="error-campo">{{ errorServidor('fechaCaducidad') }}</span> }
+        </div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <h4>Datos del proveedor</h4>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="rut">RUT</label>
+          <input id="rut" type="text" autocomplete="off" formControlName="rut" placeholder="12.345.678-9"
+                 (input)="onRutInput($event)">
+          @if (invalido('rut')) {
+            <span class="error-campo">
+              {{ form.controls.rut.hasError('required') ? 'El RUT es obligatorio.' : 'El RUT no es válido (revisa el dígito verificador).' }}
+            </span>
+          } @else if (errorServidor('rut')) { <span class="error-campo">{{ errorServidor('rut') }}</span> }
+        </div>
+        <div class="campo">
+          <label for="cargo">Cargo</label>
+          <input id="cargo" type="text" formControlName="cargo" maxlength="100">
+          @if (invalido('cargo')) { <span class="error-campo">El cargo es obligatorio.</span> }
+          @else if (errorServidor('cargo')) { <span class="error-campo">{{ errorServidor('cargo') }}</span> }
+        </div>
+        <div class="campo">
+          <label for="nombres">Nombres</label>
+          <input id="nombres" type="text" formControlName="nombres" maxlength="100">
+          @if (invalido('nombres')) { <span class="error-campo">Los nombres son obligatorios.</span> }
+          @else if (errorServidor('nombres')) { <span class="error-campo">{{ errorServidor('nombres') }}</span> }
+        </div>
+        <div class="campo">
+          <label for="apellidos">Apellidos</label>
+          <input id="apellidos" type="text" formControlName="apellidos" maxlength="100">
+          @if (invalido('apellidos')) { <span class="error-campo">Los apellidos son obligatorios.</span> }
+          @else if (errorServidor('apellidos')) { <span class="error-campo">{{ errorServidor('apellidos') }}</span> }
+        </div>
+        <div class="campo">
+          <label for="departamento">Departamento</label>
+          <input id="departamento" type="text" formControlName="departamento" maxlength="100">
+          @if (invalido('departamento')) { <span class="error-campo">El departamento es obligatorio.</span> }
+          @else if (errorServidor('departamento')) { <span class="error-campo">{{ errorServidor('departamento') }}</span> }
+        </div>
+        <div class="campo">
+          <label for="ubicacionFisica">Ubicación física</label>
+          <input id="ubicacionFisica" type="text" formControlName="ubicacionFisica" maxlength="150">
+          @if (invalido('ubicacionFisica')) { <span class="error-campo">La ubicación física es obligatoria.</span> }
+          @else if (errorServidor('ubicacionFisica')) { <span class="error-campo">{{ errorServidor('ubicacionFisica') }}</span> }
+        </div>
+        <div class="campo" style="grid-column: span 2;">
+          <label for="cuentaCorreo">Cuenta de correo</label>
+          <input id="cuentaCorreo" type="email" formControlName="cuentaCorreo" maxlength="150" placeholder="nombre@empresa.com">
+          @if (invalido('cuentaCorreo')) {
+            <span class="error-campo">
+              {{ form.controls.cuentaCorreo.hasError('required') ? 'La cuenta de correo es obligatoria.' : 'Ingresa un correo válido (ej. nombre@empresa.com).' }}
+            </span>
+          } @else if (errorServidor('cuentaCorreo')) { <span class="error-campo">{{ errorServidor('cuentaCorreo') }}</span> }
+        </div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <h4>Equipo</h4>
+      <div class="campo">
+        <label>¿Pertenece a la compañía?</label>
+        <div class="radios">
+          <label class="radio"><input type="radio" formControlName="equipoCorporativo" [value]="true"> Sí</label>
+          <label class="radio"><input type="radio" formControlName="equipoCorporativo" [value]="false"> No</label>
+        </div>
+        @if (invalido('equipoCorporativo')) { <span class="error-campo">Indica si el equipo pertenece a la compañía.</span> }
+        @else if (errorServidor('equipoCorporativo')) { <span class="error-campo">{{ errorServidor('equipoCorporativo') }}</span> }
+      </div>
+
+      @if (form.controls.equipoCorporativo.value === false) {
+        <div class="campo">
+          <label for="companiaExterna">Compañía externa</label>
+          <input id="companiaExterna" type="text" formControlName="companiaExterna" maxlength="150">
+          @if (invalido('companiaExterna')) { <span class="error-campo">La compañía externa es obligatoria cuando el equipo no pertenece a la compañía.</span> }
+          @else if (errorServidor('companiaExterna')) { <span class="error-campo">{{ errorServidor('companiaExterna') }}</span> }
+        </div>
+      }
+    </section>
+
+    <section class="tarjeta">
+      <h4>Justificación</h4>
+      <div class="campo">
+        <label for="motivo">Justificación del acceso</label>
+        <textarea id="motivo" formControlName="motivo" rows="4" [attr.maxlength]="maxMotivo"
+                  (input)="onMotivoInput($event)"
+                  placeholder="Motivo del acceso VPN. Solo letras, espacios, comas y puntos."></textarea>
+        <span class="contador">{{ largoMotivo() }}/{{ maxMotivo }}</span>
+        @if (invalido('motivo')) {
+          <span class="error-campo">El motivo es obligatorio y solo admite letras, espacios, comas y puntos.</span>
+        } @else if (errorServidor('motivo')) { <span class="error-campo">{{ errorServidor('motivo') }}</span> }
+      </div>
     </section>
 
     <app-aviso-plazo tipo="Vpn" />
     <div class="acciones">
       <button type="button" class="btn-secundario activo" (click)="cancelar()">Cancelar</button>
-      <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}</button>
+      <button type="submit" class="btn-primario" [disabled]="!puedeEnviar()">{{ enviando() ? 'Enviando...' : 'Crear solicitud' }}</button>
     </div>
   </form>
 </div>

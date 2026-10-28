@@ -31,7 +31,7 @@
           @if (candidato) {
             <div class="elegido">
               <div><strong>{{ candidato.nombre }}</strong> · {{ candidato.rut }}<div class="tenue">{{ candidato.correo }} · {{ candidato.areaNombre }}</div></div>
-              <button type="button" class="link" (click)="quitarCandidato()">Cambiar</button>
+              <button type="button" class="btn-accion" (click)="quitarCandidato()">Cambiar</button>
             </div>
           } @else {
             <input type="search" [formControl]="buscarCandidato" placeholder="Busca por nombre, RUT o correo (solo trabajadores activos sin acceso)">
@@ -112,10 +112,10 @@
                 </td>
                 <td class="acciones">
                   @if (!u.esUstedMismo) {
-                    @if (u.activo) { <button class="link" (click)="abrirCambiar(u)">Cambiar rol</button> }
-                    <button class="link" [class.peligro]="u.activo" (click)="alternarActivo(u)">{{ u.activo ? 'Quitar acceso' : 'Reactivar' }}</button>
+                    @if (u.activo) { <button class="btn-accion" (click)="abrirCambiar(u)">Cambiar rol</button> }
+                    <button class="btn-accion" [class.peligro]="u.activo" (click)="alternarActivo(u)">{{ u.activo ? 'Quitar acceso' : 'Reactivar' }}</button>
                   }
-                  <button class="link" (click)="verHistorial(u)">{{ historialDe === u.id ? 'Ocultar historial' : 'Historial' }}</button>
+                  <button class="btn-accion" (click)="verHistorial(u)">{{ historialDe === u.id ? 'Ocultar historial' : 'Historial' }}</button>
                 </td>
               </tr>
               @if (historialDe === u.id) {

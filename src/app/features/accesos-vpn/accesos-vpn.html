@@ -40,7 +40,7 @@
                   <span class="badge vigente">Vigente</span>
                 }
               </td>
-              <td class="acciones"><a class="link" [routerLink]="['/solicitudes', a.solicitudId]">Solicitud #{{ a.solicitudId }}</a></td>
+              <td class="acciones"><a class="btn-accion" [routerLink]="['/solicitudes', a.solicitudId]" [title]="'Solicitud N° ' + a.solicitudId">Ver solicitud</a></td>
             </tr>
           }
         </tbody>

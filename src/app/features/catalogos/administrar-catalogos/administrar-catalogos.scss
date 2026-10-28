@@ -33,8 +33,7 @@ td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #
 td.nombre { word-break: break-all; }
 td.tenue { color: #9ca3af; }
 .acciones { text-align: right; white-space: nowrap; }
-.link { background: none; border: none; color: #2563eb; font-size: 13px; cursor: pointer; padding: 0 6px; }
-.link.peligro { color: var(--maf-rojo); }
+.acciones .btn-accion + .btn-accion { margin-left: 6px; }
 
 .badge { border-radius: 10px; padding: 3px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
 .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
