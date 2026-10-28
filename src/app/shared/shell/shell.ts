@@ -32,6 +32,7 @@ export class Shell {
       { nombre: 'Dashboard', ruta: '/dashboard', permisos: [] },
       { nombre: soloSuArea ? 'Mi equipo' : 'Trabajadores', ruta: '/trabajadores', permisos: [PERMISOS.consultarTrabajadores] },
       { nombre: 'Bandeja de TI', ruta: '/bandeja-ti', permisos: [PERMISOS.bandejaTi] },
+      { nombre: 'Accesos VPN', ruta: '/accesos-vpn', permisos: [PERMISOS.bandejaTi, PERMISOS.consultarTodasLasSolicitudes] },
       { nombre: veTodas ? 'Solicitudes' : 'Mis solicitudes', ruta: '/solicitudes', permisos: PERMISOS_VER_SOLICITUDES },
       { nombre: 'Catálogos', ruta: '/catalogos', permisos: [PERMISOS.administrarCatalogos] },
       { nombre: 'Usuarios y roles', ruta: '/usuarios', permisos: [PERMISOS.administrarUsuarios] }

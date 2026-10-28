@@ -111,8 +111,8 @@ export class FormularioIngreso implements OnInit {
   ngOnInit(): void {
     this.catalogoService.getPorTipo('DireccionCorporativa').subscribe(r => { this.direcciones = r.datos; this.cdr.detectChanges(); });
     this.catalogoService.getPorTipo('LugarTrabajo').subscribe(r => { this.lugares = r.datos; this.cdr.detectChanges(); });
-    this.catalogoService.getPorTipo('Sistema').subscribe(r => { this.sistemas = r.datos; this.cdr.detectChanges(); });
-    this.catalogoService.getPorTipo('Carpeta').subscribe(r => { this.carpetas = r.datos; this.cdr.detectChanges(); });
+    this.catalogoService.getPorTipo('Sistema').subscribe(r => { this.sistemas = r.datos; this.marcarAccesosPrecargados(); });
+    this.catalogoService.getPorTipo('Carpeta').subscribe(r => { this.carpetas = r.datos; this.marcarAccesosPrecargados(); });
     this.catalogoService.getPorTipo('Cargo').subscribe(r => { this.cargos = r.datos; this.cdr.detectChanges(); });
 
     // Las áreas se cargan al elegir la dirección corporativa
@@ -121,12 +121,25 @@ export class FormularioIngreso implements OnInit {
     this.precargarDatosDeCorreccion();
   }
 
-  // Precarga los datos del trabajador del Ingreso rechazado; la fecha de incorporación se vuelve a elegir.
-  private precargarDatosDeCorreccion(): void {
-    const id = Number(this.route.snapshot.queryParamMap.get('trabajador'));
-    if (!this.solicitudOrigenId || !id) return;
+  // Accesos del Ingreso rechazado; se marcan cuando ya cargaron las listas de sistemas y carpetas.
+  private accesosPrecargados: number[] = [];
 
-    this.trabajadorService.getById(id).subscribe(t => {
+  private marcarAccesosPrecargados(): void {
+    if (this.accesosPrecargados.length) {
+      this.sistemasSel = this.accesosPrecargados.filter(id => this.sistemas.some(s => s.id === id));
+      this.carpetasSel = this.accesosPrecargados.filter(id => this.carpetas.some(c => c.id === id));
+    }
+    this.cdr.detectChanges();
+  }
+
+  // Precarga los datos del Ingreso rechazado (salen de la solicitud: el trabajador no existe hasta que TI la
+  // completa); la fecha de incorporación se vuelve a elegir.
+  private precargarDatosDeCorreccion(): void {
+    if (!this.solicitudOrigenId) return;
+
+    this.solicitudService.datosIngreso(this.solicitudOrigenId).subscribe(t => {
+      this.accesosPrecargados = t.catalogoIds ?? [];
+      this.marcarAccesosPrecargados();
       this.form.patchValue({
         rut: t.rut, sexo: t.sexo,
         primerNombre: t.primerNombre, segundoNombre: t.segundoNombre ?? '',

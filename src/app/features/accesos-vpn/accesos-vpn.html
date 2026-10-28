@@ -1,0 +1,59 @@
+<header class="encabezado">
+  <h1>Accesos VPN</h1>
+  <p class="sub">Proveedores con acceso VPN. Se registran solos cuando TI confirma el envío de una solicitud VPN.</p>
+</header>
+
+<div class="filtros">
+  <input class="buscar" type="search" [formControl]="buscar" placeholder="Buscar por nombre, RUT o compañía...">
+  <select aria-label="Filtrar por estado" (change)="cambiarEstado($any($event.target).value)">
+    <option value="Vigentes" [selected]="estado === 'Vigentes'">Vigentes</option>
+    <option value="Vencidos" [selected]="estado === 'Vencidos'">Vencidos</option>
+    <option value="Todos" [selected]="estado === 'Todos'">Todos</option>
+  </select>
+</div>
+
+<section class="tarjeta">
+  @if (error) {
+    <p class="mensaje">{{ error }}</p>
+  } @else if (cargando) {
+    <p class="mensaje">Cargando...</p>
+  } @else if (filas.length === 0) {
+    <p class="mensaje">No hay accesos VPN para este filtro.</p>
+  } @else {
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Proveedor</th><th>Compañía</th><th>Motivo</th><th>Desde</th><th>Hasta</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+          @for (a of filas; track a.id) {
+            <tr>
+              <td><div>{{ a.nombre }}</div><div class="tenue">{{ a.rut }}{{ a.cuentaCorreo ? ' · ' + a.cuentaCorreo : '' }}</div></td>
+              <td>{{ a.companiaExterna || '—' }}</td>
+              <td>{{ a.motivo }}</td>
+              <td>{{ fecha(a.fechaDesde) }}</td>
+              <td>{{ fecha(a.fechaHasta) }}</td>
+              <td>
+                @if (!a.vigente) {
+                  <span class="badge vencido">Vencido</span>
+                } @else if (diasRestantes(a) !== null && diasRestantes(a)! <= 15) {
+                  <span class="badge por-vencer">Vence en {{ diasRestantes(a) }} día{{ diasRestantes(a) === 1 ? '' : 's' }}</span>
+                } @else {
+                  <span class="badge vigente">Vigente</span>
+                }
+              </td>
+              <td class="acciones"><a class="link" [routerLink]="['/solicitudes', a.solicitudId]">Solicitud #{{ a.solicitudId }}</a></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="paginacion">
+      <span>{{ total }} acceso{{ total === 1 ? '' : 's' }}</span>
+      <div class="controles">
+        <button (click)="irA(pagina - 1)" [disabled]="pagina <= 1">← Anterior</button>
+        <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+        <button (click)="irA(pagina + 1)" [disabled]="pagina >= totalPaginas">Siguiente →</button>
+      </div>
+    </footer>
+  }
+</section>

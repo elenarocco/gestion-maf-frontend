@@ -58,6 +58,10 @@ export class SolicitudService {
   crearIngreso(dto: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/ingreso`, dto);
   }
+  // Datos de un Ingreso (para corregirlo): el trabajador no existe hasta que TI completa la solicitud.
+  datosIngreso(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}/datos-ingreso`);
+  }
   crearBloqueo(dto: SolicitudBloqueoCreate): Observable<SolicitudBloqueoResultado> {
     return this.http.post<SolicitudBloqueoResultado>(`${this.apiUrl}/bloqueo`, dto);
   }

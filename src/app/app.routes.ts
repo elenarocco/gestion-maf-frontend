@@ -28,6 +28,7 @@ export const routes: Routes = [
       // Después de las rutas fijas de /solicitudes/*: el router usa la primera que calza.
       { path: 'solicitudes/:id', loadComponent: () => import('./features/bandeja-ti/detalle-solicitud/detalle-solicitud').then(m => m.DetalleSolicitud), canActivate: [permisoGuard], data: { permisos: PERMISOS_VER_SOLICITUDES } },
       { path: 'bandeja-ti', loadComponent: () => import('./features/bandeja-ti/bandeja-ti/bandeja-ti').then(m => m.BandejaTi), canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
+      { path: 'accesos-vpn', loadComponent: () => import('./features/accesos-vpn/accesos-vpn').then(m => m.AccesosVpn), canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi, PERMISOS.consultarTodasLasSolicitudes] } },
       { path: 'bandeja-ti/:id', loadComponent: () => import('./features/bandeja-ti/detalle-solicitud/detalle-solicitud').then(m => m.DetalleSolicitud), canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
       { path: 'catalogos', loadComponent: () => import('./features/catalogos/administrar-catalogos/administrar-catalogos').then(m => m.AdministrarCatalogos), canActivate: [permisoGuard], data: { permisos: [PERMISOS.administrarCatalogos] } },
       { path: 'usuarios', loadComponent: () => import('./features/usuarios/administrar-usuarios/administrar-usuarios').then(m => m.AdministrarUsuarios), canActivate: [permisoGuard], data: { permisos: [PERMISOS.administrarUsuarios] } },
