@@ -22,17 +22,6 @@ function edadValida(control: AbstractControl): ValidationErrors | null {
   return null;
 }
 
-// Fecha de hoy en hora local como 'aaaa-mm-dd' (toISOString usaría UTC y puede correr el día)
-function hoyLocal(): string {
-  const h = new Date();
-  return `${h.getFullYear()}-${String(h.getMonth() + 1).padStart(2, '0')}-${String(h.getDate()).padStart(2, '0')}`;
-}
-
-function fechaNoPasada(control: AbstractControl): ValidationErrors | null {
-  if (!control.value) return null;
-  return control.value < hoyLocal() ? { fechaPasada: true } : null;
-}
-
 @Component({
   selector: 'app-formulario-ingreso',
   imports: [CommonModule, ReactiveFormsModule, BuscadorCatalogo, SelectorMultiple, AvisoPlazo],
@@ -53,6 +42,8 @@ export class FormularioIngreso implements OnInit {
 
   rutMensaje = '';
   verificandoRut = false;
+  // El resto del formulario se habilita recién cuando el backend valida el RUT (lo necesita para el correo).
+  rutListo = false;
   correoSugerido = '';
   correoDisponible = true;
   buscandoCorreo = false;
@@ -63,7 +54,6 @@ export class FormularioIngreso implements OnInit {
 
   fechaMaxNacimiento = '';
   fechaMinNacimiento = '';
-  fechaMinIncorporacion = hoyLocal();
   private snackBar = inject(MatSnackBar);
   private route = inject(ActivatedRoute);
 
@@ -93,7 +83,7 @@ export class FormularioIngreso implements OnInit {
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       fechaNacimiento: ['', [Validators.required, edadValida]],
-      fechaIncorporacion: ['', [Validators.required, fechaNoPasada]],
+      fechaIncorporacion: ['', Validators.required],
       esCuentaGenerica: [false],
       correo: ['', Validators.required],
       direccionCorporativaId: ['', Validators.required],
@@ -151,7 +141,7 @@ export class FormularioIngreso implements OnInit {
       });
       this.form.get('direccionCorporativaId')!.setValue(t.direccionCorporativaId, { emitEvent: false });
       this.cargarAreas(t.direccionCorporativaId, t.areaId);
-      this.buscarCorreoSugerido();
+      this.verificarRut(); // habilita el formulario y sugiere el correo
     });
   }
 
@@ -188,6 +178,7 @@ export class FormularioIngreso implements OnInit {
         ctrl.setErrors({ rutInvalido: true });
         ctrl.markAsTouched();
       } else {
+        this.rutListo = true;
         this.buscarCorreoSugerido();
       }
       this.cdr.detectChanges();
@@ -198,6 +189,7 @@ export class FormularioIngreso implements OnInit {
 
   onRutInput(event: Event): void {
     this.rutMensaje = '';
+    this.rutListo = false;
     const input = event.target as HTMLInputElement;
     let limpio = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
     if (limpio.length > 9) limpio = limpio.slice(0, 9);

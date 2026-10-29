@@ -7,7 +7,7 @@
   <form [formGroup]="form" (ngSubmit)="enviar()">
 
     @if (solicitudOrigenId) {
-      <div class="aviso-correccion">Corrigiendo el Ingreso N° {{ solicitudOrigenId }}, que fue rechazado. Se precargaron sus datos; revisa, corrige lo necesario y elige la fecha de incorporación.</div>
+      <div class="aviso-correccion">Corrigiendo el Ingreso N° {{ solicitudOrigenId }}, que fue rechazado. Se precargaron sus datos; revisa y corrige lo necesario.</div>
     }
 
     @if (errores.length) {
@@ -27,6 +27,9 @@
           }
         </div>
 </div>
+      @if (!rutListo) { <p class="hint">Ingresa primero el RUT: con él se verifica si la persona ya trabajó en MAF y se genera su correo.</p> }
+      <!-- El resto se habilita cuando el backend valida el RUT -->
+      <fieldset class="bloqueo" [disabled]="!rutListo">
         <div class="campo">
           <label>Sexo</label>
           <select formControlName="sexo">
@@ -47,10 +50,10 @@
             <span class="error-campo">La edad debe estar entre 18 y 75 años.</span>
           }
 </div>
-     
-     
+      </fieldset>
     </section>
 
+    <fieldset class="bloqueo" [disabled]="!rutListo">
     <section class="tarjeta">
       <h4>Correo institucional</h4>
       @if (buscandoCorreo) { <p class="hint">Buscando un correo disponible...</p> }
@@ -99,10 +102,7 @@
         </div>
         <div class="campo">
           <label>Fecha de incorporación</label>
-          <input type="date" formControlName="fechaIncorporacion" [min]="fechaMinIncorporacion" max="9999-12-31">
-          @if (form.get('fechaIncorporacion')?.hasError('fechaPasada') && form.get('fechaIncorporacion')?.touched) {
-            <span class="error-campo">La fecha de incorporación no puede ser anterior a hoy.</span>
-          }
+          <input type="date" formControlName="fechaIncorporacion" max="9999-12-31">
         </div>
       </div>
     </section>
@@ -127,11 +127,12 @@
       <app-selector-multiple [opciones]="carpetas" [(seleccionados)]="carpetasSel"
         placeholder="Escribe para buscar una carpeta..." vacio="Aún no has agregado carpetas." />
 </section>
+    </fieldset>
 
     <app-aviso-plazo tipo="Ingreso" />
     <div class="acciones">
       <button type="button" class="btn-secundario" disabled title="Próximamente">Guardar borrador</button>
-      <button type="submit" class="btn-primario" [disabled]="enviando">{{ enviando ? 'Enviando...' : 'Enviar solicitud' }}</button>
+      <button type="submit" class="btn-primario" [disabled]="enviando || !rutListo">{{ enviando ? 'Enviando...' : 'Enviar solicitud' }}</button>
     </div>
     <p class="nota-footer">Se notificará a tu jefe directo para aprobación.</p>
   </form>

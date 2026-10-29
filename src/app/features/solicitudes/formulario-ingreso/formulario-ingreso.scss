@@ -43,3 +43,12 @@ h4 { margin: 0 0 16px; font-size: 12px; letter-spacing: .06em; text-transform: u
   .grid-2 { grid-template-columns: 1fr; }
   .checks { grid-template-columns: repeat(2, 1fr) !important; }
 }
+// Agrupa los campos que se bloquean hasta validar el RUT; no altera el diseño de las tarjetas.
+fieldset.bloqueo {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
