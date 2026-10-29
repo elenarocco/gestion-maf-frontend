@@ -58,3 +58,20 @@ body {
 .btn-accion:hover { border-color: #9ca3af; background: #f9fafb; }
 .btn-accion.peligro { color: var(--maf-rojo); border-color: #f5b3bf; }
 .btn-accion.peligro:hover { border-color: var(--maf-rojo); background: #fff5f7; }
+
+// Campos obligatorios de los formularios: asterisco rojo en la etiqueta ("obligatorio") y, en el control ("req"),
+// borde rojo oscuro mientras falte o esté mal, y verde al completarlo. No se usa en opcionales, teléfonos ni accesos.
+.obligatorio::after {
+  content: ' *';
+  color: #c62828;
+}
+
+// Selectores reforzados (.req.req) para ganarle al estilo base de los inputs dentro de cada componente.
+:is(input, select, textarea).req.req:not(:disabled) {
+  &.ng-invalid { border-color: #9b1c1c; }
+  &.ng-valid { border-color: #2e7d32; }
+}
+
+// El buscador de catálogo (p. ej. Cargo) no expone su estado: el formulario le pone "lleno" cuando hay valor.
+.req-buscador.req-buscador input:not(:disabled) { border-color: #9b1c1c; }
+.req-buscador.req-buscador.lleno input:not(:disabled) { border-color: #2e7d32; }

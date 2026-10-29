@@ -17,7 +17,7 @@
     <section class="tarjeta">
       <h4>Trabajador</h4>
       <div class="campo">
-        <label>Buscar trabajador (Rut sin puntos con guión)</label>
+        <label class="obligatorio">Buscar trabajador (Rut sin puntos con guión)</label>
         <div class="buscador">
           <input type="text" autocomplete="off"
                  [value]="textoBusqueda()" placeholder="Nombre, RUT o correo..."
@@ -97,12 +97,12 @@
       @if (form.controls.esTemporal.value) {
         <div class="grid-2">
           <div class="campo">
-            <label>Desde</label>
-            <input type="datetime-local" formControlName="desde" [min]="minDesde()">
+            <label class="obligatorio">Desde</label>
+            <input class="req" type="datetime-local" formControlName="desde" [min]="minDesde()">
           </div>
           <div class="campo">
-            <label>Hasta</label>
-            <input type="datetime-local" formControlName="hasta" [min]="minHasta()">
+            <label class="obligatorio">Hasta</label>
+            <input class="req" type="datetime-local" formControlName="hasta" [min]="minHasta()">
           </div>
         </div>
       } @else {
@@ -126,8 +126,8 @@
       </div>
 
       <div class="campo">
-        <label>Justificación</label>
-        <textarea formControlName="justificacion" rows="4" [attr.maxlength]="maxJustificacion"
+        <label class="obligatorio">Justificación</label>
+        <textarea class="req" formControlName="justificacion" rows="4" [attr.maxlength]="maxJustificacion"
                   (input)="onJustificacionInput($event)"
                   placeholder="Motivo del bloqueo. Solo letras, espacios, comas y puntos."></textarea>
         <span class="contador">{{ largoJustificacion() }}/{{ maxJustificacion }}</span>

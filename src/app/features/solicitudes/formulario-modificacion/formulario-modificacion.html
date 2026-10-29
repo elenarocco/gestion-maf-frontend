@@ -17,7 +17,7 @@
     <section class="tarjeta">
       <h4>Trabajador</h4>
       <div class="campo">
-        <label>Buscar trabajador</label>
+        <label class="obligatorio">Buscar trabajador</label>
         <div class="buscador">
           <input type="text" autocomplete="off"
                  [value]="textoBusqueda()" placeholder="RUT, nombre o correo..."
@@ -54,8 +54,8 @@
             <input [value]="t.rut" disabled>
           </div>
           <div class="campo">
-            <label>Sexo @if (cambiado('sexo')) { <span class="modificado">Modificado</span> }</label>
-            <select formControlName="sexo">
+            <label class="obligatorio">Sexo @if (cambiado('sexo')) { <span class="modificado">Modificado</span> }</label>
+            <select class="req" formControlName="sexo">
               <option value="" disabled>— Seleccionar —</option>
               <option value="Femenino">Femenino</option>
               <option value="Masculino">Masculino</option>
@@ -63,24 +63,24 @@
             </select>
           </div>
           <div class="campo">
-            <label>Primer Nombre @if (cambiado('primerNombre')) { <span class="modificado">Modificado</span> }</label>
-            <input formControlName="primerNombre" (input)="onNombreInput($event, 'primerNombre')" (blur)="revisarCorreo()">
+            <label class="obligatorio">Primer Nombre @if (cambiado('primerNombre')) { <span class="modificado">Modificado</span> }</label>
+            <input class="req" formControlName="primerNombre" (input)="onNombreInput($event, 'primerNombre')" (blur)="revisarCorreo()">
           </div>
           <div class="campo">
             <label>Segundo Nombre <span class="opcional">(opcional)</span> @if (cambiado('segundoNombre')) { <span class="modificado">Modificado</span> }</label>
             <input formControlName="segundoNombre" (input)="onNombreInput($event, 'segundoNombre')">
           </div>
           <div class="campo">
-            <label>Primer Apellido @if (cambiado('primerApellido')) { <span class="modificado">Modificado</span> }</label>
-            <input formControlName="primerApellido" (input)="onNombreInput($event, 'primerApellido')" (blur)="revisarCorreo()">
+            <label class="obligatorio">Primer Apellido @if (cambiado('primerApellido')) { <span class="modificado">Modificado</span> }</label>
+            <input class="req" formControlName="primerApellido" (input)="onNombreInput($event, 'primerApellido')" (blur)="revisarCorreo()">
           </div>
           <div class="campo">
             <label>Segundo Apellido <span class="opcional">(opcional)</span> @if (cambiado('segundoApellido')) { <span class="modificado">Modificado</span> }</label>
             <input formControlName="segundoApellido" (input)="onNombreInput($event, 'segundoApellido')" (blur)="revisarCorreo()">
           </div>
           <div class="campo">
-            <label>Fecha de nacimiento @if (cambiado('fechaNacimiento')) { <span class="modificado">Modificado</span> }</label>
-            <input type="date" formControlName="fechaNacimiento" [min]="fechaMinNacimiento" [max]="fechaMaxNacimiento">
+            <label class="obligatorio">Fecha de nacimiento @if (cambiado('fechaNacimiento')) { <span class="modificado">Modificado</span> }</label>
+            <input class="req" type="date" formControlName="fechaNacimiento" [min]="fechaMinNacimiento" [max]="fechaMaxNacimiento">
             @if (form.controls.fechaNacimiento.hasError('edadInvalida') && form.controls.fechaNacimiento.touched) {
               <span class="error-campo">La edad debe estar entre 18 y 75 años.</span>
             }
@@ -89,11 +89,11 @@
       </section>
 
       <section class="tarjeta">
-        <h4>Correo institucional @if (cambiado('correo')) { <span class="modificado">Modificado</span> }</h4>
+        <h4 class="obligatorio">Correo institucional @if (cambiado('correo')) { <span class="modificado">Modificado</span> }</h4>
         @if (buscandoCorreo()) { <p class="hint">Buscando un correo disponible...</p> }
         @else if (avisoCorreo()) { <p class="hint ok">{{ avisoCorreo() }}</p> }
         <div class="campo">
-          <input formControlName="correo" (input)="onCorreoInput($event)" placeholder="nombre.apellido@mafchile.com">
+          <input class="req" formControlName="correo" (input)="onCorreoInput($event)" placeholder="nombre.apellido@mafchile.com">
         </div>
       </section>
 
@@ -101,33 +101,33 @@
         <h4>Datos organizacionales</h4>
         <div class="grid-2">
           <div class="campo">
-            <label>Dirección Corporativa @if (cambiado('direccionCorporativaId')) { <span class="modificado">Modificado</span> }</label>
-            <select formControlName="direccionCorporativaId">
+            <label class="obligatorio">Dirección Corporativa @if (cambiado('direccionCorporativaId')) { <span class="modificado">Modificado</span> }</label>
+            <select class="req" formControlName="direccionCorporativaId">
               <option value="" disabled>— Seleccionar —</option>
               @for (d of direcciones; track d.id) { <option [ngValue]="d.id">{{ d.nombre }}</option> }
             </select>
           </div>
           <div class="campo">
-            <label>Área @if (cambiado('areaId')) { <span class="modificado">Modificado</span> }</label>
-            <select formControlName="areaId">
+            <label class="obligatorio">Área @if (cambiado('areaId')) { <span class="modificado">Modificado</span> }</label>
+            <select class="req" formControlName="areaId">
               <option value="" disabled>{{ form.controls.direccionCorporativaId.value ? '— Seleccionar —' : '— Primero elige una dirección —' }}</option>
               @for (a of areas; track a.id) { <option [ngValue]="a.id">{{ a.nombre }}</option> }
             </select>
           </div>
           <div class="campo">
-            <label>Cargo @if (cambiado('cargoId')) { <span class="modificado">Modificado</span> }</label>
-            <app-buscador-catalogo [opciones]="cargos" [control]="form.controls.cargoId" placeholder="Escribe para buscar un cargo..." />
+            <label class="obligatorio">Cargo @if (cambiado('cargoId')) { <span class="modificado">Modificado</span> }</label>
+            <app-buscador-catalogo class="req-buscador" [class.lleno]="!!form.controls.cargoId.value" [opciones]="cargos" [control]="form.controls.cargoId" placeholder="Escribe para buscar un cargo..." />
           </div>
           <div class="campo">
-            <label>Lugar de Trabajo @if (cambiado('lugarTrabajoId')) { <span class="modificado">Modificado</span> }</label>
-            <select formControlName="lugarTrabajoId">
+            <label class="obligatorio">Lugar de Trabajo @if (cambiado('lugarTrabajoId')) { <span class="modificado">Modificado</span> }</label>
+            <select class="req" formControlName="lugarTrabajoId">
               <option value="" disabled>— Seleccionar —</option>
               @for (l of lugares; track l.id) { <option [ngValue]="l.id">{{ l.nombre }}</option> }
             </select>
           </div>
           <div class="campo">
-            <label>Fecha de incorporación @if (cambiado('fechaIncorporacion')) { <span class="modificado">Modificado</span> }</label>
-            <input type="date" formControlName="fechaIncorporacion">
+            <label class="obligatorio">Fecha de incorporación @if (cambiado('fechaIncorporacion')) { <span class="modificado">Modificado</span> }</label>
+            <input class="req" type="date" formControlName="fechaIncorporacion">
           </div>
         </div>
       </section>
@@ -170,9 +170,9 @@
       </section>
 
       <section class="tarjeta">
-        <h4>Justificación</h4>
+        <h4 class="obligatorio">Justificación</h4>
         <div class="campo">
-          <textarea formControlName="justificacion" rows="4" [attr.maxlength]="maxJustificacion"
+          <textarea class="req" formControlName="justificacion" rows="4" [attr.maxlength]="maxJustificacion"
                     (input)="onJustificacionInput($event)"
                     placeholder="Motivo de la modificación. Solo letras, espacios, comas y puntos."></textarea>
           <span class="contador">{{ largoJustificacion() }}/{{ maxJustificacion }}</span>
