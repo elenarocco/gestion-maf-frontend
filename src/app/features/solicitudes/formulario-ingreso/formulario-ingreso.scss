@@ -52,3 +52,21 @@ fieldset.bloqueo {
 
   &:disabled { opacity: 0.55; cursor: not-allowed; }
 }
+
+// Campos obligatorios: asterisco rojo en la etiqueta; borde rojo oscuro mientras falten y verde al completarlos.
+// No aplica a opcionales, teléfonos ni accesos (sistemas y carpetas).
+.obligatorio::after {
+  content: ' *';
+  color: #c62828;
+}
+
+$borde-falta: #9b1c1c;
+$borde-ok: #2e7d32;
+
+.req:not(:disabled) {
+  &.ng-invalid { border-color: $borde-falta; }
+  &.ng-valid { border-color: $borde-ok; }
+}
+
+.req-buscador:not(.lleno) ::ng-deep input:not(:disabled) { border-color: $borde-falta; }
+.req-buscador.lleno ::ng-deep input:not(:disabled) { border-color: $borde-ok; }
