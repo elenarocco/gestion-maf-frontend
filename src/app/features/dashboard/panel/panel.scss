@@ -46,3 +46,23 @@ td { padding: 12px 8px; font-size: 13px; color: #374151; border-top: 1px solid #
 .badge.urgente, .badge.rechazada { background: #fde8ec; color: #c81e3a; }
 .badge.proceso { background: #e0edff; color: #1d4ed8; }
 .badge.completada { background: #e2f7e8; color: #15803d; }
+.tabla-scroll { overflow-x: auto; }
+.tarjeta { min-width: 0; }
+
+// Pantallas medianas: 2 tarjetas por fila y el gráfico arriba del resumen por tipo.
+@media (max-width: 1100px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fila-2 { grid-template-columns: minmax(0, 1fr); }
+}
+
+// Teléfono: márgenes más chicos, botón bajo el título y barras más angostas para que quepan los 6 meses.
+@media (max-width: 640px) {
+  .encabezado { flex-direction: column; gap: 12px; padding: 16px; }
+  .cuerpo { padding: 16px; gap: 16px; }
+  .kpis { gap: 12px; }
+  .tarjeta { padding: 14px 16px; }
+  .valor { font-size: 24px; }
+  .barras { padding: 0 3px; gap: 3px; }
+  .barra { width: 10px; }
+  th, td { white-space: nowrap; }
+}

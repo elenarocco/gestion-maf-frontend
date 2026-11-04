@@ -74,20 +74,22 @@
         <div><h3>Solicitudes recientes</h3><p class="desc">Últimas solicitudes ingresadas al sistema</p></div>
         <a class="ver-todas" routerLink="/solicitudes">Ver todas →</a>
       </div>
-      <table>
-        <thead><tr><th>Nombre</th><th>Área</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
-        <tbody>
-          @for (s of recientes; track $index) {
-            <tr>
-              <td><div class="persona"><span class="avatar">{{ s.iniciales }}</span>{{ s.nombre }}</div></td>
-              <td>{{ s.area }}</td>
-              <td><span class="chip">{{ s.tipo }}</span></td>
-              <td>{{ s.fecha }}</td>
-              <td><span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span></td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Nombre</th><th>Área</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
+          <tbody>
+            @for (s of recientes; track $index) {
+              <tr>
+                <td><div class="persona"><span class="avatar">{{ s.iniciales }}</span>{{ s.nombre }}</div></td>
+                <td>{{ s.area }}</td>
+                <td><span class="chip">{{ s.tipo }}</span></td>
+                <td>{{ s.fecha }}</td>
+                <td><span class="badge {{ s.estadoClase }}">{{ s.estadoTexto }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </section>
   </div>
 } @else {
