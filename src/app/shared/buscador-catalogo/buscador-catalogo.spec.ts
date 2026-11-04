@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl } from '@angular/forms';
 import { BuscadorCatalogo } from './buscador-catalogo';
 
 describe('BuscadorCatalogo', () => {
@@ -12,6 +13,8 @@ describe('BuscadorCatalogo', () => {
 
     fixture = TestBed.createComponent(BuscadorCatalogo);
     component = fixture.componentInstance;
+    // "control" es un input obligatorio: el formulario que usa el buscador.
+    fixture.componentRef.setInput('control', new FormControl(''));
     await fixture.whenStable();
   });
 

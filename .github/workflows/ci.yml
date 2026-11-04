@@ -1,0 +1,37 @@
+# Revisión automática del front: compila para producción y ejecuta los tests en cada push y Pull Request.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Si llega un push nuevo a la misma rama, se cancela la revisión anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  front:
+    name: Build y tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # El Angular CLI 22 exige Node 22.22.3+ o 24.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build de producción
+        run: npx ng build
+
+      - name: Tests
+        run: npx ng test --watch=false
