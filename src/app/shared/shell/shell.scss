@@ -1,28 +1,67 @@
+// Mismos colores que el resto de la app (sin colores nuevos).
 .layout { display: flex; height: 100vh; background: #f7f8fa; }
 
 .sidebar {
-  width: 220px; background: #fff; border-right: 1px solid #e8eaee;
-  display: flex; flex-direction: column; padding: 16px 12px; box-sizing: border-box;
+  width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #e8eaee;
+  display: flex; flex-direction: column; padding: 18px 12px 14px; box-sizing: border-box; overflow-y: auto;
 }
 
-.marca { display: flex; align-items: center; gap: 10px; padding: 4px 8px 24px; }
+.marca { display: flex; align-items: center; gap: 10px; padding: 2px 10px 18px; margin-bottom: 6px; border-bottom: 1px solid #f1f2f4; }
 .marca img { height: 28px; }
 .marca-texto { display: flex; flex-direction: column; line-height: 1.2; }
-.marca-texto strong { font-size: 14px; color: #111827; }
+.marca-texto strong { font-size: 15px; color: #111827; }
 .marca-texto span { font-size: 12px; color: #9ca3af; }
 
-nav { display: flex; flex-direction: column; gap: 2px; }
-nav a { padding: 9px 12px; border-radius: 6px; font-size: 14px; color: #4b5563; text-decoration: none; }
-nav a:hover { background: #f3f4f6; }
+nav { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+.grupo { display: flex; flex-direction: column; gap: 2px; }
+.titulo-grupo { padding: 0 12px 4px; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; }
+
+nav a {
+  display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 8px;
+  font-size: 14px; color: #4b5563; text-decoration: none; transition: background .12s, color .12s;
+}
+nav a:hover { background: #f3f4f6; color: #111827; }
+nav a:focus-visible { outline: 2px solid var(--maf-rojo); outline-offset: 1px; }
 nav a.activo { background: #fde8ec; color: var(--maf-rojo); font-weight: 500; }
 
-.usuario { margin-top: auto; display: flex; flex-direction: column; gap: 2px; padding-top: 12px; border-top: 1px solid #e8eaee; font-size: 13px; }
-.usuario strong { color: #111827; }
-.usuario span { color: #6b7280; font-size: 12px; }
-.usuario .correo { word-break: break-all; }
-.usuario button { margin-top: 8px; align-self: flex-start; background: none; border: none; padding: 0; color: var(--maf-rojo); font-size: 13px; cursor: pointer; }
-.contenido { flex: 1; overflow-y: auto; }
+// Íconos de Material Symbols: ancho fijo para que el texto no salte mientras carga la fuente.
+.icono { width: 20px; flex-shrink: 0; overflow: hidden; font-size: 20px; line-height: 1; color: #9ca3af; transition: color .12s; }
+nav a:hover .icono { color: #6b7280; }
+nav a.activo .icono { color: var(--maf-rojo); font-variation-settings: 'FILL' 1; }
+
+.usuario { margin-top: auto; padding-top: 14px; border-top: 1px solid #e8eaee; display: flex; flex-direction: column; gap: 10px; }
+.perfil { display: flex; align-items: center; gap: 10px; padding: 0 4px; min-width: 0; }
+.avatar {
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #fde8ec; color: var(--maf-rojo);
+  display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; letter-spacing: .02em;
+}
+.datos { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.datos strong { font-size: 13px; color: #111827; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.datos span { font-size: 12px; color: #6b7280; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.datos .correo { color: #9ca3af; }
+
+.salir {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 12px; border: none; border-radius: 8px;
+  background: none; font: inherit; font-size: 13px; color: #6b7280; cursor: pointer; text-align: left;
+}
+.salir:hover { background: #fde8ec; color: var(--maf-rojo); }
+.salir:hover .icono { color: var(--maf-rojo); }
+.salir:focus-visible { outline: 2px solid var(--maf-rojo); outline-offset: 1px; }
+
+.contenido { flex: 1; min-width: 0; overflow-y: auto; }
+
+// Teléfono: barra superior con el menú en una fila desplazable.
 @media (max-width: 768px) {
   .layout { flex-direction: column; height: auto; min-height: 100vh; }
-  .sidebar { width: 100%; box-sizing: border-box; }
+  .sidebar { width: 100%; padding: 12px 12px 8px; border-right: none; border-bottom: 1px solid #e8eaee; overflow: visible; }
+  .marca { padding: 0 4px 10px; margin-bottom: 0; }
+  nav { flex-direction: row; gap: 6px; padding: 8px 0 4px; overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  .grupo { flex-direction: row; gap: 6px; }
+  .titulo-grupo { display: none; }
+  nav a { white-space: nowrap; padding: 7px 12px; border: 1px solid #e8eaee; }
+  nav a.activo { border-color: transparent; }
+  .usuario { flex-direction: row; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 10px; }
+  .datos .correo { display: none; }
+  .salir { width: auto; flex-shrink: 0; }
 }

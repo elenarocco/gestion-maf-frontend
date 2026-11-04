@@ -8,18 +8,35 @@
       </div>
     </div>
 
-    <nav>
-      @for (item of menuActual(); track item.ruta) {
-        <a [routerLink]="item.ruta" [class.activo]="item.ruta === rutaActiva()">{{ item.nombre }}</a>
+    <nav aria-label="Menú principal">
+      @for (g of grupos(); track g.nombre) {
+        <div class="grupo">
+          <span class="titulo-grupo">{{ g.nombre }}</span>
+          @for (item of g.items; track item.ruta) {
+            <a [routerLink]="item.ruta" [class.activo]="item.ruta === rutaActiva()"
+               [attr.aria-current]="item.ruta === rutaActiva() ? 'page' : null">
+              <span class="icono material-symbols-outlined" aria-hidden="true">{{ item.icono }}</span>
+              <span class="texto">{{ item.nombre }}</span>
+            </a>
+          }
+        </div>
       }
     </nav>
 
     @if (sesion.usuario(); as u) {
       <div class="usuario">
-        <strong>{{ u.nombre }}</strong>
-        <span>{{ u.rol }}@if (u.areaNombre) { · {{ u.areaNombre }} }</span>
-        <span class="correo">{{ u.correo }}</span>
-        <button type="button" (click)="cerrarSesion()">Cerrar sesión</button>
+        <div class="perfil">
+          <span class="avatar" aria-hidden="true">{{ iniciales() }}</span>
+          <div class="datos">
+            <strong>{{ u.nombre }}</strong>
+            <span>{{ u.rol }}@if (u.areaNombre) { · {{ u.areaNombre }} }</span>
+            <span class="correo" [title]="u.correo">{{ u.correo }}</span>
+          </div>
+        </div>
+        <button type="button" class="salir" (click)="cerrarSesion()">
+          <span class="icono material-symbols-outlined" aria-hidden="true">logout</span>
+          Cerrar sesión
+        </button>
       </div>
     }
   </aside>

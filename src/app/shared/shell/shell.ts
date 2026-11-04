@@ -5,9 +5,13 @@ import { filter, map, startWith } from 'rxjs';
 import { SesionService } from '../../core/sesion';
 import { PERMISOS, PERMISOS_VER_SOLICITUDES } from '../../core/permisos';
 
+type GrupoMenu = 'General' | 'Gestión' | 'Administración';
+
 interface ItemMenu {
   nombre: string;
   ruta: string;
+  icono: string;                 // nombre del ícono de Material Symbols
+  grupo: GrupoMenu;
   permisos: readonly string[];   // se muestra si el usuario tiene alguno (vacío = todos)
   tambien?: string[];            // otras rutas que pertenecen a esta opción (para marcarla activa)
 }
@@ -29,16 +33,30 @@ export class Shell {
     const soloSuArea = this.sesion.soloSuArea();
     const veTodas = this.sesion.tienePermiso(PERMISOS.consultarTodasLasSolicitudes);
     const items: ItemMenu[] = [
-      { nombre: 'Dashboard', ruta: '/dashboard', permisos: [] },
-      { nombre: soloSuArea ? 'Mi equipo' : 'Trabajadores', ruta: '/trabajadores', permisos: [PERMISOS.consultarTrabajadores] },
-      { nombre: 'Bandeja de TI', ruta: '/bandeja-ti', permisos: [PERMISOS.bandejaTi] },
-      { nombre: 'Accesos VPN', ruta: '/accesos-vpn', permisos: [PERMISOS.bandejaTi, PERMISOS.consultarTodasLasSolicitudes] },
-      { nombre: veTodas ? 'Solicitudes' : 'Mis solicitudes', ruta: '/solicitudes', permisos: PERMISOS_VER_SOLICITUDES },
-      { nombre: 'Catálogos', ruta: '/catalogos', permisos: [PERMISOS.administrarCatalogos] },
-      { nombre: 'Sostenibilidad', ruta: '/sostenibilidad', permisos: [PERMISOS.verSostenibilidad] },
-      { nombre: 'Usuarios y roles', ruta: '/usuarios', permisos: [PERMISOS.administrarUsuarios] }
+      { nombre: 'Dashboard', ruta: '/dashboard', icono: 'space_dashboard', grupo: 'General', permisos: [] },
+      { nombre: 'Sostenibilidad', ruta: '/sostenibilidad', icono: 'eco', grupo: 'General', permisos: [PERMISOS.verSostenibilidad] },
+      { nombre: 'Bandeja de TI', ruta: '/bandeja-ti', icono: 'inbox', grupo: 'Gestión', permisos: [PERMISOS.bandejaTi] },
+      { nombre: veTodas ? 'Solicitudes' : 'Mis solicitudes', ruta: '/solicitudes', icono: 'description', grupo: 'Gestión', permisos: PERMISOS_VER_SOLICITUDES },
+      { nombre: 'Accesos VPN', ruta: '/accesos-vpn', icono: 'vpn_key', grupo: 'Gestión', permisos: [PERMISOS.bandejaTi, PERMISOS.consultarTodasLasSolicitudes] },
+      { nombre: soloSuArea ? 'Mi equipo' : 'Trabajadores', ruta: '/trabajadores', icono: 'group', grupo: 'Gestión', permisos: [PERMISOS.consultarTrabajadores] },
+      { nombre: 'Catálogos', ruta: '/catalogos', icono: 'category', grupo: 'Administración', permisos: [PERMISOS.administrarCatalogos] },
+      { nombre: 'Usuarios y roles', ruta: '/usuarios', icono: 'admin_panel_settings', grupo: 'Administración', permisos: [PERMISOS.administrarUsuarios] }
     ];
     return items.filter(i => this.sesion.tieneAlguno(i.permisos));
+  });
+
+  // Secciones del menú; las que quedan sin opciones para el rol no se muestran.
+  grupos = computed(() => {
+    const orden: GrupoMenu[] = ['General', 'Gestión', 'Administración'];
+    return orden
+      .map(nombre => ({ nombre, items: this.menuActual().filter(i => i.grupo === nombre) }))
+      .filter(g => g.items.length > 0);
+  });
+
+  // Iniciales para el avatar: primer nombre y primer apellido.
+  iniciales = computed(() => {
+    const partes = (this.sesion.usuario()?.nombre ?? '').trim().split(/\s+/).filter(Boolean);
+    return ((partes[0]?.[0] ?? '') + (partes.length > 1 ? partes[partes.length - 1][0] : '')).toUpperCase();
   });
 
   private url = toSignal(
