@@ -14,7 +14,7 @@
 @if (ejemplo()) {
   <div class="banner-ejemplo" role="alert">
     <strong>DATOS DE EJEMPLO</strong>
-    <span>Estas cifras son ficticias y no corresponden a solicitudes reales. Apaga el interruptor para ver los datos reales.</span>
+    <span>{{ resumen()?.descripcionEjemplo ?? 'Estas cifras no corresponden a solicitudes registradas.' }} Apaga el interruptor para ver los datos reales.</span>
   </div>
 }
 
@@ -34,15 +34,19 @@
     <p class="cargando">Calculando...</p>
   } @else if (resumen(); as r) {
     <p class="periodo">
-      @if (r.esEjemplo) { <span class="etiqueta-ejemplo">Ejemplo</span> }
-      Solicitudes completadas entre el {{ fecha(r.desde) }} y el {{ fecha(r.hasta) }} · <strong>Valores estimados, no mediciones.</strong>
+      @if (r.esEjemplo) {
+        <span class="etiqueta-ejemplo">Ejemplo</span> Un mes típico, no un período real ·
+      } @else {
+        Solicitudes completadas entre el {{ fecha(r.desde) }} y el {{ fecha(r.hasta) }} ·
+      }
+      <strong>Valores estimados, no mediciones.</strong>
     </p>
 
     <div class="kpis" [class.es-ejemplo]="r.esEjemplo">
       <div class="tarjeta kpi">
         <span class="label">Solicitudes digitalizadas</span>
         <div class="valor">{{ n(r.totalSolicitudes) }}</div>
-        <span class="nota">Completadas en el período</span>
+        <span class="nota">{{ r.esEjemplo ? 'Promedio de un mes' : 'Completadas en el período' }}</span>
       </div>
       <div class="tarjeta kpi">
         <span class="label">Hojas evitadas</span>

@@ -28,6 +28,7 @@ export interface ResumenSostenibilidad {
   desde: string;             // "2026-11-01" (fecha de Chile, incluida)
   hasta: string;
   esEjemplo: boolean;
+  descripcionEjemplo: string | null;   // de dónde salen las cifras de ejemplo
   alcance: string;
   totalSolicitudes: number;
   cantidadPorTipo: SostenibilidadTipo[];
