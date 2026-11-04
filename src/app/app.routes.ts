@@ -31,6 +31,7 @@ export const routes: Routes = [
       { path: 'accesos-vpn', loadComponent: () => import('./features/accesos-vpn/accesos-vpn').then(m => m.AccesosVpn), canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi, PERMISOS.consultarTodasLasSolicitudes] } },
       { path: 'bandeja-ti/:id', loadComponent: () => import('./features/bandeja-ti/detalle-solicitud/detalle-solicitud').then(m => m.DetalleSolicitud), canActivate: [permisoGuard], data: { permisos: [PERMISOS.bandejaTi] } },
       { path: 'catalogos', loadComponent: () => import('./features/catalogos/administrar-catalogos/administrar-catalogos').then(m => m.AdministrarCatalogos), canActivate: [permisoGuard], data: { permisos: [PERMISOS.administrarCatalogos] } },
+      { path: 'sostenibilidad', loadComponent: () => import('./features/sostenibilidad/sostenibilidad').then(m => m.Sostenibilidad), canActivate: [permisoGuard], data: { permisos: [PERMISOS.verSostenibilidad] } },
       { path: 'usuarios', loadComponent: () => import('./features/usuarios/administrar-usuarios/administrar-usuarios').then(m => m.AdministrarUsuarios), canActivate: [permisoGuard], data: { permisos: [PERMISOS.administrarUsuarios] } },
     ]
   },

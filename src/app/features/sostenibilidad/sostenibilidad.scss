@@ -1,0 +1,97 @@
+// Mismos valores y colores que el panel y la Bandeja de TI (sin colores nuevos).
+.encabezado { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px 28px; background: #fff; border-bottom: 1px solid #e8eaee; }
+h1 { margin: 0; font-size: 20px; font-weight: 600; color: #111827; }
+.sub { margin: 4px 0 0; font-size: 13px; color: #9ca3af; }
+
+// Interruptor "Datos de ejemplo" (mismo switch que los formularios).
+.interruptor { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #374151; cursor: pointer; white-space: nowrap; }
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch span { position: absolute; inset: 0; background: #d1d5db; border-radius: 999px; transition: .15s; }
+.switch span::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .15s; }
+.switch input:checked + span { background: var(--maf-rojo); }
+.switch input:checked + span::before { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--maf-rojo); outline-offset: 2px; }
+
+// Aviso de datos ficticios: imposible de pasar por alto mientras el interruptor esté activo.
+.banner-ejemplo {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px;
+  background: var(--maf-rojo); color: #fff; padding: 14px 28px; font-size: 14px;
+}
+.banner-ejemplo strong { font-size: 16px; letter-spacing: .08em; }
+.etiqueta-ejemplo { background: var(--maf-rojo); color: #fff; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; margin-right: 6px; }
+
+.filtros { padding: 16px 28px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.filtros label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #374151; }
+.filtros input { border: 1px solid #d1d5db; border-radius: 6px; padding: 7px 10px; font-size: 13px; color: #374151; background: #fff; font-family: inherit; }
+.filtros input:focus { outline: none; border-color: var(--maf-rojo); }
+.btn-accion:disabled { opacity: .5; cursor: default; }
+
+.alerta { margin: 16px 28px 0; background: #fde8ec; color: var(--maf-rojo); padding: 12px 16px; border-radius: 6px; font-size: 13px; }
+.alerta.en-tarjeta { margin: 0 0 14px; }
+
+.cuerpo { padding: 16px 28px 28px; display: flex; flex-direction: column; gap: 16px; }
+.cargando { padding: 12px 0; color: #6b7280; }
+.periodo { margin: 0; font-size: 13px; color: #6b7280; }
+.periodo strong { color: #374151; font-weight: 500; }
+
+.tarjeta { background: #fff; border: 1px solid #e8eaee; border-radius: 8px; padding: 18px 20px; min-width: 0; }
+h3 { margin: 0; font-size: 14px; font-weight: 600; color: #111827; }
+h4 { margin: 18px 0 6px; font-size: 13px; font-weight: 600; color: #374151; }
+.desc { margin: 2px 0 14px; font-size: 12px; color: #9ca3af; }
+
+.kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.kpis.es-ejemplo .kpi { border-color: var(--maf-rojo); border-style: dashed; }
+.label { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; }
+.valor { font-size: 26px; font-weight: 600; color: #111827; margin: 8px 0 4px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.valor.negativo { color: var(--maf-rojo); }
+.kpi.destacado { border-color: var(--maf-rojo); }
+.kpi.destacado .label { color: var(--maf-rojo); }
+.nota { font-size: 12px; color: #6b7280; }
+
+// Gráfico de barras por tipo (mismo trazo que el panel).
+.vacio { margin: 0 0 8px; font-size: 13px; color: #6b7280; }
+.grafico { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; }
+.columna { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.cifra { font-size: 15px; font-weight: 600; color: #111827; font-variant-numeric: tabular-nums; }
+.eje { height: 160px; width: 100%; display: flex; align-items: flex-end; justify-content: center; border-bottom: 1px solid #e5e7eb; }
+.barra { width: min(56px, 60%); min-height: 2px; background: var(--maf-rojo); border-radius: 3px 3px 0 0; transition: height .2s; }
+.tipo { font-size: 13px; color: #374151; margin-top: 4px; }
+.detalle { font-size: 11px; color: #9ca3af; }
+
+// Supuestos
+.aviso-estimacion { margin: 10px 0 12px; background: #fff4d6; color: #b7791f; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; }
+.tabla-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; font-weight: 500; padding: 8px; }
+td { padding: 10px 8px; font-size: 13px; color: #374151; border-top: 1px solid #f1f2f4; }
+.lista { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: #374151; }
+
+// Edición de supuestos
+.grid-parametros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+.campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.campo label { font-size: 13px; color: #374151; }
+.con-unidad { display: flex; align-items: center; gap: 8px; }
+.con-unidad span { font-size: 12px; color: #6b7280; white-space: nowrap; }
+.campo input { flex: 1; min-width: 0; border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 12px; font-size: 14px; font-family: inherit; background: #fafafa; }
+.campo input:focus { outline: none; border-color: var(--maf-rojo); background: #fff; }
+.campo input.con-error { border-color: var(--maf-rojo); }
+.error-campo { font-size: 12px; color: var(--maf-rojo); }
+.acciones { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.btn-primario { background: var(--maf-rojo); color: #fff; border: none; border-radius: 6px; padding: 10px 18px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; }
+.btn-primario:disabled { opacity: .6; cursor: default; }
+
+@media (max-width: 1100px) {
+  .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .encabezado { padding: 16px; flex-direction: column; }
+  .banner-ejemplo { padding: 12px 16px; }
+  .filtros { padding: 16px 16px 0; }
+  .alerta { margin: 16px 16px 0; }
+  .cuerpo { padding: 16px 16px 24px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grafico { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
+  .grid-parametros { grid-template-columns: 1fr; }
+}

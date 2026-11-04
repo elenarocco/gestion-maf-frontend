@@ -1,0 +1,144 @@
+<header class="encabezado">
+  <div>
+    <h1>Sostenibilidad</h1>
+    <p class="sub">Papel evitado al digitalizar los formularios vs. huella estimada del sistema@if (resumen(); as r) { · {{ r.alcance }} }</p>
+  </div>
+  @if (puedeEditar()) {
+    <label class="interruptor">
+      <span>Datos de ejemplo</span>
+      <span class="switch"><input type="checkbox" [checked]="ejemplo()" (change)="cambiarEjemplo($any($event.target).checked)"><span></span></span>
+    </label>
+  }
+</header>
+
+@if (ejemplo()) {
+  <div class="banner-ejemplo" role="alert">
+    <strong>DATOS DE EJEMPLO</strong>
+    <span>Estas cifras son ficticias y no corresponden a solicitudes reales. Apaga el interruptor para ver los datos reales.</span>
+  </div>
+}
+
+<div class="filtros">
+  <label>Desde <input type="date" [value]="desde() ?? ''" (change)="cambiarFecha('desde', $any($event.target).value)" [disabled]="ejemplo()"></label>
+  <label>Hasta <input type="date" [value]="hasta() ?? ''" (change)="cambiarFecha('hasta', $any($event.target).value)" [disabled]="ejemplo()"></label>
+  <button type="button" class="btn-accion" (click)="cargar()" [disabled]="cargando() || ejemplo()">Consultar</button>
+  <button type="button" class="btn-accion" (click)="mesEnCurso()" [disabled]="cargando() || ejemplo()">Mes en curso</button>
+</div>
+
+@if (errores().length) {
+  <div class="alerta">@for (e of errores(); track e) { <div>{{ e }}</div> }</div>
+}
+
+<div class="cuerpo">
+  @if (cargando() && !resumen()) {
+    <p class="cargando">Calculando...</p>
+  } @else if (resumen(); as r) {
+    <p class="periodo">
+      @if (r.esEjemplo) { <span class="etiqueta-ejemplo">Ejemplo</span> }
+      Solicitudes completadas entre el {{ fecha(r.desde) }} y el {{ fecha(r.hasta) }} · <strong>Valores estimados, no mediciones.</strong>
+    </p>
+
+    <div class="kpis" [class.es-ejemplo]="r.esEjemplo">
+      <div class="tarjeta kpi">
+        <span class="label">Solicitudes digitalizadas</span>
+        <div class="valor">{{ n(r.totalSolicitudes) }}</div>
+        <span class="nota">Completadas en el período</span>
+      </div>
+      <div class="tarjeta kpi">
+        <span class="label">Hojas evitadas</span>
+        <div class="valor">{{ n(r.hojasEvitadas) }}</div>
+        <span class="nota">Hojas que se habrían impreso</span>
+      </div>
+      <div class="tarjeta kpi">
+        <span class="label">CO2e del papel evitado</span>
+        <div class="valor">{{ g(r.co2PapelEvitadoGramos) }}</div>
+        <span class="nota">Emisión que no ocurrió</span>
+      </div>
+      <div class="tarjeta kpi">
+        <span class="label">CO2e del sistema</span>
+        <div class="valor">{{ g(r.co2SistemaGramos) }}</div>
+        <span class="nota">Datos transferidos al usarlo</span>
+      </div>
+      <div class="tarjeta kpi destacado">
+        <span class="label">Ahorro neto</span>
+        <div class="valor" [class.negativo]="r.ahorroNetoGramos < 0">{{ g(r.ahorroNetoGramos) }}</div>
+        <span class="nota">Papel evitado − sistema</span>
+      </div>
+    </div>
+
+    <section class="tarjeta">
+      <h3>Solicitudes digitalizadas por tipo</h3>
+      <p class="desc">Cantidad de solicitudes completadas y hojas evitadas por cada tipo</p>
+      @if (r.totalSolicitudes === 0) {
+        <p class="vacio">No hay solicitudes completadas en este período.</p>
+      }
+      <div class="grafico" role="img" [attr.aria-label]="'Solicitudes por tipo: ' + barras().map(b => b.etiqueta + ' ' + b.cantidad).join(', ')">
+        @for (b of barras(); track b.tipo) {
+          <div class="columna">
+            <span class="cifra">{{ n(b.cantidad) }}</span>
+            <div class="eje"><div class="barra" [style.height.%]="b.alto"></div></div>
+            <span class="tipo">{{ b.etiqueta }}</span>
+            <span class="detalle">{{ n(b.hojasEvitadas) }} hojas · {{ g(b.co2PapelEvitadoGramos) }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <h3>Supuestos y fuentes</h3>
+      <p class="aviso-estimacion">Valores estimados, no mediciones. Los resultados dependen de estos supuestos.</p>
+
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Supuesto</th><th>Valor usado</th></tr></thead>
+          <tbody>
+            <tr><td>Hojas por formulario</td>
+              <td>Ingreso {{ r.supuestos.parametros.hojasIngreso }} · Modificación {{ r.supuestos.parametros.hojasModificacion }} · Bloqueo {{ r.supuestos.parametros.hojasBloqueo }} · VPN {{ r.supuestos.parametros.hojasVpn }}</td></tr>
+            <tr><td>Copias impresas</td><td>{{ r.supuestos.parametros.copiasImpresas }}</td></tr>
+            <tr><td>CO2e por hoja</td><td>{{ d(r.supuestos.parametros.gramosCO2PorHoja) }} g CO2e</td></tr>
+            <tr><td>Datos transferidos por solicitud</td><td>{{ d(r.supuestos.parametros.kbTransferidosPorSolicitud) }} KB</td></tr>
+            <tr><td>CO2e por MB transferido</td><td>{{ d(r.supuestos.parametros.gramosCO2PorMB) }} g CO2e</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4>Cómo se calcula</h4>
+      <ul class="lista">@for (f of r.supuestos.formulas; track f) { <li>{{ f }}</li> }</ul>
+
+      <h4>Fuentes</h4>
+      <ul class="lista">@for (f of r.supuestos.fuentes; track f.parametro) { <li><strong>{{ f.parametro }}:</strong> {{ f.descripcion }}</li> }</ul>
+
+      <p class="nota">Supuestos actualizados el {{ fechaHora(r.supuestos.fechaActualizacion) }}.</p>
+    </section>
+
+    @if (puedeEditar()) {
+      <section class="tarjeta">
+        <h3>Editar supuestos</h3>
+        <p class="desc">Los cambios se aplican a todos los cálculos, también a períodos anteriores.</p>
+
+        @if (erroresParametros().length) {
+          <div class="alerta en-tarjeta">@for (e of erroresParametros(); track e) { <div>{{ e }}</div> }</div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="guardarParametros()">
+          <div class="grid-parametros">
+            @for (c of camposParametros; track c.campo) {
+              <div class="campo">
+                <label [for]="'p-' + c.campo">{{ c.etiqueta }}</label>
+                <div class="con-unidad">
+                  <input type="number" [id]="'p-' + c.campo" [formControlName]="c.campo" [step]="c.paso" min="0" [class.con-error]="erroresCampo()[c.campo]">
+                  <span>{{ c.unidad }}</span>
+                </div>
+                @if (erroresCampo()[c.campo]; as m) { <span class="error-campo">{{ m }}</span> }
+              </div>
+            }
+          </div>
+          <div class="acciones">
+            <button type="button" class="btn-accion" (click)="descartarCambios()" [disabled]="guardando() || !form.dirty">Descartar cambios</button>
+            <button type="submit" class="btn-primario" [disabled]="guardando() || !form.dirty">{{ guardando() ? 'Guardando...' : 'Guardar supuestos' }}</button>
+          </div>
+        </form>
+      </section>
+    }
+  }
+</div>

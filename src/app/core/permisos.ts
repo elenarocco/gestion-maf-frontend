@@ -12,7 +12,9 @@ export const PERMISOS = {
   bandejaTi: 'GestionarBandejaTI',
   administrarCatalogos: 'AdministrarCatalogos',
   exportarReportes: 'ExportarReportes',
-  administrarUsuarios: 'AdministrarUsuariosYRoles'
+  administrarUsuarios: 'AdministrarUsuariosYRoles',
+  verSostenibilidad: 'VerSostenibilidad',
+  editarSostenibilidad: 'EditarParametrosSostenibilidad'
 } as const;
 
 // Con cualquiera de estos se puede crear algún tipo de solicitud.

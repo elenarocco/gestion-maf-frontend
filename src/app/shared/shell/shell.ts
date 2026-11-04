@@ -35,6 +35,7 @@ export class Shell {
       { nombre: 'Accesos VPN', ruta: '/accesos-vpn', permisos: [PERMISOS.bandejaTi, PERMISOS.consultarTodasLasSolicitudes] },
       { nombre: veTodas ? 'Solicitudes' : 'Mis solicitudes', ruta: '/solicitudes', permisos: PERMISOS_VER_SOLICITUDES },
       { nombre: 'Catálogos', ruta: '/catalogos', permisos: [PERMISOS.administrarCatalogos] },
+      { nombre: 'Sostenibilidad', ruta: '/sostenibilidad', permisos: [PERMISOS.verSostenibilidad] },
       { nombre: 'Usuarios y roles', ruta: '/usuarios', permisos: [PERMISOS.administrarUsuarios] }
     ];
     return items.filter(i => this.sesion.tieneAlguno(i.permisos));
